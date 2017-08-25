@@ -1,0 +1,19 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is a sample input file. Lines that begin with the percentage symbol will 
+% not be parsed. Empty lines will also not be parsed. The remaining lines contain
+% the names of variables, followed by a colon, then the expected value. Variable
+% names or their order should not be edited. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Some variables
+timeStep: 0.1
+maximumNumberOfIterations: 10 
+numberOfPatches: 5
+particlesPerPatch: 10
+
+% Some paths
+meshFilePath: meshFile.su2
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of input file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
