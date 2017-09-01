@@ -44,7 +44,7 @@ public:
 class COMMON_API Exception: public std::exception
 {
 public:
-	//virtual ~Exception () throw();
+	virtual ~Exception () throw();
 
 	void append (const std::string& add) throw ();			// Append additional description into m_what
 	const std::string& str () const throw ();				// Get contents of description (m_what)

@@ -118,7 +118,8 @@ void Parameters::printMemberVariables()
 	cout << "Number of patches: " << numberOfPatches << endl;
 	cout << "Particle per patch: " << particlesPerPatch << endl;
 	cout << "Mesh file path: " << meshFilePath << endl;
-	precessingGridSU2(meshFilePath, processedMesh);
+	//precessingGridSU2(meshFilePath, processedMesh);
+	//readGridFromFile(processedMesh, gridinfo, gridgeo);
 }
 
 void Parameters::hitReturnToEnter()

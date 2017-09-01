@@ -105,11 +105,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OpenMP>None</OpenMP>
       <Cpp0xSupport>true</Cpp0xSupport>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>GRID.lib;COMM.lib;MATH_MK.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)$(IntDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,6 +141,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OpenMP>None</OpenMP>
       <Cpp0xSupport>true</Cpp0xSupport>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>COMM; GRID; MATH_MK</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,10 +155,45 @@
   <ItemGroup>
     <ClInclude Include="Cell.h" />
     <ClInclude Include="ChargeProjector.h" />
+    <ClInclude Include="COMM\assert_mk.hpp" />
+    <ClInclude Include="COMM\codelocation.hpp" />
+    <ClInclude Include="COMM\common.hpp" />
+    <ClInclude Include="COMM\commonAPI.hpp" />
+    <ClInclude Include="COMM\error_check.hpp" />
+    <ClInclude Include="COMM\error_codes.hpp" />
+    <ClInclude Include="COMM\error_exception.hpp" />
+    <ClInclude Include="COMM\exportAPI.hpp" />
+    <ClInclude Include="COMM\fileHandle.hpp" />
+    <ClInclude Include="COMM\map1D.hpp" />
+    <ClInclude Include="COMM\MultiVector.hpp" />
+    <ClInclude Include="COMM\noncopyable.hpp" />
+    <ClInclude Include="COMM\noninstantiable.hpp" />
+    <ClInclude Include="COMM\processorinfo.hpp" />
+    <ClInclude Include="COMM\readdatafromstring.hpp" />
+    <ClInclude Include="COMM\StringOps.hpp" />
+    <ClInclude Include="COMM\timer.hpp" />
+    <ClInclude Include="COMM\utilities.hpp" />
+    <ClInclude Include="COMM\VectorCompare.hpp" />
+    <ClInclude Include="COMM\version.hpp" />
     <ClInclude Include="Face.h" />
     <ClInclude Include="FDTD.h" />
     <ClInclude Include="FieldInterpolator.h" />
     <ClInclude Include="FieldSolver.h" />
+    <ClInclude Include="GRID\cell.hpp" />
+    <ClInclude Include="GRID\connection.hpp" />
+    <ClInclude Include="GRID\element.hpp" />
+    <ClInclude Include="GRID\face.hpp" />
+    <ClInclude Include="GRID\geometry.hpp" />
+    <ClInclude Include="GRID\grid.hpp" />
+    <ClInclude Include="GRID\grid_def.hpp" />
+    <ClInclude Include="GRID\index.hpp" />
+    <ClInclude Include="GRID\node.hpp" />
+    <ClInclude Include="GRID\stencilinfo.hpp" />
+    <ClInclude Include="MATH_MK\cal_area.hpp" />
+    <ClInclude Include="MATH_MK\linear_algebra.hpp" />
+    <ClInclude Include="MATH_MK\math_basic.hpp" />
+    <ClInclude Include="MATH_MK\matrix.hpp" />
+    <ClInclude Include="MATH_MK\random_number_fns.hpp" />
     <ClInclude Include="MCC.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Node.h" />
