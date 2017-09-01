@@ -21,9 +21,7 @@ namespace Common {
 class COMMON_API CodeLocation
 {
 public:
-	//explicit CodeLocation(std::string file, int line, std::string function);	// Prevent un-intended function call
-	explicit CodeLocation::CodeLocation(std::string file, int line, std::string function)
-		: m_file(file), m_function(function), m_line(line) {};	// Prevent un-intended function call
+	explicit CodeLocation(const char *file, int line, const char *function);	// Prevent un-intended function call
 	std::string str () const;
 
 private:

@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Some variables
-timeStep: 0.1
+timeStep: 0.2
 maximumNumberOfIterations: 10 
 numberOfPatches: 5
 particlesPerPatch: 10
