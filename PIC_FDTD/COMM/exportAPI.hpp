@@ -14,13 +14,13 @@
 
 
 // For Window (Visual studio)
-//#if defined (_MSC_VER)
+#if defined (_MSC_VER)
     #define MK_LOCAL_API
     #define MK_IMPORT_API	__declspec(dllimport)
     #define MK_EXPORT_API	__declspec(dllexport)
-//#endif
+#endif
 
-/*
+
 // For Linux (GNU)
 #if defined (__GNUC__)
     #define MK_LOCAL_API    __attribute__ ((visibility("hidden")))
@@ -39,7 +39,7 @@
         #error "Unrecognized compiler and/or platform."
     #endif
 #endif
-*/
+
 
 
 #endif /* EXPORTAPI_HPP_ */

@@ -9,18 +9,18 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\OP2A">
+      <UniqueIdentifier>{77b1e3d0-4b49-434d-a95d-9c3352a444b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OP2A">
+      <UniqueIdentifier>{0af337a0-a14e-439e-98b0-c9566f49674d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ChargeProjector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Face.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FDTD.h">
@@ -38,9 +38,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -56,9 +53,6 @@
     <ClInclude Include="Simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VectorCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,119 +66,128 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="COMM\assert_mk.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\codelocation.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\commonAPI.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\error_check.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\error_codes.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\error_exception.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\exportAPI.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\fileHandle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\map1D.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\MultiVector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\noncopyable.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\noninstantiable.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\processorinfo.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\readdatafromstring.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\StringOps.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\timer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\utilities.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\VectorCompare.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COMM\version.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\cell.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\connection.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\element.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\face.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\geometry.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\grid.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\grid_def.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\index.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\node.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GRID\stencilinfo.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OP2A</Filter>
     </ClInclude>
     <ClInclude Include="MATH_MK\cal_area.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\codelocation.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\commonAPI.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\connection.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\element.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\error_codes.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\error_check.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\error_exception.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\exportAPI.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\face.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\fileHandle.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\geometry.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\grid.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\grid_def.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\index.hpp">
+      <Filter>Header Files\OP2A</Filter>
     </ClInclude>
     <ClInclude Include="MATH_MK\linear_algebra.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\map1D.hpp">
+      <Filter>Header Files\OP2A</Filter>
     </ClInclude>
     <ClInclude Include="MATH_MK\math_basic.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OP2A</Filter>
     </ClInclude>
     <ClInclude Include="MATH_MK\matrix.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\MultiVector.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\node.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\noncopyable.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\noninstantiable.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\processorinfo.hpp">
+      <Filter>Header Files\OP2A</Filter>
     </ClInclude>
     <ClInclude Include="MATH_MK\random_number_fns.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\readdatafromstring.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\stencilinfo.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\StringOps.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\timer.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\utilities.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\VectorCompare.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\version.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\common.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="GRID\cell.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="Cells.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Faces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Nodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\sys\times.h">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="COMM\sys\time.h">
+      <Filter>Header Files\OP2A</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ChargeProjector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Face.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FDTD.cpp">
@@ -205,9 +208,6 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Parameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -221,9 +221,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Simulation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VectorCell.cpp">
@@ -240,6 +237,108 @@
     </ClCompile>
     <ClCompile Include="VectorPatch.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\version.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\VectorCompare.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\utilities.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\timer.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\StringOps.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\readdatafromstring.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="MATH_MK\random_number_fns.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\processorinfo.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\preprocessingGridSU2.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\preprocessingGridFluent.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\preprocessingGrid.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\node.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\MultiVector.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="MATH_MK\matrix.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="MATH_MK\math_basic.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="MATH_MK\linear_algebra.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\index.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\gridUtil.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\grid.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\geometry.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\fileHandle.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\face.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\error_exception.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\error_codes.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\error_check.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\connection.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\codelocation.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="GRID\cell.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="MATH_MK\cal_area.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\assert_mk.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="Cells.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Faces.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Nodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="COMM\sys\times.cpp">
+      <Filter>Source Files\OP2A</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -17,9 +17,6 @@
 #include <cassert>
 #include "noncopyable.hpp"
 #include "commonAPI.hpp"
-#include "common.hpp"
-#include "error_exception.hpp"
-#include "error_codes.hpp"
 
 
 /// Manager of behavior of assertions
@@ -31,18 +28,14 @@ public:
 	  bool AssertionThrows;		// Flag for Assettion Throws exceptions
 
 	  /// Constructor
-	  AssertionManager() : DoAssertions(true), AssertionDumps(true), AssertionThrows(true) {};
+	  AssertionManager();
 
 	  /*
 	   * Class functions
 	   */
 
 	  // [CF-01] Gets the instance of the manager
-	  static	AssertionManager&	getInstance ()
-	  {
-		  static AssertionManager assertion_manager;
-		  return assertion_manager;
-	  }
+	  static	AssertionManager&	getInstance ();
 
 	  // [CF-02] If AssertionManager is not handling assertions and those are passed to the standard assert function
 	  // Controlled by the build option ENABLE_STDASSERT
@@ -56,32 +49,7 @@ public:
 	  }
 
 	  // [CF-03] Forward declaration of the function that implements the always present assert
-	  static void do_assert (bool condition, const char * cond_str, const char * file, int line, const char * func, const char * desc = 0 )
-	  {
-		  if ((!condition) && getInstance().DoAssertions)
-		  {
-			  std::ostringstream out;
-			  out << "Assertion failed: [" << cond_str << "] ";
-
-			  if (desc)	out << "'" << desc << "' ";
-			  out << "in " << file << ":" << line;
-
-			  if (func)	out << " [function " << func << "]";
-
-			  //if ( AssertionManager::getInstance().AssertionDumps )	out << "\n" << OSystem::getInstance().getProcessInfo()->getBackTrace();
-
-			  if (getInstance().AssertionThrows)
-			  {
-				  throw Common::ExceptionError(FromHere(), out.str(), Common::ErrorCodes::FailAssertion());
-			  }
-			  else
-			  {
-				  std::cerr << &out << std::endl;
-				  std::cerr.flush();
-				  abort();
-			  }
-		  }
-	  }
+	  static void do_assert (bool condition, const char * cond_str, const char * file, int line, const char * func, const char * desc = 0 );
 };
 
 

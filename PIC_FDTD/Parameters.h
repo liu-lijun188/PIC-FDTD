@@ -35,5 +35,5 @@ public:
 	string meshFilePath;
 	string processedMesh = "processedMesh";
 	GridBasicInfo gridinfo;
-	//GridGeo gridgeo;
+	GridGeo gridgeo;
 };
