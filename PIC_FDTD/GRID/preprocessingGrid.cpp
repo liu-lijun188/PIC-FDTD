@@ -83,6 +83,6 @@ int preprocessingGrid(int argc, char **argv)
     
     std::cout << argv[2];
 
-
+	return 0;
 }
 
