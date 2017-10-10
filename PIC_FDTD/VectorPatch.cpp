@@ -1,4 +1,13 @@
+//! \file
+//! \brief Implementation of VectorPatch class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #include "VectorPatch.h"
+
+VectorPatch::VectorPatch()
+{
+}
 
 VectorPatch::VectorPatch(Parameters parametersList)
 {

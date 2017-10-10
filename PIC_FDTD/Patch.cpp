@@ -1,4 +1,13 @@
+//! \file
+//! \brief Implementation of Patch class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #include "Patch.h"
+
+Patch::Patch()
+{
+}
 
 Patch::Patch(Parameters parametersList)
 {

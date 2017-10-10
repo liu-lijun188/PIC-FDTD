@@ -1,3 +1,8 @@
+//! \file
+//! \brief Definition of Parameters class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #pragma once
 
 #include <ctime>
@@ -11,6 +16,8 @@
 
 using namespace std;
 
+//! \class Parameters 
+//! \brief Handles pre-processing of input parameters
 class Parameters
 {
 private:
@@ -20,17 +27,17 @@ private:
 	clock_t initialTime, currentTime;
 
 public:
-	Parameters();
-	Parameters(string filename);	// Default constructor, reads input file and dumps data in valuesVector
-	~Parameters();
+	Parameters();						//!< Default constructor
+	Parameters(string filename);		//!< Constructor
+	~Parameters();						//!< Destructor
 
-	void printValuesVector();		// Print raw input from valuesVector
-	void distributeInputs();		// Assign values to member variables
-	void printMemberVariables();	// Print member variables
-	void hitReturnToEnter();		// Keeps console window open
-	void logMessages(string message);
+	void printValuesVector();			//!< Print raw input from valuesVector
+	void distributeInputs();			//!< Assign values to member variables
+	void printMemberVariables();		//!< Print member variables
+	void hitReturnToEnter();			//!< Keeps console window open
+	void logMessages(string message);	//!< Log error messages
 
-	double timeStep;
+	double timeStep;				
 	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
 	string meshFilePath;
 	string processedMesh = "processedMesh";

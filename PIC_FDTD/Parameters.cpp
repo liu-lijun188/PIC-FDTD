@@ -1,3 +1,8 @@
+//! \file
+//! \brief Implementation of Parameters class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #include "Parameters.h"
 
 Parameters::Parameters()

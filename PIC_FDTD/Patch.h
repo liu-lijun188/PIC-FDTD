@@ -1,3 +1,8 @@
+//! \file
+//! \brief Definition of Patch class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #pragma once
 
 #include <iostream>
@@ -14,12 +19,15 @@
 
 using namespace std;
 
+//! \class Patch
+//! \brief Definition
 class Patch
 {
 public:
-	Patch(Parameters parametersList);
-	~Patch();
-	void startPIC();
+	Patch();							//!< Default constructor
+	Patch(Parameters parametersList);	//!< Constructor
+	~Patch();							//!< Destructor
+	void startPIC();					//!< Start the PIC loop within a Patch object
 
 	Parameters localParametersList;
 	Mesh mesh;
