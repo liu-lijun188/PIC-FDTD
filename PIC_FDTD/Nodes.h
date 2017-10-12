@@ -5,9 +5,12 @@
 
 #pragma once
 
+#include "Parameters.h"
+#include "GRID\node.hpp"
+
 //! \class Nodes
 //! \brief Definition
-class Nodes
+class Nodes : public NodeBase
 {
 public:
 	Nodes();	//!< Default constructor

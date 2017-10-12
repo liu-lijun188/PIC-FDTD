@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Faces.h"
+
 //! \class VectorFace
 //! \brief Definition
 class VectorFace
@@ -12,4 +14,6 @@ class VectorFace
 public:
 	VectorFace();	//!< Default constructor
 	~VectorFace();	//!< Destructor
+
+	vector<Faces> facesVector;
 };

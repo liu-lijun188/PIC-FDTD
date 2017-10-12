@@ -4,6 +4,7 @@
 //! \date Last updated October 2017
 
 #pragma once
+
 #include "Particle.h"
 
 //! \class VectorParticle

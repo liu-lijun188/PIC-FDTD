@@ -5,10 +5,12 @@
 
 #include "Parameters.h"
 
+// Default constructor
 Parameters::Parameters()
 {
 }
 
+// Constructor
 Parameters::Parameters(string filename)
 {
 	initialTime = clock();
@@ -20,7 +22,7 @@ Parameters::Parameters(string filename)
 
 	if (inputFile.is_open())
 	{
-		logMessages("Processing parameters...");
+		logMessages("Reading inputs...");
 
 		while (!inputFile.eof())	// Until the end of the file is reached
 		{
@@ -49,10 +51,12 @@ Parameters::Parameters(string filename)
 	}
 }
 
+// Destructor
 Parameters::~Parameters()
 {
 }
 
+// Print raw input from valuesVector
 void Parameters::printValuesVector()
 {
 	if (valuesVector.size() != 0)
@@ -65,7 +69,8 @@ void Parameters::printValuesVector()
 	}
 }
 
-void Parameters::distributeInputs()
+// Assign values to member variables
+void Parameters::assignInputs()
 {
 	if (!fileNotOpened)
 	{
@@ -116,6 +121,7 @@ void Parameters::distributeInputs()
 	}
 }
 
+// Print member variables
 void Parameters::printMemberVariables()
 {
 	cout << "Time step: " << timeStep << endl;
@@ -123,22 +129,34 @@ void Parameters::printMemberVariables()
 	cout << "Number of patches: " << numberOfPatches << endl;
 	cout << "Particle per patch: " << particlesPerPatch << endl;
 	cout << "Mesh file path: " << meshFilePath << endl;
+}
+
+// Process mesh file
+void Parameters::processMesh()
+{
+	logMessages("Extracting mesh data...");
 	precessingGridSU2(meshFilePath, processedMesh);
 	readGridFromFile(processedMesh + ".op2", gridinfo, gridgeo);
+	
 }
 
+// Keeps console window open
 void Parameters::hitReturnToEnter()
 {
-	do {
+	do 
+	{
 		cout << endl << "Press the return key to continue . . .";
-	} while (cin.get() != '\n');
+	} 
+	while (cin.get() != '\n');
 }
 
+// Log messages and warnings
 void Parameters::logMessages(string message)
 {
+	clock_t currentTime;
 	if (!firstLog)
 	{
-		ofstream logFile("logFile.txt", ios::app);	// Open log file
+		ofstream logFile("logFile.txt", ios::app);	// Open log file, 'append' write mode
 
 		if (logFile.is_open())
 		{
@@ -154,7 +172,7 @@ void Parameters::logMessages(string message)
 	}
 	else
 	{
-		ofstream logFile("logFile.txt", ios::trunc);	// Open log file
+		ofstream logFile("logFile.txt", ios::trunc);	// Open log file, 'truncate' write mode
 
 		if (logFile.is_open())
 		{

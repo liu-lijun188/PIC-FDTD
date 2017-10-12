@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Nodes.h"
+
 //! \class VectorNode
 //! \brief Definition
 class VectorNode
@@ -12,4 +14,6 @@ class VectorNode
 public:
 	VectorNode();	//!< Default constructor
 	~VectorNode();	//!< Destructor
+
+	vector<Nodes> nodesVector;
 };

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Cells.h"
+
 //! \class VectorCell
 //! \brief Definition
 class VectorCell
@@ -12,4 +14,6 @@ class VectorCell
 public:
 	VectorCell();	//!< Default constructor
 	~VectorCell();	//!< Destructor
+
+	vector<Cells> cellsVector;
 };

@@ -184,6 +184,7 @@
     <ClInclude Include="FDTD.h" />
     <ClInclude Include="FieldInterpolator.h" />
     <ClInclude Include="FieldSolver.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="GRID\cell.hpp" />
     <ClInclude Include="GRID\connection.hpp" />
     <ClInclude Include="GRID\element.hpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="VectorCell.h" />
     <ClInclude Include="VectorFace.h" />
+    <ClInclude Include="VectorGhost.h" />
     <ClInclude Include="VectorNode.h" />
     <ClInclude Include="VectorParticle.h" />
     <ClInclude Include="VectorPatch.h" />
@@ -235,6 +237,7 @@
     <ClCompile Include="FDTD.cpp" />
     <ClCompile Include="FieldInterpolator.cpp" />
     <ClCompile Include="FieldSolver.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="GRID\cell.cpp" />
     <ClCompile Include="GRID\connection.cpp" />
     <ClCompile Include="GRID\face.cpp" />
@@ -262,6 +265,7 @@
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="VectorCell.cpp" />
     <ClCompile Include="VectorFace.cpp" />
+    <ClCompile Include="VectorGhost.cpp" />
     <ClCompile Include="VectorNode.cpp" />
     <ClCompile Include="VectorParticle.cpp" />
     <ClCompile Include="VectorPatch.cpp" />

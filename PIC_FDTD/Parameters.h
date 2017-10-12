@@ -13,6 +13,10 @@
 #include <vector>
 
 #include "GRID/grid.hpp"
+#include "VectorCell.h"
+#include "VectorFace.h"
+#include "VectorGhost.h"
+#include "VectorNode.h"
 
 using namespace std;
 
@@ -24,7 +28,11 @@ private:
 	vector<string> valuesVector;
 	bool fileNotOpened = false;
 	bool firstLog = true;
-	clock_t initialTime, currentTime;
+	clock_t initialTime;
+
+	string processedMesh = "processedMesh";
+	GridBasicInfo gridinfo;
+	GridGeo gridgeo;
 
 public:
 	Parameters();						//!< Default constructor
@@ -32,15 +40,19 @@ public:
 	~Parameters();						//!< Destructor
 
 	void printValuesVector();			//!< Print raw input from valuesVector
-	void distributeInputs();			//!< Assign values to member variables
+	void assignInputs();				//!< Assign values to member variables
 	void printMemberVariables();		//!< Print member variables
+	void processMesh();					//!< Process mesh file
 	void hitReturnToEnter();			//!< Keeps console window open
-	void logMessages(string message);	//!< Log error messages
+	void logMessages(string message);	//!< Log messages and warnings
 
 	double timeStep;				
 	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
 	string meshFilePath;
-	string processedMesh = "processedMesh";
-	GridBasicInfo gridinfo;
-	GridGeo gridgeo;
+
+	VectorCell localCellsVector;
+	VectorFace localFacesVector;
+	VectorGhost localGhostVector;
+	VectorNode localNodesVector;
+
 };

@@ -6,7 +6,6 @@
 #pragma once
 
 #include "Patch.h"
-#include <vector>
 
 //! \class VectorPatch
 //! \brief Definition

@@ -185,6 +185,12 @@
     <ClInclude Include="COMM\sys\time.h">
       <Filter>Header Files\OP2A</Filter>
     </ClInclude>
+    <ClInclude Include="Ghost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorGhost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChargeProjector.cpp">
@@ -339,6 +345,12 @@
     </ClCompile>
     <ClCompile Include="COMM\sys\times.cpp">
       <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorGhost.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

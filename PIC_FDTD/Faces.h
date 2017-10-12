@@ -5,9 +5,12 @@
 
 #pragma once
 
+#include "Parameters.h"
+#include "GRID\face.hpp"
+
 //! \class Faces
 //! \brief Definition
-class Faces
+class Faces : public FaceBase
 {
 public:
 	Faces();	//!< Default constructor
