@@ -1,8 +1,18 @@
+//! \file
+//! \brief Definition of Nodes class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #pragma once
 
-class Nodes
+#include "Parameters.h"
+#include "GRID\node.hpp"
+
+//! \class Nodes
+//! \brief Definition
+class Nodes : public NodeBase
 {
 public:
-	Nodes();
-	~Nodes();
+	Nodes();	//!< Default constructor
+	~Nodes();	//!< Destructor
 };

@@ -1,13 +1,20 @@
+//! \file
+//! \brief Entry point into the simulation
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #include "Simulation.h"
 
 int main()
 {
-
-	Parameters parametersList("inputs.txt");
-	parametersList.distributeInputs();
+	// Preprocessing of inputs
+	Parameters parametersList("inputs.txt");	
+	parametersList.assignInputs();				
+	parametersList.processMesh();					 
 	parametersList.printMemberVariables();
 
-	Simulation simulation(parametersList);
+	// Commence simulation
+	//Simulation simulation(parametersList);
 
 	return 0;
 }

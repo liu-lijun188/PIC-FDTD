@@ -1,3 +1,8 @@
+//! \file
+//! \brief Definition of Parameters class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #pragma once
 
 #include <ctime>
@@ -8,32 +13,46 @@
 #include <vector>
 
 #include "GRID/grid.hpp"
+#include "VectorCell.h"
+#include "VectorFace.h"
+#include "VectorGhost.h"
+#include "VectorNode.h"
 
 using namespace std;
 
+//! \class Parameters 
+//! \brief Handles pre-processing of input parameters
 class Parameters
 {
 private:
 	vector<string> valuesVector;
 	bool fileNotOpened = false;
 	bool firstLog = true;
-	clock_t initialTime, currentTime;
+	clock_t initialTime;
 
-public:
-	Parameters();
-	Parameters(string filename);	// Default constructor, reads input file and dumps data in valuesVector
-	~Parameters();
-
-	void printValuesVector();		// Print raw input from valuesVector
-	void distributeInputs();		// Assign values to member variables
-	void printMemberVariables();	// Print member variables
-	void hitReturnToEnter();		// Keeps console window open
-	void logMessages(string message);
-
-	double timeStep;
-	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
-	string meshFilePath;
 	string processedMesh = "processedMesh";
 	GridBasicInfo gridinfo;
 	GridGeo gridgeo;
+
+public:
+	Parameters();						//!< Default constructor
+	Parameters(string filename);		//!< Constructor
+	~Parameters();						//!< Destructor
+
+	void printValuesVector();			//!< Print raw input from valuesVector
+	void assignInputs();				//!< Assign values to member variables
+	void printMemberVariables();		//!< Print member variables
+	void processMesh();					//!< Process mesh file
+	void hitReturnToEnter();			//!< Keeps console window open
+	void logMessages(string message);	//!< Log messages and warnings
+
+	double timeStep;				
+	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
+	string meshFilePath;
+
+	VectorCell localCellsVector;
+	VectorFace localFacesVector;
+	VectorGhost localGhostVector;
+	VectorNode localNodesVector;
+
 };

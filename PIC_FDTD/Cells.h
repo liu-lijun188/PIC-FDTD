@@ -1,8 +1,18 @@
+//! \file
+//! \brief Definition of Cells class 
+//! \author Rahul Kalampattel
+//! \date Last updated October 2017
+
 #pragma once
 
-class Cells
+#include "Parameters.h"
+#include "GRID\cell.hpp"
+
+//! \class Cells
+//! \brief Definition
+class Cells : public CellBase
 {
 public:
-	Cells();
-	~Cells();
+	Cells();	//!< Default constructor
+	~Cells();	//!< Destructor
 };
