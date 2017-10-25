@@ -11,14 +11,14 @@ Parameters::Parameters()
 }
 
 // Constructor
-Parameters::Parameters(string filename)
+Parameters::Parameters(std::string filename)
 {
 	initialTime = clock();
-	ifstream inputFile(filename);	// Open input file
+	std::ifstream inputFile(filename);	// Open input file
 	
 	char firstCharacter;
-	string name;
-	string value;
+	std::string name;
+	std::string value;
 
 	if (inputFile.is_open())
 	{
@@ -63,9 +63,9 @@ void Parameters::printValuesVector()
 	{
 		for (size_t i = 0; i < valuesVector.size(); i++)
 		{
-			cout << "Parameter " << i + 1 << " is: " << valuesVector[i] << endl;
+			std::cout << "Parameter " << i + 1 << " is: " << valuesVector[i] << std::endl;
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
 }
 
@@ -78,7 +78,7 @@ void Parameters::assignInputs()
 		{
 			timeStep = stod(valuesVector[0]);
 		}
-		catch (invalid_argument&)
+		catch (std::invalid_argument&)
 		{
 			logMessages("Invalid argument detected for time step!!!");
 		}
@@ -87,7 +87,7 @@ void Parameters::assignInputs()
 		{
 			maximumNumberOfIterations = stoi(valuesVector[1]);
 		}
-		catch (invalid_argument&)
+		catch (std::invalid_argument&)
 		{
 			logMessages("Invalid argument detected for maximum number of iterations!!!");
 		}
@@ -96,7 +96,7 @@ void Parameters::assignInputs()
 		{
 			numberOfPatches = stoi(valuesVector[2]);
 		}
-		catch (invalid_argument&)
+		catch (std::invalid_argument&)
 		{
 			logMessages("Invalid argument detected for number of patches!!!");
 		}
@@ -105,7 +105,7 @@ void Parameters::assignInputs()
 		{
 			particlesPerPatch = stoi(valuesVector[3]);
 		}
-		catch (invalid_argument&)
+		catch (std::invalid_argument&)
 		{
 			logMessages("Invalid argument detected for particles per patch!!!");
 		}
@@ -114,7 +114,7 @@ void Parameters::assignInputs()
 		{
 			meshFilePath = valuesVector[4];
 		}
-		catch (invalid_argument&)
+		catch (std::invalid_argument&)
 		{
 			logMessages("Invalid argument detected for mesh file path!!!");
 		}
@@ -124,11 +124,11 @@ void Parameters::assignInputs()
 // Print member variables
 void Parameters::printMemberVariables()
 {
-	cout << "Time step: " << timeStep << endl;
-	cout << "Maximum number of iterations: " << maximumNumberOfIterations << endl;
-	cout << "Number of patches: " << numberOfPatches << endl;
-	cout << "Particle per patch: " << particlesPerPatch << endl;
-	cout << "Mesh file path: " << meshFilePath << endl;
+	std::cout << "Time step: " << timeStep << std::endl;
+	std::cout << "Maximum number of iterations: " << maximumNumberOfIterations << std::endl;
+	std::cout << "Number of patches: " << numberOfPatches << std::endl;
+	std::cout << "Particle per patch: " << particlesPerPatch << std::endl;
+	std::cout << "Mesh file path: " << meshFilePath << std::endl;
 }
 
 // Process mesh file
@@ -145,45 +145,45 @@ void Parameters::hitReturnToEnter()
 {
 	do 
 	{
-		cout << endl << "Press the return key to continue . . .";
+		std::cout << std::endl << "Press the return key to continue . . .";
 	} 
-	while (cin.get() != '\n');
+	while (std::cin.get() != '\n');
 }
 
 // Log messages and warnings
-void Parameters::logMessages(string message)
+void Parameters::logMessages(std::string message)
 {
 	clock_t currentTime;
 	if (!firstLog)
 	{
-		ofstream logFile("logFile.txt", ios::app);	// Open log file, 'append' write mode
+		std::ofstream logFile("logFile.txt", std::ios::app);	// Open log file, 'append' write mode
 
 		if (logFile.is_open())
 		{
 			currentTime = clock() - initialTime;
-			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << ' ' << message << endl;
+			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << ' ' << message << std::endl;
 			logFile.close();
 		}
 		else
 		{
-			cout << "Unable to open log file" << endl;
+			std::cout << "Unable to open log file" << std::endl;
 		}
-		cout << message << endl;
+		std::cout << message << std::endl;
 	}
 	else
 	{
-		ofstream logFile("logFile.txt", ios::trunc);	// Open log file, 'truncate' write mode
+		std::ofstream logFile("logFile.txt", std::ios::trunc);	// Open log file, 'truncate' write mode
 
 		if (logFile.is_open())
 		{
 			
 			currentTime = clock() - initialTime;
-			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << ' ' << message << endl;
+			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << ' ' << message << std::endl;
 			logFile.close();
 		}
 		else
 		{
-			cout << "Unable to open log file" << endl;
+			std::cout << "Unable to open log file" << std::endl;
 		}
 		firstLog = false;
 	}

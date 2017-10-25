@@ -15,5 +15,5 @@ public:
 	VectorGhost();	//!< Default constructor
 	~VectorGhost();	//!< Destructor
 
-	vector<Ghost> ghostVector;
+	std::vector<Ghost> ghostVector;
 };

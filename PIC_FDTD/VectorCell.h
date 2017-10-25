@@ -15,5 +15,5 @@ public:
 	VectorCell();	//!< Default constructor
 	~VectorCell();	//!< Destructor
 
-	vector<Cells> cellsVector;
+	std::vector<Cells> cellsVector;
 };

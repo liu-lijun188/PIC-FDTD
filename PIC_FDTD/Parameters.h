@@ -18,25 +18,23 @@
 #include "VectorGhost.h"
 #include "VectorNode.h"
 
-using namespace std;
-
 //! \class Parameters 
 //! \brief Handles pre-processing of input parameters
 class Parameters
 {
 private:
-	vector<string> valuesVector;
+	std::vector<std::string> valuesVector;
 	bool fileNotOpened = false;
 	bool firstLog = true;
 	clock_t initialTime;
 
-	string processedMesh = "processedMesh";
+	std::string processedMesh = "processedMesh";
 	GridBasicInfo gridinfo;
 	GridGeo gridgeo;
 
 public:
 	Parameters();						//!< Default constructor
-	Parameters(string filename);		//!< Constructor
+	Parameters(std::string filename);		//!< Constructor
 	~Parameters();						//!< Destructor
 
 	void printValuesVector();			//!< Print raw input from valuesVector
@@ -44,11 +42,11 @@ public:
 	void printMemberVariables();		//!< Print member variables
 	void processMesh();					//!< Process mesh file
 	void hitReturnToEnter();			//!< Keeps console window open
-	void logMessages(string message);	//!< Log messages and warnings
+	void logMessages(std::string message);	//!< Log messages and warnings
 
 	double timeStep;				
 	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
-	string meshFilePath;
+	std::string meshFilePath;
 
 	VectorCell localCellsVector;
 	VectorFace localFacesVector;

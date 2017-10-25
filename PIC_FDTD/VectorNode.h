@@ -15,5 +15,5 @@ public:
 	VectorNode();	//!< Default constructor
 	~VectorNode();	//!< Destructor
 
-	vector<Nodes> nodesVector;
+	std::vector<Nodes> nodesVector;
 };
