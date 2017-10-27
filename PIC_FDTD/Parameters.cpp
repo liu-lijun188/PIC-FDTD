@@ -135,9 +135,30 @@ void Parameters::printMemberVariables()
 void Parameters::processMesh()
 {
 	logMessages("Extracting mesh data...");
-	precessingGridSU2(meshFilePath, processedMesh);
-	readGridFromFile(processedMesh + ".op2", gridinfo, gridgeo);
-	
+	precessingGridSU2(meshFilePath, processedMeshFile);
+	readGridFromFile(processedMeshFile + ".op2", gridinfo, gridgeo);
+	processingGrid(gridinfo, gridgeo);
+}
+
+// Generate Tecplot output
+void Parameters::generateOutput()
+{
+	writeGridGeoTecplot(tecplotMesh, gridinfo, gridgeo);
+
+	std::vector<std::string> variableNames = { "Cell_ID_squared" };
+	int N = 1;
+	vector2D data;
+
+	for (int i = 0; i < gridinfo.NCM; i++)
+	{
+		data.push_back(std::vector<double>());
+		for (int j = 0; j<N; j++)
+		{
+			data[i].push_back(121);
+		}
+	}
+
+	writeSolutionCellTecplot(tecplotSolution, gridinfo, gridgeo, data, variableNames, N);
 }
 
 // Keeps console window open

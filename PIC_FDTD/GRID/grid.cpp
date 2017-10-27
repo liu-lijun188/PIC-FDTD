@@ -888,7 +888,7 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo)
             int temp;
         }
     }
-    
+
     // c. Calculate path
     int num_Pass = 0;
     FaceBase* wall_Face;
@@ -905,7 +905,7 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo)
             if (walkBound[cID] == num_Pass)
             {
                 wall_Face = nearWallFace[cID];
-                
+
                 for (int f = 0; f < gridgeo.Cell(cID).connectivity.numFaces; f++)
                 {
                     int fID = gridgeo.Cell(cID).connectivity.faceIDs[f];
@@ -928,7 +928,7 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo)
                             else if (nearWallFace[cl] != wall_Face)
                             {
                                 double dist = area_line(gridgeo.Cell(cl).geometry.X, wall_Face->geometry.X);
-                                
+
                                 if (dist < gridgeo.Cell(cl).geometry.distanceToWall)
                                 {
                                     nearWallFace[cl] = wall_Face;
@@ -963,7 +963,8 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo)
     
     
     // 6. Calculate distance and n_dot_wallVector for each faces
-    for (int f = 0; f < gridinfo.NFM; f++)
+    /*
+	for (int f = 0; f < gridinfo.NFM; f++)
     {
         int fID = gridgeo.faces[f].geometry.id;
         int cl = gridgeo.Face(fID).connectivity.cl[0];
@@ -974,7 +975,7 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo)
         
         matrix wallNormal(3);
         matrix faceNormal(3);
-        
+		
         for (int d = 0; d < 3; d++)
         {
             wallNormal(d) = wall_Face->geometry.n(GRID_NOR, d);
@@ -984,7 +985,7 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo)
         double n_dot_wall = dot(faceNormal, wallNormal);
         gridgeo.Face(fID).geometry.nDotWall = 1.0 - fabs(n_dot_wall);
     }
-    
+    */
     
     // 7. Find Stencil
     // Find stencil

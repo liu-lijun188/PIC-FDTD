@@ -28,7 +28,9 @@ private:
 	bool firstLog = true;
 	clock_t initialTime;
 
-	std::string processedMesh = "processedMesh";
+	std::string processedMeshFile = "processedMesh";
+	std::string tecplotMesh = "tecplotMesh";
+	std::string tecplotSolution = "tecplotSolution";
 	GridBasicInfo gridinfo;
 	GridGeo gridgeo;
 
@@ -41,6 +43,7 @@ public:
 	void assignInputs();				//!< Assign values to member variables
 	void printMemberVariables();		//!< Print member variables
 	void processMesh();					//!< Process mesh file
+	void generateOutput();				//!< Generate Tecplot output
 	void hitReturnToEnter();			//!< Keeps console window open
 	void logMessages(std::string message);	//!< Log messages and warnings
 

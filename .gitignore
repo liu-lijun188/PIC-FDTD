@@ -260,3 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 /Documentation
+/test.lay
+/PIC_FDTD/tecplotSolution_sol.plt
+/PIC_FDTD/tecplotMesh.plt
