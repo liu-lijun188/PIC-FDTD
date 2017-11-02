@@ -28,7 +28,7 @@ void VectorPatch::startPIC()
 {
 	for (unsigned int i = 0; i < patchesVector.size(); i++)
 	{
-		cout << "Patch " << i << endl;
+		cout << "Working in patch " << i << endl;
 		patchesVector[i].startPIC();
 	}
 }

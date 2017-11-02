@@ -11,11 +11,11 @@ int main()
 	Parameters parametersList("inputs.txt");	
 	parametersList.assignInputs();				
 	parametersList.processMesh();			
-	parametersList.generateOutput();
-	parametersList.printMemberVariables();
 
 	// Commence simulation
-	//Simulation simulation(parametersList);
+	Simulation simulation(parametersList);
 
+	parametersList.generateOutput();
+	parametersList.printMemberVariables();
 	return 0;
 }

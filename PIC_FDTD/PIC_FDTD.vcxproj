@@ -158,6 +158,15 @@
   <ItemGroup>
     <ClInclude Include="Cells.h" />
     <ClInclude Include="ChargeProjector.h" />
+    <ClInclude Include="CHEM\Blottner.hpp" />
+    <ClInclude Include="CHEM\chemConstants.hpp" />
+    <ClInclude Include="CHEM\electronicState.hpp" />
+    <ClInclude Include="CHEM\kev.hpp" />
+    <ClInclude Include="CHEM\LeRc.hpp" />
+    <ClInclude Include="CHEM\species.hpp" />
+    <ClInclude Include="CHEM\speciesDatabase.hpp" />
+    <ClInclude Include="CHEM\Sutherland.hpp" />
+    <ClInclude Include="CHEM\viscosity_kinetic_theory.hpp" />
     <ClInclude Include="COMM\assert_mk.hpp" />
     <ClInclude Include="COMM\codelocation.hpp" />
     <ClInclude Include="COMM\common.hpp" />
@@ -218,6 +227,14 @@
   <ItemGroup>
     <ClCompile Include="Cells.cpp" />
     <ClCompile Include="ChargeProjector.cpp" />
+    <ClCompile Include="CHEM\Blottner.cpp" />
+    <ClCompile Include="CHEM\electronicState.cpp" />
+    <ClCompile Include="CHEM\kev.cpp" />
+    <ClCompile Include="CHEM\LeRc.cpp" />
+    <ClCompile Include="CHEM\species.cpp" />
+    <ClCompile Include="CHEM\speciesDatabase.cpp" />
+    <ClCompile Include="CHEM\Sutherland.cpp" />
+    <ClCompile Include="CHEM\viscosity_kinetic_theory.cpp" />
     <ClCompile Include="COMM\assert_mk.cpp" />
     <ClCompile Include="COMM\codelocation.cpp" />
     <ClCompile Include="COMM\error_check.cpp" />
