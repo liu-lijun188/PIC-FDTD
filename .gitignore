@@ -263,3 +263,8 @@ __pycache__/
 /test.lay
 /PIC_FDTD/tecplotSolution_sol.plt
 /PIC_FDTD/tecplotMesh.plt
+/PIC_FDTD/logFile.txt
+/PIC_FDTD/tecplotMeshC.plt
+/PIC_FDTD/tecplotMeshF.plt
+/PIC_FDTD/tecplotSolutionC_sol.plt
+/PIC_FDTD/tecplotSolutionF_sol.plt

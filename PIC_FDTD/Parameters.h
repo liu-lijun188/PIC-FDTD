@@ -28,11 +28,13 @@ private:
 	bool firstLog = true;
 	clock_t initialTime;
 
-	std::string processedMeshFile = "processedMesh";
-	std::string tecplotMesh = "tecplotMesh";
-	std::string tecplotSolution = "tecplotSolution";
+	std::string meshFilePath;
 	GridBasicInfo gridinfo;
 	GridGeo gridgeo;
+
+	std::string processedMeshFile = "processedMesh";
+	std::string tecplotMesh = "tecplotMeshC";
+	std::string tecplotSolution = "tecplotSolutionC";
 
 public:
 	Parameters();						//!< Default constructor
@@ -49,7 +51,6 @@ public:
 
 	double timeStep;				
 	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
-	std::string meshFilePath;
 
 	VectorCell localCellsVector;
 	VectorFace localFacesVector;

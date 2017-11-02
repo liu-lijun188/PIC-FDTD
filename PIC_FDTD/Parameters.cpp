@@ -154,7 +154,7 @@ void Parameters::generateOutput()
 		data.push_back(std::vector<double>());
 		for (int j = 0; j<N; j++)
 		{
-			data[i].push_back(121);
+			data[i].push_back((i+1)*100);
 		}
 	}
 

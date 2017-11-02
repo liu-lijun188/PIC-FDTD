@@ -356,7 +356,4 @@
   <ItemGroup>
     <Text Include="inputs.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="meshFile.su2" />
-  </ItemGroup>
 </Project>
