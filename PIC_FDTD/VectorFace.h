@@ -15,5 +15,5 @@ public:
 	VectorFace();	//!< Default constructor
 	~VectorFace();	//!< Destructor
 
-	vector<Faces> facesVector;
+	std::vector<Faces> facesVector;
 };

@@ -10,11 +10,12 @@ int main()
 	// Preprocessing of inputs
 	Parameters parametersList("inputs.txt");	
 	parametersList.assignInputs();				
-	parametersList.processMesh();					 
-	parametersList.printMemberVariables();
+	parametersList.processMesh();			
 
 	// Commence simulation
-	//Simulation simulation(parametersList);
+	Simulation simulation(parametersList);
 
+	parametersList.generateOutput();
+	parametersList.printMemberVariables();
 	return 0;
 }

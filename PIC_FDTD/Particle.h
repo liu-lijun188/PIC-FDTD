@@ -6,12 +6,13 @@
 #pragma once
 
 #include "Parameters.h"
+#include "CHEM\species.hpp"
 
 using namespace std;
 
 //! \class Particle
 //! \brief Definition
-class Particle
+class Particle : public species
 {
 public:
 	Particle();									//!< Default constructor

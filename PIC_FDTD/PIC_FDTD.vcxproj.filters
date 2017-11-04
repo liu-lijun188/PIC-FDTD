@@ -191,6 +191,33 @@
     <ClInclude Include="VectorGhost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CHEM\viscosity_kinetic_theory.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\Sutherland.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\speciesDatabase.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\species.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\LeRc.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\kev.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\electronicState.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\chemConstants.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEM\Blottner.hpp">
+      <Filter>Header Files\OP2A</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChargeProjector.cpp">
@@ -352,11 +379,32 @@
     <ClCompile Include="VectorGhost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CHEM\Blottner.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\viscosity_kinetic_theory.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\Sutherland.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\speciesDatabase.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\species.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\LeRc.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\kev.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
+    <ClCompile Include="CHEM\electronicState.cpp">
+      <Filter>Source Files\OP2A</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputs.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="meshFile.su2" />
   </ItemGroup>
 </Project>

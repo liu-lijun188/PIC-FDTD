@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "Parameters.h"
 #include "GRID\node.hpp"
 
 //! \class Nodes

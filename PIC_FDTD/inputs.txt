@@ -8,11 +8,11 @@
 % Some variables
 timeStep: 0.2
 maximumNumberOfIterations: 10 
-numberOfPatches: 5
-particlesPerPatch: 10
+numberOfPatches: 1
+particlesPerPatch: 1
 
 % Some paths
-meshFilePath: meshFile.su2
+meshFilePath: coarseMesh.su2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % End of input file

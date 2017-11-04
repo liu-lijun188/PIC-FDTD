@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "Parameters.h"
 #include "GRID\face.hpp"
 
 //! \class Faces
