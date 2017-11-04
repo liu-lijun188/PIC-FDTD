@@ -145,20 +145,9 @@ void Parameters::generateOutput()
 {
 	writeGridGeoTecplot(tecplotMesh, gridinfo, gridgeo);
 
-	std::vector<std::string> variableNames = { "Cell_ID_squared" };
-	int N = 1;
-	vector2D data;
+	std::vector<double> data{ 0.07, 0.03 };
 
-	for (int i = 0; i < gridinfo.NCM; i++)
-	{
-		data.push_back(std::vector<double>());
-		for (int j = 0; j<N; j++)
-		{
-			data[i].push_back((i+1)*100);
-		}
-	}
-
-	writeSolutionCellTecplot(tecplotSolution, gridinfo, gridgeo, data, variableNames, N);
+	writeSolutionXYTecplot(tecplotSolution, data);
 }
 
 // Keeps console window open

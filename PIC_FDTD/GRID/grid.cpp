@@ -1254,7 +1254,7 @@ void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo,
 {
     // 1. Open File to write
     std::string fileName;
-    fileName = title + "_sol.plt";
+    fileName = title + ".plt";
     
     std::ofstream grid_tecplot;
     grid_tecplot.open(fileName.c_str());
@@ -1336,7 +1336,32 @@ void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo,
     grid_tecplot.close();
 }
 
+void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data)
+{
+	// 1. Open File to write
+	std::string fileName;
+	fileName = title + ".plt";
 
+	std::ofstream grid_tecplot;
+	grid_tecplot.open(fileName.c_str());
+
+
+	// 2. Write Header
+	grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+	grid_tecplot << "FILETYPE = FULL" << std::endl;
+
+	grid_tecplot << std::scientific << std::setprecision(16) 
+		<< "VARIABLES = \"X\" \"Y\"" << std::scientific << std::endl;
+
+	grid_tecplot << "ZONE I=1" << std::endl;
+	grid_tecplot << "DATAPACKING = POINT" << std::endl;
+
+	// 3. Write Solution DATA
+
+	grid_tecplot << data[0] << " " << data[1] << std::endl;
+
+	grid_tecplot.close();
+}
 
 
 
