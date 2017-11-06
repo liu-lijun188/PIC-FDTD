@@ -15,7 +15,6 @@ public:
 	Mesh();										//!< Default constructor
 	Mesh(Parameters *localParametersList);		//!< Constructor
 	~Mesh();									//!< Destructor
-	void checkMesh();							//!< Checks the mesh
 
 	Parameters localParametersList;				
 };

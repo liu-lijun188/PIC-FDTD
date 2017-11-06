@@ -25,10 +25,11 @@ class Patch
 {
 public:
 	Patch();							//!< Default constructor
-	Patch(Parameters parametersList);	//!< Constructor
+	Patch(Parameters parametersList, int patchID);	//!< Constructor
 	~Patch();							//!< Destructor
 	void startPIC();					//!< Start the PIC loop within a Patch object
-
+	
+	int patchID;
 	Parameters localParametersList;
 	Mesh mesh;
 	VectorParticle particlesVector;

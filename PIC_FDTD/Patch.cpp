@@ -9,13 +9,13 @@ Patch::Patch()
 {
 }
 
-Patch::Patch(Parameters parametersList)
+Patch::Patch(Parameters parametersList, int patchID)
 {
+	this->patchID = patchID;
 	localParametersList = parametersList;
-	localParametersList.logMessages("Initialising patch...");
-	particlesVector = VectorParticle(&localParametersList);
+	localParametersList.logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
+	particlesVector = VectorParticle(&localParametersList, patchID);
 	mesh = Mesh(&localParametersList);
-	mesh.checkMesh();
 }
 
 Patch::~Patch()
@@ -24,7 +24,7 @@ Patch::~Patch()
 
 void Patch::startPIC()
 {
-	localParametersList.logMessages("Starting PIC loop...");
+	localParametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__);
 	for (int i = 0; i < localParametersList.maximumNumberOfIterations; i++)
 	{
 		ParticlePusher pusher();

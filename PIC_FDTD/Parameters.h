@@ -29,8 +29,6 @@ private:
 	clock_t initialTime;
 
 	std::string meshFilePath;
-	GridBasicInfo gridinfo;
-	GridGeo gridgeo;
 
 	std::string processedMeshFile = "processedMesh";
 	std::string tecplotMesh = "tecplotMeshC";
@@ -47,14 +45,12 @@ public:
 	void processMesh();					//!< Process mesh file
 	void generateOutput();				//!< Generate Tecplot output
 	void hitReturnToEnter();			//!< Keeps console window open
-	void logMessages(std::string message);	//!< Log messages and warnings
+	void Parameters::logMessages(std::string message, 
+	   std::string filename, int line);	//!< Log messages and warnings
 
 	double timeStep;				
 	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
 
-	VectorCell localCellsVector;
-	VectorFace localFacesVector;
-	VectorGhost localGhostVector;
-	VectorNode localNodesVector;
-
+	GridBasicInfo gridinfo;
+	GridGeo gridgeo;
 };

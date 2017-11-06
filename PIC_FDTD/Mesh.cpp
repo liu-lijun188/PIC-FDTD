@@ -19,8 +19,3 @@ Mesh::Mesh(Parameters *localParametersList)
 Mesh::~Mesh()
 {
 }
-
-void Mesh::checkMesh()
-{
-	localParametersList.logMessages("Checking mesh...");
-}

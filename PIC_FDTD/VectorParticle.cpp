@@ -9,9 +9,9 @@ VectorParticle::VectorParticle()
 {
 }
 
-VectorParticle::VectorParticle(Parameters *localParametersList)
+VectorParticle::VectorParticle(Parameters *localParametersList, int patchID)
 {
-	localParametersList->logMessages("Creating particles vector...");
+	localParametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
 	for (int i = 0; i < localParametersList->particlesPerPatch; i++)
 	{
 		Particle particle(localParametersList);

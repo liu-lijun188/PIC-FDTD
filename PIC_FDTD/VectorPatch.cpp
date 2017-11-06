@@ -11,11 +11,10 @@ VectorPatch::VectorPatch()
 
 VectorPatch::VectorPatch(Parameters parametersList)
 {
-	parametersList.logMessages("Creating patches vector...");
+	parametersList.logMessages("Creating patches vector", __FILE__, __LINE__);
 	for (int i = 0; i < parametersList.numberOfPatches; i++)
 	{
-		cout << "Patch " << i << endl;
-		Patch patch(parametersList);
+		Patch patch(parametersList, i);
 		patchesVector.push_back(patch);
 	}
 }
@@ -28,7 +27,6 @@ void VectorPatch::startPIC()
 {
 	for (unsigned int i = 0; i < patchesVector.size(); i++)
 	{
-		cout << "Working in patch " << i << endl;
 		patchesVector[i].startPIC();
 	}
 }
