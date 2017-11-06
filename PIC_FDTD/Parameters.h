@@ -43,13 +43,13 @@ public:
 	void assignInputs();				//!< Assign values to member variables
 	void printMemberVariables();		//!< Print member variables
 	void processMesh();					//!< Process mesh file
-	void generateOutput();				//!< Generate Tecplot output
+	void generateOutput(std::vector<double> data);				//!< Generate Tecplot output
 	void hitReturnToEnter();			//!< Keeps console window open
 	void Parameters::logMessages(std::string message, 
 	   std::string filename, int line);	//!< Log messages and warnings
 
 	double timeStep;				
-	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
+	int maximumNumberOfIterations, numberOfPatches, particlesPerCell;
 
 	GridBasicInfo gridinfo;
 	GridGeo gridgeo;

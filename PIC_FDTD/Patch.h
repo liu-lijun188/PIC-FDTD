@@ -30,7 +30,7 @@ public:
 	void startPIC();					//!< Start the PIC loop within a Patch object
 	
 	int patchID;
-	Parameters localParametersList;
+	Parameters parametersList;
 	Mesh mesh;
 	VectorParticle particlesVector;
 };

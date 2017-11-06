@@ -9,14 +9,19 @@ VectorParticle::VectorParticle()
 {
 }
 
-VectorParticle::VectorParticle(Parameters *localParametersList, int patchID)
+VectorParticle::VectorParticle(Parameters *parametersList, int patchID)
 {
-	localParametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
-	for (int i = 0; i < localParametersList->particlesPerPatch; i++)
+	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
+//	for (int i = 0; i < parametersList->gridinfo.NCM; i++)
+	for (int i = 0; i < 1; i++)
 	{
-		Particle particle(localParametersList);
-		particleVector.push_back(particle);
+		for (int j = 0; j < parametersList->particlesPerCell; j++)
+		{
+			Particle particle(parametersList, patchID, i, j);
+			particleVector.push_back(particle);
+		}
 	}
+
 }
 
 

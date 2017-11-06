@@ -103,11 +103,11 @@ void Parameters::assignInputs()
 		
 		try
 		{
-			particlesPerPatch = stoi(valuesVector[3]);
+			particlesPerCell = stoi(valuesVector[3]);
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for particles per patch!!!", __FILE__, __LINE__);
+			logMessages("Invalid argument detected for particles per cell!!!", __FILE__, __LINE__);
 		}
 
 		try
@@ -127,7 +127,7 @@ void Parameters::printMemberVariables()
 	std::cout << "Time step: " << timeStep << std::endl;
 	std::cout << "Maximum number of iterations: " << maximumNumberOfIterations << std::endl;
 	std::cout << "Number of patches: " << numberOfPatches << std::endl;
-	std::cout << "Particle per patch: " << particlesPerPatch << std::endl;
+	std::cout << "Particle per cell: " << particlesPerCell << std::endl;
 	std::cout << "Mesh file path: " << meshFilePath << std::endl;
 }
 
@@ -141,11 +141,10 @@ void Parameters::processMesh()
 }
 
 // Generate Tecplot output
-void Parameters::generateOutput()
+void Parameters::generateOutput(std::vector<double> data)
 {
 	logMessages("Generating Tecplot output", __FILE__, __LINE__);
 	writeGridGeoTecplot(tecplotMesh, gridinfo, gridgeo);
-	std::vector<double> data{ 0.07, 0.03 };
 	writeSolutionXYTecplot(tecplotSolution, data);
 }
 

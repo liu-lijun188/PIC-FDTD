@@ -13,7 +13,7 @@ class VectorParticle
 {
 public:
 	VectorParticle();									//!< Default constructor
-	VectorParticle(Parameters *localParametersList, int patchID);	//!< Constructor
+	VectorParticle(Parameters *parametersList, int patchID);	//!< Constructor
 	~VectorParticle();									//!< Destructor
 
 	vector<Particle> particleVector;
