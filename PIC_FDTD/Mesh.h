@@ -6,6 +6,10 @@
 #pragma once
 
 #include "Parameters.h"
+#include "VectorCell.h"
+#include "VectorFace.h"
+#include "VectorGhost.h"
+#include "VectorNode.h"
 
 //! \class Mesh
 //! \brief Definition
@@ -16,5 +20,9 @@ public:
 	Mesh(Parameters *localParametersList);		//!< Constructor
 	~Mesh();									//!< Destructor
 
-	Parameters localParametersList;				
+	int numCells, numFaces, numGhost, numNodes;
+	VectorCell cellsVector;
+	VectorFace facesVector;
+	VectorGhost ghostVector;
+	VectorNode nodesVector;
 };

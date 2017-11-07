@@ -14,6 +14,7 @@ class VectorCell
 public:
 	VectorCell();	//!< Default constructor
 	~VectorCell();	//!< Destructor
+	void allocate(std::vector<CellBase> cells);	//!< Allocate cells to cells attribute
 
-	std::vector<Cells> cellsVector;
+	std::vector<Cells> cells;
 };

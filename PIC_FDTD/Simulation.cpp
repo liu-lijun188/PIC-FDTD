@@ -11,9 +11,9 @@ Simulation::Simulation()
 }
 
 // Constructor
-Simulation::Simulation(Parameters parametersList)
+Simulation::Simulation(Parameters *parametersList)
 {
-	parametersList.logMessages("Starting simulation", __FILE__, __LINE__);
+	parametersList->logMessages("Starting simulation", __FILE__, __LINE__);
 	VectorPatch patchesVector(parametersList);
 	patchesVector.startPIC();
 }

@@ -11,10 +11,10 @@ VectorPatch::VectorPatch()
 }
 
 // Constructor
-VectorPatch::VectorPatch(Parameters parametersList)
+VectorPatch::VectorPatch(Parameters *parametersList)
 {
-	parametersList.logMessages("Creating patches vector", __FILE__, __LINE__);
-	for (int i = 0; i < parametersList.numberOfPatches; i++)
+	parametersList->logMessages("Creating patches vector", __FILE__, __LINE__);
+	for (int i = 0; i < parametersList->numberOfPatches; i++)
 	{
 		Patch patch(parametersList, i);
 		patchesVector.push_back(patch);

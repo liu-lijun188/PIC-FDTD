@@ -10,6 +10,13 @@ Faces::Faces()
 {
 }
 
+// Constructor
+Faces::Faces(FaceBase baseFace)
+{
+	this->connectivity = baseFace.connectivity;
+	this->geometry = baseFace.geometry;
+}
+
 // Destructor
 Faces::~Faces()
 {

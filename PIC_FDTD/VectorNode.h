@@ -14,6 +14,7 @@ class VectorNode
 public:
 	VectorNode();	//!< Default constructor
 	~VectorNode();	//!< Destructor
+	void allocate(std::vector<NodeBase> nodes);	//!< Allocate nodes to nodes attribute
 
-	std::vector<Nodes> nodesVector;
+	std::vector<Nodes> nodes;
 };

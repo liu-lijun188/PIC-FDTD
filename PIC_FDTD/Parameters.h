@@ -13,10 +13,6 @@
 #include <vector>
 
 #include "GRID/grid.hpp"
-#include "VectorCell.h"
-#include "VectorFace.h"
-#include "VectorGhost.h"
-#include "VectorNode.h"
 
 //! \class Parameters 
 //! \brief Handles pre-processing of input parameters
@@ -29,8 +25,8 @@ private:
 	clock_t initialTime;
 
 	std::string meshFilePath;
-
 	std::string processedMeshFile = "processedMesh";
+
 	std::string tecplotMesh = "tecplotMeshC";
 	std::string tecplotSolution = "tecplotSolutionC";
 

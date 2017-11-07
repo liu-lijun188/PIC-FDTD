@@ -14,6 +14,7 @@ class VectorFace
 public:
 	VectorFace();	//!< Default constructor
 	~VectorFace();	//!< Destructor
+	void allocate(std::vector<FaceBase> faces);	//!< Allocate faces to faces attribute
 
-	std::vector<Faces> facesVector;
+	std::vector<Faces> faces;
 };

@@ -11,13 +11,13 @@ Patch::Patch()
 }
 
 // Constructor
-Patch::Patch(Parameters parametersList, int patchID)
+Patch::Patch(Parameters *parametersList, int patchID)
 {
 	this->patchID = patchID;
-	this->parametersList = parametersList;
-	parametersList.logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
-	particlesVector = VectorParticle(&parametersList, patchID);
-	mesh = Mesh(&parametersList);
+	this->parametersList = *parametersList;
+	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
+	mesh = Mesh(&this->parametersList);
+	particlesVector = VectorParticle(&this->parametersList, patchID);
 }
 
 // Destructor

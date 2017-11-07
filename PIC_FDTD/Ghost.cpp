@@ -10,6 +10,13 @@ Ghost::Ghost()
 {
 }
 
+// Constructor
+Ghost::Ghost(CellBase baseCell)
+{
+	this->connectivity = baseCell.connectivity;
+	this->geometry = baseCell.geometry;
+}
+
 // Destructor
 Ghost::~Ghost()
 {

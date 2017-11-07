@@ -12,6 +12,7 @@
 class Nodes : public NodeBase
 {
 public:
-	Nodes();	//!< Default constructor
-	~Nodes();	//!< Destructor
+	Nodes();					//!< Default constructor
+	Nodes(NodeBase baseNode);	//!< Constructor
+	~Nodes();					//!< Destructor
 };

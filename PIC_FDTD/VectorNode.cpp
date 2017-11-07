@@ -14,3 +14,13 @@ VectorNode::VectorNode()
 VectorNode::~VectorNode()
 {
 }
+
+// Allocate nodes to nodes attribute
+void VectorNode::allocate(std::vector<NodeBase> nodes)
+{
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		Nodes tempNode(nodes[i]);
+		this->nodes.push_back(tempNode);
+	}
+}

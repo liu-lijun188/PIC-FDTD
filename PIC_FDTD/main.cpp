@@ -14,7 +14,7 @@ int main()
 	parametersList.processMesh();			
 
 	// Commence simulation
-	Simulation simulation(parametersList);
+	Simulation simulation(&parametersList);
 
 	return 0;
 }

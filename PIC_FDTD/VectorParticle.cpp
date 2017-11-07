@@ -17,7 +17,10 @@ VectorParticle::VectorParticle(Parameters *parametersList, int patchID)
 
 	vector2D data;
 	
-	for (int i = 0; i < parametersList->gridinfo.NCM; i++)
+	// for (int i = 0; i < parametersList->gridinfo.NCM; i++)
+	
+	int numCells = 1;	// Just generate particles in a single cell
+	for (int i = 0; i < numCells; i++)
 	{
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
 		{
@@ -28,7 +31,8 @@ VectorParticle::VectorParticle(Parameters *parametersList, int patchID)
 		}
 	}
 	
-	parametersList->generateOutput(data, parametersList->gridinfo.NCM);
+	// parametersList->generateOutput(data, parametersList->gridinfo.NCM);
+	parametersList->generateOutput(data, numCells);
 }
 
 // Destructor

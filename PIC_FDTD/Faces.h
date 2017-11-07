@@ -12,6 +12,7 @@
 class Faces : public FaceBase
 {
 public:
-	Faces();	//!< Default constructor
-	~Faces();	//!< Destructor
+	Faces();					//!< Default constructor
+	Faces(FaceBase baseFace);	//!< Constructor
+	~Faces();					//!< Destructor
 };

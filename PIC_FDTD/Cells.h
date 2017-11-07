@@ -12,6 +12,7 @@
 class Cells : public CellBase
 {
 public:
-	Cells();	//!< Default constructor
-	~Cells();	//!< Destructor
+	Cells();					//!< Default constructor
+	Cells(CellBase baseCell);	//!< Constructor
+	~Cells();					//!< Destructor
 };
