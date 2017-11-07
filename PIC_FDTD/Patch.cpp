@@ -5,10 +5,12 @@
 
 #include "Patch.h"
 
+// Default constructor
 Patch::Patch()
 {
 }
 
+// Constructor
 Patch::Patch(Parameters parametersList, int patchID)
 {
 	this->patchID = patchID;
@@ -18,10 +20,12 @@ Patch::Patch(Parameters parametersList, int patchID)
 	mesh = Mesh(&parametersList);
 }
 
+// Destructor
 Patch::~Patch()
 {
 }
 
+// Start the PIC loop within a Patch object
 void Patch::startPIC()
 {
 	parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__);

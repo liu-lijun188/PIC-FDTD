@@ -5,11 +5,12 @@
 
 #include "Ghost.h"
 
+// Default constructor
 Ghost::Ghost()
 {
 }
 
-
+// Destructor
 Ghost::~Ghost()
 {
 }

@@ -5,10 +5,12 @@
 
 #include "Particle.h"
 
+// Default constructor
 Particle::Particle()
 {
 }
 
+// Constructor
 Particle::Particle(Parameters *parametersList, int patchID, int cellID, int particleID)
 {
 	parametersList->logMessages("Generating particle " + std::to_string(particleID) + 
@@ -59,11 +61,9 @@ Particle::Particle(Parameters *parametersList, int patchID, int cellID, int part
 	// Place particle in middle of cell
 	position.push_back((left + right) / 2);
 	position.push_back((top + bottom) / 2);
-
-	// Generate Tecplot output
-	parametersList->generateOutput(position);
 }
 
+// Destructor
 Particle::~Particle()
 {
 }

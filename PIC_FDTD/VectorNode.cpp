@@ -5,11 +5,12 @@
 
 #include "VectorNode.h"
 
+// Default constructor
 VectorNode::VectorNode()
 {
 }
 
-
+// Destructor
 VectorNode::~VectorNode()
 {
 }

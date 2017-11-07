@@ -5,11 +5,12 @@
 
 #include "VectorCell.h"
 
+// Default constructor
 VectorCell::VectorCell()
 {
 }
 
-
+// Destructor
 VectorCell::~VectorCell()
 {
 }

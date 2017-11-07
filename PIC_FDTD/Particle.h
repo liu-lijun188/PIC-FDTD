@@ -16,7 +16,8 @@ class Particle : public species
 {
 public:
 	Particle();									//!< Default constructor
-	Particle(Parameters *parametersList, int patchID, int cellID, int particleID);	//!< Constructor
+	Particle(Parameters *parametersList, int patchID, 
+		int cellID, int particleID);			//!< Constructor
 	~Particle();								//!< Destructor
 
 	std::vector<double> position;

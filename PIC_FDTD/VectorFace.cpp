@@ -5,11 +5,12 @@
 
 #include "VectorFace.h"
 
+// Default constructor
 VectorFace::VectorFace()
 {
 }
 
-
+// Destructor
 VectorFace::~VectorFace()
 {
 }

@@ -5,11 +5,12 @@
 
 #include "Cells.h"
 
+// Default constructor
 Cells::Cells()
 {
 }
 
-
+// Destructor
 Cells::~Cells()
 {
 }

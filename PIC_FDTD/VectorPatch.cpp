@@ -5,10 +5,12 @@
 
 #include "VectorPatch.h"
 
+// Default constructor
 VectorPatch::VectorPatch()
 {
 }
 
+// Constructor
 VectorPatch::VectorPatch(Parameters parametersList)
 {
 	parametersList.logMessages("Creating patches vector", __FILE__, __LINE__);
@@ -19,10 +21,12 @@ VectorPatch::VectorPatch(Parameters parametersList)
 	}
 }
 
+// Destructor
 VectorPatch::~VectorPatch()
 {
 }
 
+// Start the PIC loop within a VectorPatch object
 void VectorPatch::startPIC()
 {
 	for (unsigned int i = 0; i < patchesVector.size(); i++)

@@ -1336,7 +1336,7 @@ void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo,
     grid_tecplot.close();
 }
 
-void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data)
+void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N)
 {
 	// 1. Open File to write
 	std::string fileName;
@@ -1351,34 +1351,18 @@ void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data)
 	grid_tecplot << "FILETYPE = FULL" << std::endl;
 
 	grid_tecplot << std::scientific << std::setprecision(16) 
-		<< "VARIABLES = \"X\" \"Y\"" << std::scientific << std::endl;
+		<< "VARIABLES = \"X\" \"Y\" \"Cell_ID\"" << std::scientific << std::endl;
 
-	grid_tecplot << "ZONE I=1" << std::endl;
+	grid_tecplot << "ZONE I=" << N << std::endl;
 	grid_tecplot << "DATAPACKING = POINT" << std::endl;
 
 	// 3. Write Solution DATA
-
-	grid_tecplot << data[0] << " " << data[1] << std::endl;
+	
+	for (int i = 0; i < N; i++)
+	{
+		grid_tecplot << data[i][0] << " " << data[i][1] << " " << data[i][2]  << std::endl;
+	}
+	
 
 	grid_tecplot.close();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

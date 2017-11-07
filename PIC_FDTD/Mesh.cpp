@@ -5,17 +5,18 @@
 
 #include "Mesh.h"
 
+// Default constructor
 Mesh::Mesh()
 {
 }
 
-
+// Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {
 	this->localParametersList = *localParametersList;
 }
 
-
+// Destructor
 Mesh::~Mesh()
 {
 }

@@ -36,17 +36,17 @@ private:
 
 public:
 	Parameters();						//!< Default constructor
-	Parameters(std::string filename);		//!< Constructor
+	Parameters(std::string filename);	//!< Constructor
 	~Parameters();						//!< Destructor
 
-	void printValuesVector();			//!< Print raw input from valuesVector
-	void assignInputs();				//!< Assign values to member variables
-	void printMemberVariables();		//!< Print member variables
-	void processMesh();					//!< Process mesh file
-	void generateOutput(std::vector<double> data);				//!< Generate Tecplot output
-	void hitReturnToEnter();			//!< Keeps console window open
+	void printValuesVector();					//!< Print raw input from valuesVector
+	void assignInputs();						//!< Assign values to member variables
+	void printMemberVariables();				//!< Print member variables
+	void processMesh();							//!< Process mesh file
+	void generateOutput(vector2D data, int N);	//!< Generate Tecplot output
+	void hitReturnToEnter();					//!< Keeps console window open
 	void Parameters::logMessages(std::string message, 
-	   std::string filename, int line);	//!< Log messages and warnings
+		std::string filename, int line);		//!< Log messages and warnings
 
 	double timeStep;				
 	int maximumNumberOfIterations, numberOfPatches, particlesPerCell;

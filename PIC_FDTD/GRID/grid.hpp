@@ -235,7 +235,7 @@ void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo);
 void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata);
 void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
 void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
-void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data);
+void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N);
 
 
 /*

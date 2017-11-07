@@ -5,11 +5,12 @@
 
 #include "VectorGhost.h"
 
+// Default constructor
 VectorGhost::VectorGhost()
 {
 }
 
-
+// Destructor
 VectorGhost::~VectorGhost()
 {
 }

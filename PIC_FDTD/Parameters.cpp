@@ -24,7 +24,7 @@ Parameters::Parameters(std::string filename)
 	{
 		logMessages("Reading inputs", __FILE__, __LINE__);
 
-		while (!inputFile.eof())	// Until the end of the file is reached
+		while (!inputFile.eof())	// Continue until the end of the file is reached
 		{
 			// Check what the first character in each line is
 			firstCharacter = static_cast<char>(inputFile.get());
@@ -141,11 +141,11 @@ void Parameters::processMesh()
 }
 
 // Generate Tecplot output
-void Parameters::generateOutput(std::vector<double> data)
+void Parameters::generateOutput(vector2D data, int N)
 {
 	logMessages("Generating Tecplot output", __FILE__, __LINE__);
 	writeGridGeoTecplot(tecplotMesh, gridinfo, gridgeo);
-	writeSolutionXYTecplot(tecplotSolution, data);
+	writeSolutionXYTecplot(tecplotSolution, data, N); 
 }
 
 // Keeps console window open
@@ -170,7 +170,7 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 		{
 			currentTime = clock() - initialTime;
 			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << "\t\t" << 
-				message << " (" << filename << ", " << std::to_string(line) << ")" << std::endl;
+				message << " (" << filename << ", " << line << ")" << std::endl;
 			logFile.close();
 		}
 		else
@@ -188,7 +188,7 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 			
 			currentTime = clock() - initialTime;
 			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << "\t\t" <<
-				message << " (" << filename << ", " << std::to_string(line) << ")" << std::endl;
+				message << " (" << filename << ", " << line << ")" << std::endl;
 			logFile.close();
 		}
 		else

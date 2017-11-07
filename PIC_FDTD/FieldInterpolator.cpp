@@ -5,11 +5,12 @@
 
 #include "FieldInterpolator.h"
 
+// Default constructor
 FieldInterpolator::FieldInterpolator()
 {
 }
 
-
+// Destructor
 FieldInterpolator::~FieldInterpolator()
 {
 }

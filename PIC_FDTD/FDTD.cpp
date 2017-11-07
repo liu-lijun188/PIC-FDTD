@@ -5,11 +5,12 @@
 
 #include "FDTD.h"
 
+// Default constructor
 FDTD::FDTD()
 {
 }
 
-
+// Destructor
 FDTD::~FDTD()
 {
 }
