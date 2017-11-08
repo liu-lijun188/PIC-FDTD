@@ -41,7 +41,7 @@ public:
 	void processMesh();							//!< Process mesh file
 	void generateOutput(vector2D data, int N);	//!< Generate Tecplot output
 	void hitReturnToEnter();					//!< Keeps console window open
-	void Parameters::logMessages(std::string message, 
+	void logMessages(std::string message, 
 		std::string filename, int line);		//!< Log messages and warnings
 
 	double timeStep;				

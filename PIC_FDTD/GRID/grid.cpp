@@ -1243,9 +1243,147 @@ void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, Gri
     grid_tecplot.close();
 }
 
+/*
+void writeMeshTecplot(const std::string& title, Mesh& mesh)
+{
+	int maxNodeID = mesh.numNodes - 1;
+	int maxCellID = mesh.numCells - 1;
+	std::vector<int>    newNodeID(maxNodeID + 1);
+	std::vector<int>    newCellID(maxCellID + 1);
+
+	int NNM = 0;
+	for (int n = 1; n <= maxNodeID; n++)
+	{
+		newNodeID[n] = -1;
+
+		if (mesh.nodesVector.nodes[n].geometry.treat != -1)
+		{
+			NNM++;
+			newNodeID[n] = NNM;
+		}
+	}
+
+	int NCM = 0;
+	for (int c = 1; c <= maxCellID; c++)
+	{
+		if (mesh.cellsVector.cells[c].geometry.treat != -1)
+		{
+			NCM++;
+			newCellID[c] = NCM;
+		}
+	}
+
+	// 1. Open File to write
+	std::string fileName;
+	fileName = title + ".plt";
+
+	std::ofstream grid_tecplot;
+	grid_tecplot.open(fileName.c_str());
 
 
+	// 2. Write Header
+	grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+	grid_tecplot << "FILETYPE = GRID" << std::endl;
+	if (mesh.dimension == 2)	     grid_tecplot << std::scientific << std::setprecision(16) << "VARIABLES = \"X\" \"Y\" " << std::endl;
+	else if (mesh.dimension == 3)  grid_tecplot << std::scientific << std::setprecision(16) << "VARIABLES = \"X\" \"Y\" \"Z\" " << std::endl;
 
+	grid_tecplot << "ZONE" << std::endl;
+	grid_tecplot << "T=\"" << title << "\"" << std::endl;
+	grid_tecplot << "DATAPACKING= POINT" << std::endl;
+	grid_tecplot << "NODES=" << NNM << std::endl;
+	grid_tecplot << "ELEMENTS=" << NCM << std::endl;
+
+	if (mesh.dimension == 2)	    grid_tecplot << "ZONETYPE = FEQUADRILATERAL" << std::endl;
+	else if (mesh.dimension == 3) grid_tecplot << "ZONETYPE = FEBRICK" << std::endl;
+
+
+	// 3. Write Node Positions
+	for (int n = 1; n <= maxNodeID; n++)
+	{
+		if (newNodeID[n] != -1)
+		{
+			for (int d = 0; d < mesh.dimension; d++)
+			{
+				grid_tecplot << mesh.nodesVector.nodes[newNodeID[n]].geometry.X(d) << " ";
+			}
+			grid_tecplot << std::endl;
+		}
+	}
+	grid_tecplot << std::endl;
+
+
+	// 4. Write Cell Data
+	for (int c = 1; c <= maxCellID; c++)
+	{
+		if (newCellID[c] != -1)
+		{
+			int cID = newCellID[c];
+			switch (mesh.cellsVector.cells[cID].connectivity.type)
+			{
+			case TRI3:
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << std::endl;
+				break;
+
+			case QUAD4:
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << std::endl;
+				break;
+
+			case TETRA4:
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << std::endl;
+				break;
+
+			case HEXA8:
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[5]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[6]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[7]] << std::endl;
+				break;
+
+			case PRISM6:
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[5]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[5]] << std::endl;
+				break;
+
+			case PYRAMID5:
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
+				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << std::endl;
+				break;
+			}
+		}
+	}
+
+	grid_tecplot.close();
+}
+*/
 
 
 // Write Solution DATA

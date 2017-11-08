@@ -17,6 +17,7 @@ Mesh::Mesh(Parameters *localParametersList)
 	numFaces = localParametersList->gridinfo.NFM;
 	numGhost = localParametersList->gridinfo.NGM;
 	numNodes = localParametersList->gridinfo.NNM;
+	dimension = localParametersList->gridinfo.DIM;
 	
 	cellsVector.allocate(localParametersList->gridgeo.cells);
 	facesVector.allocate(localParametersList->gridgeo.faces);

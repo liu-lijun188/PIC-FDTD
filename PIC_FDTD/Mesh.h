@@ -20,7 +20,7 @@ public:
 	Mesh(Parameters *localParametersList);		//!< Constructor
 	~Mesh();									//!< Destructor
 
-	int numCells, numFaces, numGhost, numNodes;
+	int numCells, numFaces, numGhost, numNodes, dimension;
 	VectorCell cellsVector;
 	VectorFace facesVector;
 	VectorGhost ghostVector;
