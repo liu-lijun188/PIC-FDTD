@@ -6,15 +6,18 @@
 #pragma once
 
 #include "Particle.h"
+#include "Mesh.h"
 
 //! \class VectorParticle
 //! \brief Definition
 class VectorParticle
 {
 public:
-	VectorParticle();											//!< Default constructor
-	VectorParticle(Parameters *parametersList, int patchID);	//!< Constructor
-	~VectorParticle();											//!< Destructor
+	VectorParticle();							//!< Default constructor
+	VectorParticle(Parameters *parametersList,
+		Mesh *mesh, int patchID);				//!< Constructor
+	~VectorParticle();							//!< Destructor
 
-	vector<Particle> particleVector;
+	std::vector<Particle> particleVector;
+	vector2D positionVector;
 };

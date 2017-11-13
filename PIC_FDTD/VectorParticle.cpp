@@ -11,28 +11,20 @@ VectorParticle::VectorParticle()
 }
 
 // Constructor
-VectorParticle::VectorParticle(Parameters *parametersList, int patchID)
+VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
-
-	vector2D data;
 	
-	// for (int i = 0; i < parametersList->gridinfo.NCM; i++)
-	
-	int numCells = 1;	// Just generate particles in a single cell
-	for (int i = 0; i < numCells; i++)
+	for (int i = 0; i < mesh->numCells; i++)
 	{
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
 		{
 			Particle particle(parametersList, patchID, i, j);
 			particleVector.push_back(particle);
-			data.push_back(particle.position);
-			data[i].push_back(i);
+			positionVector.push_back(particle.position);
+			positionVector[i].push_back(i);
 		}
 	}
-	
-	// parametersList->generateOutput(data, parametersList->gridinfo.NCM);
-	parametersList->generateOutput(data, numCells);
 }
 
 // Destructor

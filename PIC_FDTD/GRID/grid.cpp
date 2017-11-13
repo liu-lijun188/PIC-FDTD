@@ -1245,13 +1245,13 @@ void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, Gri
 
 void writeMeshTecplot(const std::string& title, Mesh& mesh)
 {
-	int maxNodeID = mesh.numNodes - 1;
-	int maxCellID = mesh.numCells - 1;
-	std::vector<int>    newNodeID(maxNodeID + 1);
-	std::vector<int>    newCellID(maxCellID + 1);
+	int maxNodeID = mesh.numNodes;
+	int maxCellID = mesh.numCells;
+	std::vector<int>    newNodeID(maxNodeID);
+	std::vector<int>    newCellID(maxCellID);
 
 	int NNM = 0;
-	for (int n = 1; n <= maxNodeID; n++)
+	for (int n = 0; n < maxNodeID; n++)
 	{
 		newNodeID[n] = -1;
 
@@ -1263,7 +1263,7 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh)
 	}
 
 	int NCM = 0;
-	for (int c = 1; c <= maxCellID; c++)
+	for (int c = 0; c < maxCellID; c++)
 	{
 		if (mesh.cellsVector.cells[c].geometry.treat != -1)
 		{
@@ -1297,13 +1297,13 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh)
 
 
 	// 3. Write Node Positions
-	for (int n = 1; n <= maxNodeID; n++)
+	for (int n = 0; n < maxNodeID; n++)
 	{
 		if (newNodeID[n] != -1)
 		{
 			for (int d = 0; d < mesh.dimension; d++)
 			{
-				grid_tecplot << mesh.nodesVector.nodes[newNodeID[n]].geometry.X(d) << " ";
+				grid_tecplot << mesh.nodesVector.nodes[newNodeID[n] - 1].geometry.X(d) << " ";
 			}
 			grid_tecplot << std::endl;
 		}
@@ -1312,71 +1312,16 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh)
 
 
 	// 4. Write Cell Data
-	for (int c = 1; c <= maxCellID; c++)
+	for (int c = 0; c < maxCellID; c++)
 	{
 		if (newCellID[c] != -1)
 		{
-			int cID = newCellID[c];
-			switch (mesh.cellsVector.cells[cID].connectivity.type)
-			{
-			case TRI3:
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << std::endl;
-				break;
+			int cID = newCellID[c] - 1;
 
-			case QUAD4:
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << std::endl;
-				break;
-
-			case TETRA4:
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << std::endl;
-				break;
-
-			case HEXA8:
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[5]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[6]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[7]] << std::endl;
-				break;
-
-			case PRISM6:
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[5]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[5]] << std::endl;
-				break;
-
-			case PYRAMID5:
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << " ";
-				grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[4]] << std::endl;
-				break;
-			}
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0] - 1] << " ";
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1] - 1] << " ";
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2] - 1] << " ";
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3] - 1] << std::endl;
 		}
 	}
 

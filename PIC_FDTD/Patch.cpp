@@ -17,12 +17,21 @@ Patch::Patch(Parameters *parametersList, int patchID)
 	this->parametersList = *parametersList;
 	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
 	mesh = Mesh(&this->parametersList);
-	particlesVector = VectorParticle(&this->parametersList, patchID);
+	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
+	generateOutput(particlesVector.positionVector, mesh.numCells);
 }
 
 // Destructor
 Patch::~Patch()
 {
+}
+
+// Generate Tecplot output
+void Patch::generateOutput(vector2D data, int N)
+{
+	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
+	writeMeshTecplot(tecplotMesh, mesh);
+	writeSolutionXYTecplot(tecplotSolution, data, N);
 }
 
 // Start the PIC loop within a Patch object

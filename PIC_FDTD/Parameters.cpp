@@ -140,14 +140,6 @@ void Parameters::processMesh()
 	processingGrid(gridinfo, gridgeo);
 }
 
-// Generate Tecplot output
-void Parameters::generateOutput(vector2D data, int N)
-{
-	logMessages("Generating Tecplot output", __FILE__, __LINE__);
-	writeGridGeoTecplot(tecplotMesh, gridinfo, gridgeo);
-	writeSolutionXYTecplot(tecplotSolution, data, N); 
-}
-
 // Keeps console window open
 void Parameters::hitReturnToEnter()
 {

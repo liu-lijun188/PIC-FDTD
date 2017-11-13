@@ -8,8 +8,6 @@
 #include "Parameters.h"
 #include "CHEM\species.hpp"
 
-using namespace std;
-
 //! \class Particle
 //! \brief Definition
 class Particle : public species
