@@ -9,7 +9,7 @@
 timeStep: 0.2
 maximumNumberOfIterations: 10 
 numberOfPatches: 1
-particlesPerPatch: 1
+particlesPerCell: 1
 
 % Some paths
 meshFilePath: coarseMesh.su2

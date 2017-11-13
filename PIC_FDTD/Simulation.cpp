@@ -5,21 +5,25 @@
 
 #include "Simulation.h"
 
+// Default constructor
 Simulation::Simulation()
 {
 }
 
-Simulation::Simulation(Parameters parametersList)
+// Constructor
+Simulation::Simulation(Parameters *parametersList)
 {
-	parametersList.logMessages("Starting simulation...");
+	parametersList->logMessages("Starting simulation", __FILE__, __LINE__);
 	VectorPatch patchesVector(parametersList);
 	patchesVector.startPIC();
 }
 
+// Destructor
 Simulation::~Simulation()
 {
 }
 
+// Perform load balancing across patches
 void Simulation::loadBalance()
 {
 }

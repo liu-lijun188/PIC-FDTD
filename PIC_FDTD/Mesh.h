@@ -5,7 +5,13 @@
 
 #pragma once
 
-#include "Parameters.h"
+
+#include "VectorCell.h"
+#include "VectorFace.h"
+#include "VectorGhost.h"
+#include "VectorNode.h"
+
+class Parameters;		// Forward declaration to resolve circular dependency
 
 //! \class Mesh
 //! \brief Definition
@@ -15,7 +21,10 @@ public:
 	Mesh();										//!< Default constructor
 	Mesh(Parameters *localParametersList);		//!< Constructor
 	~Mesh();									//!< Destructor
-	void checkMesh();							//!< Checks the mesh
 
-	Parameters localParametersList;				
+	int numCells, numFaces, numGhost, numNodes, dimension;
+	VectorCell cellsVector;
+	VectorFace facesVector;
+	VectorGhost ghostVector;
+	VectorNode nodesVector;
 };

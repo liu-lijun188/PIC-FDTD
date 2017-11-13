@@ -14,7 +14,7 @@ class Simulation
 {
 public: 
 	Simulation();							//!< Default constructor
-	Simulation(Parameters parametersList);	//!< Constructor
+	Simulation(Parameters *parametersList);	//!< Constructor
 	~Simulation();							//!< Destructor
 	void loadBalance();						//!< Perform load balancing across patches
 };

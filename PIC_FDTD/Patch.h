@@ -23,13 +23,19 @@ using namespace std;
 //! \brief Definition
 class Patch
 {
-public:
-	Patch();							//!< Default constructor
-	Patch(Parameters parametersList);	//!< Constructor
-	~Patch();							//!< Destructor
-	void startPIC();					//!< Start the PIC loop within a Patch object
+private:
+	std::string tecplotMesh = "tecplotMeshC";
+	std::string tecplotSolution = "tecplotSolutionC";
 
-	Parameters localParametersList;
+public:
+	Patch();										//!< Default constructor
+	Patch(Parameters *parametersList, int patchID);	//!< Constructor
+	~Patch();										//!< Destructor
+	void generateOutput(vector2D data, int N);		//!< Generate Tecplot output
+	void startPIC();								//!< Start the PIC loop within a Patch object
+	
+	int patchID;
+	Parameters parametersList;
 	Mesh mesh;
 	VectorParticle particlesVector;
 };

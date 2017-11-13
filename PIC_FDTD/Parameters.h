@@ -13,10 +13,6 @@
 #include <vector>
 
 #include "GRID/grid.hpp"
-#include "VectorCell.h"
-#include "VectorFace.h"
-#include "VectorGhost.h"
-#include "VectorNode.h"
 
 //! \class Parameters 
 //! \brief Handles pre-processing of input parameters
@@ -29,32 +25,24 @@ private:
 	clock_t initialTime;
 
 	std::string meshFilePath;
-	GridBasicInfo gridinfo;
-	GridGeo gridgeo;
-
 	std::string processedMeshFile = "processedMesh";
-	std::string tecplotMesh = "tecplotMeshC";
-	std::string tecplotSolution = "tecplotSolutionC";
 
 public:
 	Parameters();						//!< Default constructor
-	Parameters(std::string filename);		//!< Constructor
+	Parameters(std::string filename);	//!< Constructor
 	~Parameters();						//!< Destructor
 
-	void printValuesVector();			//!< Print raw input from valuesVector
-	void assignInputs();				//!< Assign values to member variables
-	void printMemberVariables();		//!< Print member variables
-	void processMesh();					//!< Process mesh file
-	void generateOutput();				//!< Generate Tecplot output
-	void hitReturnToEnter();			//!< Keeps console window open
-	void logMessages(std::string message);	//!< Log messages and warnings
+	void printValuesVector();					//!< Print raw input from valuesVector
+	void assignInputs();						//!< Assign values to member variables
+	void printMemberVariables();				//!< Print member variables
+	void processMesh();							//!< Process mesh file
+	void hitReturnToEnter();					//!< Keeps console window open
+	void logMessages(std::string message, 
+		std::string filename, int line);		//!< Log messages and warnings
 
 	double timeStep;				
-	int maximumNumberOfIterations, numberOfPatches, particlesPerPatch;
+	int maximumNumberOfIterations, numberOfPatches, particlesPerCell;
 
-	VectorCell localCellsVector;
-	VectorFace localFacesVector;
-	VectorGhost localGhostVector;
-	VectorNode localNodesVector;
-
+	GridBasicInfo gridinfo;
+	GridGeo gridgeo;
 };

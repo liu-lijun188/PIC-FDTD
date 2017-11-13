@@ -5,11 +5,12 @@
 
 #include "FieldSolver.h"
 
+// Default constructor
 FieldSolver::FieldSolver()
 {
 }
 
-
+// Destructor
 FieldSolver::~FieldSolver()
 {
 }

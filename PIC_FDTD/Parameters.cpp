@@ -22,9 +22,9 @@ Parameters::Parameters(std::string filename)
 
 	if (inputFile.is_open())
 	{
-		logMessages("Reading inputs...");
+		logMessages("Reading inputs", __FILE__, __LINE__);
 
-		while (!inputFile.eof())	// Until the end of the file is reached
+		while (!inputFile.eof())	// Continue until the end of the file is reached
 		{
 			// Check what the first character in each line is
 			firstCharacter = static_cast<char>(inputFile.get());
@@ -46,7 +46,7 @@ Parameters::Parameters(std::string filename)
 	}
 	else
 	{
-		logMessages("Unable to open input file");
+		logMessages("Unable to open input file!!!", __FILE__, __LINE__);
 		fileNotOpened = true;
 	}
 }
@@ -80,7 +80,7 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for time step!!!");
+			logMessages("Invalid argument detected for time step!!!", __FILE__, __LINE__);
 		}
 
 		try
@@ -89,7 +89,7 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for maximum number of iterations!!!");
+			logMessages("Invalid argument detected for maximum number of iterations!!!", __FILE__, __LINE__);
 		}
 		
 		try
@@ -98,16 +98,16 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for number of patches!!!");
+			logMessages("Invalid argument detected for number of patches!!!", __FILE__, __LINE__);
 		}
 		
 		try
 		{
-			particlesPerPatch = stoi(valuesVector[3]);
+			particlesPerCell = stoi(valuesVector[3]);
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for particles per patch!!!");
+			logMessages("Invalid argument detected for particles per cell!!!", __FILE__, __LINE__);
 		}
 
 		try
@@ -116,7 +116,7 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for mesh file path!!!");
+			logMessages("Invalid argument detected for mesh file path!!!", __FILE__, __LINE__);
 		}
 	}
 }
@@ -127,27 +127,17 @@ void Parameters::printMemberVariables()
 	std::cout << "Time step: " << timeStep << std::endl;
 	std::cout << "Maximum number of iterations: " << maximumNumberOfIterations << std::endl;
 	std::cout << "Number of patches: " << numberOfPatches << std::endl;
-	std::cout << "Particle per patch: " << particlesPerPatch << std::endl;
+	std::cout << "Particle per cell: " << particlesPerCell << std::endl;
 	std::cout << "Mesh file path: " << meshFilePath << std::endl;
 }
 
 // Process mesh file
 void Parameters::processMesh()
 {
-	logMessages("Extracting mesh data...");
+	logMessages("Extracting mesh data", __FILE__, __LINE__);
 	precessingGridSU2(meshFilePath, processedMeshFile);
 	readGridFromFile(processedMeshFile + ".op2", gridinfo, gridgeo);
 	processingGrid(gridinfo, gridgeo);
-}
-
-// Generate Tecplot output
-void Parameters::generateOutput()
-{
-	writeGridGeoTecplot(tecplotMesh, gridinfo, gridgeo);
-
-	std::vector<double> data{ 0.07, 0.03 };
-
-	writeSolutionXYTecplot(tecplotSolution, data);
 }
 
 // Keeps console window open
@@ -161,7 +151,7 @@ void Parameters::hitReturnToEnter()
 }
 
 // Log messages and warnings
-void Parameters::logMessages(std::string message)
+void Parameters::logMessages(std::string message, std::string filename, int line)
 {
 	clock_t currentTime;
 	if (!firstLog)
@@ -171,12 +161,13 @@ void Parameters::logMessages(std::string message)
 		if (logFile.is_open())
 		{
 			currentTime = clock() - initialTime;
-			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << ' ' << message << std::endl;
+			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << "\t\t" << 
+				message << " (" << filename << ", " << line << ")" << std::endl;
 			logFile.close();
 		}
 		else
 		{
-			std::cout << "Unable to open log file" << std::endl;
+			std::cout << "Unable to open log file!!!" << std::endl;
 		}
 		std::cout << message << std::endl;
 	}
@@ -188,12 +179,13 @@ void Parameters::logMessages(std::string message)
 		{
 			
 			currentTime = clock() - initialTime;
-			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << ' ' << message << std::endl;
+			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << "\t\t" <<
+				message << " (" << filename << ", " << line << ")" << std::endl;
 			logFile.close();
 		}
 		else
 		{
-			std::cout << "Unable to open log file" << std::endl;
+			std::cout << "Unable to open log file!!!" << std::endl;
 		}
 		firstLog = false;
 	}

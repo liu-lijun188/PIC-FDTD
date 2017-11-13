@@ -14,6 +14,7 @@ class VectorGhost
 public:
 	VectorGhost();	//!< Default constructor
 	~VectorGhost();	//!< Destructor
+	void allocate(std::vector<CellBase> cells);	//!< Allocate cells to ghosts attribute
 
-	std::vector<Ghost> ghostVector;
+	std::vector<Ghost> ghosts;
 };

@@ -5,11 +5,12 @@
 
 #include "ChargeProjector.h"
 
+// Default constructor
 ChargeProjector::ChargeProjector()
 {
 }
 
-
+// Destructor
 ChargeProjector::~ChargeProjector()
 {
 }

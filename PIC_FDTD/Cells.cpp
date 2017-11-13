@@ -5,11 +5,19 @@
 
 #include "Cells.h"
 
+// Default constructor
 Cells::Cells()
 {
 }
 
+// Constructor
+Cells::Cells(CellBase baseCell)
+{
+	this->connectivity = baseCell.connectivity;
+	this->geometry = baseCell.geometry;
+}
 
+// Destructor
 Cells::~Cells()
 {
 }

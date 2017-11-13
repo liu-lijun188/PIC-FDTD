@@ -8,14 +8,15 @@
 #include "Parameters.h"
 #include "CHEM\species.hpp"
 
-using namespace std;
-
 //! \class Particle
 //! \brief Definition
 class Particle : public species
 {
 public:
 	Particle();									//!< Default constructor
-	Particle(Parameters *localParametersList);	//!< Constructor
+	Particle(Parameters *parametersList, int patchID, 
+		int cellID, int particleID);			//!< Constructor
 	~Particle();								//!< Destructor
+
+	std::vector<double> position;
 };

@@ -13,7 +13,7 @@ class VectorPatch
 {
 public:
 	VectorPatch();								//!< Default constructor
-	VectorPatch(Parameters parametersList);		//!< Constructor
+	VectorPatch(Parameters *parametersList);	//!< Constructor
 	~VectorPatch();								//!< Destructor
 	void startPIC();							//!< Start the PIC loop within a VectorPatch object
 

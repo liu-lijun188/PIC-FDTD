@@ -5,13 +5,14 @@
 
 #pragma once
 
-#include "Cells.h"
+#include "GRID\cell.hpp"
 
 //! \class Ghost
 //! \brief Definition
-class Ghost : public Cells
+class Ghost : public CellBase
 {
 public:
-	Ghost();	//!< Default constructor
-	~Ghost();	//!< Destructor
+	Ghost();					//!< Default constructor
+	Ghost(CellBase baseCell);	//!< Constructor
+	~Ghost();					//!< Destructor
 };

@@ -5,27 +5,40 @@
 
 #include "Patch.h"
 
+// Default constructor
 Patch::Patch()
 {
 }
 
-Patch::Patch(Parameters parametersList)
+// Constructor
+Patch::Patch(Parameters *parametersList, int patchID)
 {
-	localParametersList = parametersList;
-	localParametersList.logMessages("Initialising patch...");
-	particlesVector = VectorParticle(&localParametersList);
-	mesh = Mesh(&localParametersList);
-	mesh.checkMesh();
+	this->patchID = patchID;
+	this->parametersList = *parametersList;
+	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
+	mesh = Mesh(&this->parametersList);
+	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
+	generateOutput(particlesVector.positionVector, mesh.numCells);
 }
 
+// Destructor
 Patch::~Patch()
 {
 }
 
+// Generate Tecplot output
+void Patch::generateOutput(vector2D data, int N)
+{
+	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
+	writeMeshTecplot(tecplotMesh, mesh);
+	writeSolutionXYTecplot(tecplotSolution, data, N);
+}
+
+// Start the PIC loop within a Patch object
 void Patch::startPIC()
 {
-	localParametersList.logMessages("Starting PIC loop...");
-	for (int i = 0; i < localParametersList.maximumNumberOfIterations; i++)
+	parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__);
+	for (int i = 0; i < parametersList.maximumNumberOfIterations; i++)
 	{
 		ParticlePusher pusher();
 		MCC collisions();

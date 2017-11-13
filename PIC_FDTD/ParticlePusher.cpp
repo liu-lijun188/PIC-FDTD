@@ -5,11 +5,12 @@
 
 #include "ParticlePusher.h"
 
+// Default constructor
 ParticlePusher::ParticlePusher()
 {
 }
 
-
+// Destructor
 ParticlePusher::~ParticlePusher()
 {
 }

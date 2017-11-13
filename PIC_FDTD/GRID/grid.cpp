@@ -8,7 +8,6 @@
 
 #include "grid.hpp"
 
-
 ///////////////////////
 // Classes for Grid
 ///////////////////////
@@ -1244,7 +1243,90 @@ void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, Gri
 }
 
 
+void writeMeshTecplot(const std::string& title, Mesh& mesh)
+{
+	int maxNodeID = mesh.numNodes;
+	int maxCellID = mesh.numCells;
+	std::vector<int>    newNodeID(maxNodeID);
+	std::vector<int>    newCellID(maxCellID);
 
+	int NNM = 0;
+	for (int n = 0; n < maxNodeID; n++)
+	{
+		newNodeID[n] = -1;
+
+		if (mesh.nodesVector.nodes[n].geometry.treat != -1)
+		{
+			NNM++;
+			newNodeID[n] = NNM;
+		}
+	}
+
+	int NCM = 0;
+	for (int c = 0; c < maxCellID; c++)
+	{
+		if (mesh.cellsVector.cells[c].geometry.treat != -1)
+		{
+			NCM++;
+			newCellID[c] = NCM;
+		}
+	}
+
+	// 1. Open File to write
+	std::string fileName;
+	fileName = title + ".plt";
+
+	std::ofstream grid_tecplot;
+	grid_tecplot.open(fileName.c_str());
+
+
+	// 2. Write Header
+	grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+	grid_tecplot << "FILETYPE = GRID" << std::endl;
+	if (mesh.dimension == 2)	     grid_tecplot << std::scientific << std::setprecision(16) << "VARIABLES = \"X\" \"Y\" " << std::endl;
+	else if (mesh.dimension == 3)  grid_tecplot << std::scientific << std::setprecision(16) << "VARIABLES = \"X\" \"Y\" \"Z\" " << std::endl;
+
+	grid_tecplot << "ZONE" << std::endl;
+	grid_tecplot << "T=\"" << title << "\"" << std::endl;
+	grid_tecplot << "DATAPACKING= POINT" << std::endl;
+	grid_tecplot << "NODES=" << NNM << std::endl;
+	grid_tecplot << "ELEMENTS=" << NCM << std::endl;
+
+	if (mesh.dimension == 2)	    grid_tecplot << "ZONETYPE = FEQUADRILATERAL" << std::endl;
+	else if (mesh.dimension == 3) grid_tecplot << "ZONETYPE = FEBRICK" << std::endl;
+
+
+	// 3. Write Node Positions
+	for (int n = 0; n < maxNodeID; n++)
+	{
+		if (newNodeID[n] != -1)
+		{
+			for (int d = 0; d < mesh.dimension; d++)
+			{
+				grid_tecplot << mesh.nodesVector.nodes[newNodeID[n] - 1].geometry.X(d) << " ";
+			}
+			grid_tecplot << std::endl;
+		}
+	}
+	grid_tecplot << std::endl;
+
+
+	// 4. Write Cell Data
+	for (int c = 0; c < maxCellID; c++)
+	{
+		if (newCellID[c] != -1)
+		{
+			int cID = newCellID[c] - 1;
+
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[0] - 1] << " ";
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[1] - 1] << " ";
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[2] - 1] << " ";
+			grid_tecplot << newNodeID[mesh.cellsVector.cells[cID].connectivity.nodeIDs[3] - 1] << std::endl;
+		}
+	}
+
+	grid_tecplot.close();
+}
 
 
 
@@ -1336,7 +1418,7 @@ void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo,
     grid_tecplot.close();
 }
 
-void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data)
+void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N)
 {
 	// 1. Open File to write
 	std::string fileName;
@@ -1351,34 +1433,18 @@ void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data)
 	grid_tecplot << "FILETYPE = FULL" << std::endl;
 
 	grid_tecplot << std::scientific << std::setprecision(16) 
-		<< "VARIABLES = \"X\" \"Y\"" << std::scientific << std::endl;
+		<< "VARIABLES = \"X\" \"Y\" \"Cell_ID\"" << std::scientific << std::endl;
 
-	grid_tecplot << "ZONE I=1" << std::endl;
+	grid_tecplot << "ZONE I=" << N << std::endl;
 	grid_tecplot << "DATAPACKING = POINT" << std::endl;
 
 	// 3. Write Solution DATA
-
-	grid_tecplot << data[0] << " " << data[1] << std::endl;
+	
+	for (int i = 0; i < N; i++)
+	{
+		grid_tecplot << data[i][0] << " " << data[i][1] << " " << data[i][2]  << std::endl;
+	}
+	
 
 	grid_tecplot.close();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

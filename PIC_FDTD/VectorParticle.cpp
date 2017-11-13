@@ -5,21 +5,29 @@
 
 #include "VectorParticle.h"
 
+// Default constructor
 VectorParticle::VectorParticle()
 {
 }
 
-VectorParticle::VectorParticle(Parameters *localParametersList)
+// Constructor
+VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
-	localParametersList->logMessages("Creating particles vector...");
-	for (int i = 0; i < localParametersList->particlesPerPatch; i++)
+	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
+	
+	for (int i = 0; i < mesh->numCells; i++)
 	{
-		Particle particle(localParametersList);
-		particleVector.push_back(particle);
+		for (int j = 0; j < parametersList->particlesPerCell; j++)
+		{
+			Particle particle(parametersList, patchID, i, j);
+			particleVector.push_back(particle);
+			positionVector.push_back(particle.position);
+			positionVector[i].push_back(i);
+		}
 	}
 }
 
-
+// Destructor
 VectorParticle::~VectorParticle()
 {
 }

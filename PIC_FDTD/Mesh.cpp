@@ -3,24 +3,30 @@
 //! \author Rahul Kalampattel
 //! \date Last updated October 2017
 
+#include "Parameters.h"
 #include "Mesh.h"
 
+// Default constructor
 Mesh::Mesh()
 {
 }
 
-
+// Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {
-	this->localParametersList = *localParametersList;
+	numCells = localParametersList->gridinfo.NCM;
+	numFaces = localParametersList->gridinfo.NFM;
+	numGhost = localParametersList->gridinfo.NGM;
+	numNodes = localParametersList->gridinfo.NNM;
+	dimension = localParametersList->gridinfo.DIM;
+	
+	cellsVector.allocate(localParametersList->gridgeo.cells);
+	facesVector.allocate(localParametersList->gridgeo.faces);
+	ghostVector.allocate(localParametersList->gridgeo.ghost);
+	nodesVector.allocate(localParametersList->gridgeo.nodes);
 }
 
-
+// Destructor
 Mesh::~Mesh()
 {
-}
-
-void Mesh::checkMesh()
-{
-	localParametersList.logMessages("Checking mesh...");
 }

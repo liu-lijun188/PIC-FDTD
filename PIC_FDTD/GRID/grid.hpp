@@ -35,6 +35,7 @@
 #include "cell.hpp"
 #include "grid_def.hpp"
 
+#include "../Mesh.h"
 
 ///////////////////////
 // Classes for Grid
@@ -232,10 +233,13 @@ void precessingGridFLUENT(const std::string& mesh_file_name_Fluent, std::string&
 
 void readGridFromFile(const std::string& mesh_file_name, GridBasicInfo& gridinfo, GridGeo& gridgeo);
 void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo);
+
 void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata);
+void writeMeshTecplot(const std::string& title, Mesh& mesh);
+
 void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
 void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
-void writeSolutionXYTecplot(const std::string& title, std::vector<double>& data);
+void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N);
 
 
 /*
