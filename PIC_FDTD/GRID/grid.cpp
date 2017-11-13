@@ -8,7 +8,6 @@
 
 #include "grid.hpp"
 
-
 ///////////////////////
 // Classes for Grid
 ///////////////////////
@@ -1243,7 +1242,7 @@ void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, Gri
     grid_tecplot.close();
 }
 
-/*
+
 void writeMeshTecplot(const std::string& title, Mesh& mesh)
 {
 	int maxNodeID = mesh.numNodes - 1;
@@ -1383,7 +1382,7 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh)
 
 	grid_tecplot.close();
 }
-*/
+
 
 
 // Write Solution DATA

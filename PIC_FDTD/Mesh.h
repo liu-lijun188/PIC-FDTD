@@ -5,11 +5,13 @@
 
 #pragma once
 
-#include "Parameters.h"
+
 #include "VectorCell.h"
 #include "VectorFace.h"
 #include "VectorGhost.h"
 #include "VectorNode.h"
+
+class Parameters;		// Forward declaration to resolve circular dependency
 
 //! \class Mesh
 //! \brief Definition
