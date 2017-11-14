@@ -6,7 +6,6 @@
 #pragma once
 
 #include "Particle.h"
-#include "Mesh.h"
 
 //! \class VectorParticle
 //! \brief Definition
@@ -18,6 +17,9 @@ public:
 		Mesh *mesh, int patchID);				//!< Constructor
 	~VectorParticle();							//!< Destructor
 
+	void updatePositionVector(Particle *particle);
+
 	std::vector<Particle> particleVector;
+	int numParticles = 0;
 	vector2D positionVector;
 };

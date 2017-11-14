@@ -31,10 +31,11 @@ public:
 	Patch();										//!< Default constructor
 	Patch(Parameters *parametersList, int patchID);	//!< Constructor
 	~Patch();										//!< Destructor
-	void generateOutput(vector2D data, int N);		//!< Generate Tecplot output
+	void generateOutput(std::string solutionName, vector2D data, int N);		//!< Generate Tecplot output
 	void startPIC();								//!< Start the PIC loop within a Patch object
 	
 	int patchID;
+	double t = 0;
 	Parameters parametersList;
 	Mesh mesh;
 	VectorParticle particlesVector;

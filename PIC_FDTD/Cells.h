@@ -15,4 +15,5 @@ public:
 	Cells();					//!< Default constructor
 	Cells(CellBase baseCell);	//!< Constructor
 	~Cells();					//!< Destructor
+	std::vector<int> listOfParticles;
 };

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Parameters.h"
+#include "Mesh.h"
 #include "CHEM\species.hpp"
 
 //! \class Particle
@@ -14,9 +15,13 @@ class Particle : public species
 {
 public:
 	Particle();									//!< Default constructor
-	Particle(Parameters *parametersList, int patchID, 
+	Particle(Parameters *parametersList, Mesh *mesh, int patchID,
 		int cellID, int particleID);			//!< Constructor
 	~Particle();								//!< Destructor
 
+	int particleID;
+	int cellID;
+	double left, right, top, bottom;
 	std::vector<double> position;
+	std::vector<double> velocity;
 };

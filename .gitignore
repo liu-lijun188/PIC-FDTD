@@ -271,3 +271,5 @@ __pycache__/
 /PIC_FDTD/processedMesh.op2
 /PIC_FDTD/tecplotSolutionC.plt
 /PIC_FDTD/tecplotSolutionF.plt
+/PIC_FDTD/0tecplotSolutionC.plt
+/PIC_FDTD/1tecplotSolutionC.plt

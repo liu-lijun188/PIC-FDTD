@@ -30,3 +30,8 @@ Mesh::Mesh(Parameters *localParametersList)
 Mesh::~Mesh()
 {
 }
+
+void Mesh::addParticlesToCell(int cellID, int particleID)
+{
+	cellsVector.cells[cellID].listOfParticles.push_back(particleID);
+}

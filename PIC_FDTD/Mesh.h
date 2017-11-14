@@ -22,6 +22,8 @@ public:
 	Mesh(Parameters *localParametersList);		//!< Constructor
 	~Mesh();									//!< Destructor
 
+	void addParticlesToCell(int cellID, int particleID);
+
 	int numCells, numFaces, numGhost, numNodes, dimension;
 	VectorCell cellsVector;
 	VectorFace facesVector;
