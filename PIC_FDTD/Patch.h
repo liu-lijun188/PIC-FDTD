@@ -25,17 +25,17 @@ class Patch
 {
 private:
 	std::string tecplotMesh = "tecplotMeshC";
-	std::string tecplotSolution = "tecplotSolutionC";
+	std::string tecplotSolution_T = "tecplotSolutionC_T";
 
 public:
 	Patch();										//!< Default constructor
 	Patch(Parameters *parametersList, int patchID);	//!< Constructor
 	~Patch();										//!< Destructor
-	void generateOutput(std::string solutionName, vector2D data, int N);		//!< Generate Tecplot output
+	void generateOutput(std::string solutionName, vector2D data, double t);		//!< Generate Tecplot output
 	void startPIC();								//!< Start the PIC loop within a Patch object
 	
 	int patchID;
-	double t = 0;
+	double t = 0.0;
 	Parameters parametersList;
 	Mesh mesh;
 	VectorParticle particlesVector;

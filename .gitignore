@@ -273,3 +273,7 @@ __pycache__/
 /PIC_FDTD/tecplotSolutionF.plt
 /PIC_FDTD/0tecplotSolutionC.plt
 /PIC_FDTD/1tecplotSolutionC.plt
+/PIC_FDTD/tecplotSolutionC0.plt
+/PIC_FDTD/tecplotSolutionC1.plt
+/PIC_FDTD/tecplotSolutionCT.plt
+/PIC_FDTD/tecplotSolutionC_T.plt

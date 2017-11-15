@@ -239,7 +239,8 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh);
 
 void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
 void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
-void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N);
+void writeSolutionXY_N_Tecplot(const std::string& title, vector2D& data, int N);
+void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, double t);
 
 
 /*

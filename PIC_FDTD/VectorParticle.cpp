@@ -21,12 +21,12 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 	{
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
 		{
-			Particle particle(parametersList, mesh, patchID, i, j);
+			Particle particle(parametersList, mesh, patchID, i, j + 1);
 			particleVector.push_back(particle);
 			numParticles += 1;
 			positionVector.push_back(particle.position);
-			positionVector[i].push_back(i);
-			mesh->addParticlesToCell(i, j);
+			positionVector[i].push_back(particle.particleID);
+			mesh->addParticlesToCell(i, particle.particleID);
 		}
 	}
 }
@@ -40,5 +40,5 @@ void VectorParticle::updatePositionVector(Particle *particle)
 {
 	positionVector.pop_back();
 	positionVector.push_back(particle->position);
-	positionVector[particle->particleID].push_back(particle->particleID);
+	positionVector[particle->cellID].push_back(particle->particleID);
 }

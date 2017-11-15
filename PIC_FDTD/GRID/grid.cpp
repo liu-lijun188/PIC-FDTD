@@ -1418,7 +1418,7 @@ void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo,
     grid_tecplot.close();
 }
 
-void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N)
+void writeSolutionXY_N_Tecplot(const std::string& title, vector2D& data, int N)
 {
 	// 1. Open File to write
 	std::string fileName;
@@ -1438,6 +1438,7 @@ void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N)
 	grid_tecplot << "ZONE I=" << N << std::endl;
 	grid_tecplot << "DATAPACKING = POINT" << std::endl;
 
+
 	// 3. Write Solution DATA
 	
 	for (int i = 0; i < N; i++)
@@ -1447,4 +1448,53 @@ void writeSolutionXYTecplot(const std::string& title, vector2D& data, int N)
 	
 
 	grid_tecplot.close();
+}
+
+void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, double t)
+{
+	if (t == 0.0)
+	{
+		// 1. Open File to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str());
+
+
+		// 2. Write Header
+		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+		grid_tecplot << "FILETYPE = FULL" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"STRANDID\" \"SOLUTIONTIME\"" << std::endl;
+		grid_tecplot << "ZONE DATAPACKING = POINT, T=\"" << t << " seconds\", I=1" << std::endl;
+
+
+		// 3. Write Solution DATA
+
+		grid_tecplot << std::scientific << std::setprecision(16) << data[0][0] 
+			<< " " << data[0][1] << " " << static_cast<int>(data[0][2]) << " " << t << std::scientific << std::endl;
+
+		grid_tecplot.close();
+	}
+	else if (t > 0.0)
+	{
+		// 1. Open File to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str(), std::ios::app);
+
+
+		// 2. Write Header
+		grid_tecplot << "ZONE DATAPACKING = POINT, T=\"" << t << " seconds\", I=1" << std::endl;
+
+
+		// 3. Write Solution DATA
+
+		grid_tecplot << std::scientific << std::setprecision(16) << data[0][0] 
+			<< " " << data[0][1] << " " << static_cast<int>(data[0][2]) << " " << t << std::scientific << std::endl;
+
+		grid_tecplot.close();
+	}
 }
