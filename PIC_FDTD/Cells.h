@@ -15,5 +15,8 @@ public:
 	Cells();					//!< Default constructor
 	Cells(CellBase baseCell);	//!< Constructor
 	~Cells();					//!< Destructor
+	
 	std::vector<int> listOfParticles;
+	double left, right, top, bottom;
+	int leftCellID, rightCellID, topCellID, bottomCellID;
 };

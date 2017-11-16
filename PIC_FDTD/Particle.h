@@ -21,7 +21,6 @@ public:
 
 	int particleID;
 	int cellID;
-	double left, right, top, bottom;
 	std::vector<double> position;
 	std::vector<double> velocity;
 };

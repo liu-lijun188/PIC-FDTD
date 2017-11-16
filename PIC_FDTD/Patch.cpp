@@ -32,7 +32,7 @@ void Patch::generateOutput(std::string solutionName, vector2D data, double t)
 {
 	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
 	writeMeshTecplot(tecplotMesh, mesh);
-	writeSolutionXY_T_Tecplot(solutionName, data, t);
+	writeSolutionXY_T_Tecplot(solutionName, data, mesh.numCells, t);
 }
 
 // Start the PIC loop within a Patch object

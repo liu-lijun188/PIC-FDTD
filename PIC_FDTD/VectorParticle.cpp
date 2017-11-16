@@ -16,17 +16,18 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
 	
 	//for (int i = 0; i < mesh->numCells; i++)
-	int numCellsWithParticles = 1;
-	for (int i = 0; i <numCellsWithParticles; i++)	// Single particle
+	int numCellsWithParticles = 2;
+	for (int i = 0; i <mesh->numCells; i++)	// Single particle
 	{
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
 		{
-			Particle particle(parametersList, mesh, patchID, i, j + 1);
+			Particle particle(parametersList, mesh, patchID, i, j);
 			particleVector.push_back(particle);
 			numParticles += 1;
 			positionVector.push_back(particle.position);
-			positionVector[i].push_back(particle.particleID);
-			mesh->addParticlesToCell(i, particle.particleID);
+			positionVector[particle.cellID].push_back(particle.cellID);
+			positionVector[particle.cellID].push_back(particle.particleID);
+			mesh->addParticlesToCell(particle.cellID, particle.particleID);
 		}
 	}
 }

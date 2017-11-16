@@ -7,7 +7,7 @@
 
 % Some variables
 timeStep: 0.2
-maximumNumberOfIterations: 1 
+maximumNumberOfIterations: 0 
 numberOfPatches: 1
 particlesPerCell: 1
 
