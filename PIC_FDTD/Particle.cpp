@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Particle class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "Particle.h"
 
@@ -9,6 +9,7 @@
 Particle::Particle()
 {
 }
+
 
 // Constructor
 Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, int particleID)
@@ -21,12 +22,15 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	this->cellID = cellID;
 
 	// Place particle in middle of cell
-	position.push_back((mesh->cellsVector.cells[cellID].left + mesh->cellsVector.cells[cellID].right) / 2);	// x
-	position.push_back((mesh->cellsVector.cells[cellID].top + mesh->cellsVector.cells[cellID].bottom) / 2); // y
+	position.push_back((mesh->cellsVector.cells[cellID].left + 
+		mesh->cellsVector.cells[cellID].right) / 2);			// x
+	position.push_back((mesh->cellsVector.cells[cellID].top + 
+		mesh->cellsVector.cells[cellID].bottom) / 2);			// y
 	
-	velocity.push_back(-0.1); // u
-	velocity.push_back(0); // v
+	velocity.push_back(0.1);	// u
+	velocity.push_back(0.1);	// v
 }
+
 
 // Destructor
 Particle::~Particle()

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ParticlePusher class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "ParticlePusher.h"
 
@@ -10,14 +10,11 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 {
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
-		// Update x and y positions
-		particlesVector->particleVector[i].position[0] += parametersList->timeStep * particlesVector->particleVector[i].velocity[0]; 
-		particlesVector->particleVector[i].position[1] += parametersList->timeStep * particlesVector->particleVector[i].velocity[1];
+		// Update x position
+		particlesVector->particleVector[i].position[0] += 
+			parametersList->timeStep * particlesVector->particleVector[i].velocity[0]; 
 
-		// The following assumes the particle does not travel out of the cell to 
-		// a diagonally adjacent cell (i.e. it only moves left, right, up or down 
-		// in a single time step)
-		
+		// Update cell ID in x direction
 		if (particlesVector->particleVector[i].position[0] < 
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID].left)	// Exit left
 		{
@@ -30,7 +27,13 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			particlesVector->particleVector[i].cellID = 
 				mesh->cellsVector.cells[particlesVector->particleVector[i].cellID].rightCellID;
 		}
-		else if (particlesVector->particleVector[i].position[1] < 
+
+		// Update y position
+		particlesVector->particleVector[i].position[1] +=
+			parametersList->timeStep * particlesVector->particleVector[i].velocity[1];
+
+		// Update cell ID in y direction
+		if (particlesVector->particleVector[i].position[1] < 
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID].bottom)	// Exit bottom
 		{
 			particlesVector->particleVector[i].cellID = 
@@ -46,6 +49,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		particlesVector->updatePositionVector(&particlesVector->particleVector[i]);
 	}
 }
+
 
 // Destructor
 ParticlePusher::~ParticlePusher()

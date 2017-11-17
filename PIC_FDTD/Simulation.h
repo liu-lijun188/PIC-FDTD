@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Simulation class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #pragma once
 
@@ -9,12 +9,18 @@
 #include "VectorPatch.h"
 
 //! \class Simulation
-//! \brief Definition
+//! \brief TODO - Assign mesh to patches and perform load balancing
 class Simulation
 {
 public: 
+	// Data members
+
+
+	// Constructor/destructor
 	Simulation();							//!< Default constructor
 	Simulation(Parameters *parametersList);	//!< Constructor
 	~Simulation();							//!< Destructor
-	void loadBalance();						//!< Perform load balancing across patches
+
+	// Methods
+
 };

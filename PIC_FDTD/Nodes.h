@@ -1,18 +1,25 @@
 //! \file
 //! \brief Definition of Nodes class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #pragma once
 
 #include "GRID\node.hpp"
 
 //! \class Nodes
-//! \brief Definition
+//! \brief Contains node properties, derived from NodeBase
 class Nodes : public NodeBase
 {
 public:
+	// Data members
+
+
+	// Constructor/destructor
 	Nodes();					//!< Default constructor
 	Nodes(NodeBase baseNode);	//!< Constructor
 	~Nodes();					//!< Destructor
+
+	// Methods
+
 };

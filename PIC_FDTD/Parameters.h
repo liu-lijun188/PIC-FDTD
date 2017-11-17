@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #pragma once
 
@@ -19,30 +19,38 @@
 class Parameters
 {
 private:
-	std::vector<std::string> valuesVector;
-	bool fileNotOpened = false;
-	bool firstLog = true;
-	clock_t initialTime;
+	// Data members
+	std::vector<std::string> valuesVector;	//!< Raw strings from input file	
+	std::string meshFilePath;				//!< Path of mesh file
+	std::string meshFile = "processedMesh";	//!< Name of processed mesh file
 
-	std::string meshFilePath;
-	std::string processedMeshFile = "processedMesh";
+	bool fileNotOpened = false;				//!< Check if log file is open 
+	bool firstLog = true;					//!< Check if this is the first log entry
+	clock_t initialTime;					//!< Global simulation time
 
 public:
-	Parameters();						//!< Default constructor
-	Parameters(std::string filename);	//!< Constructor
-	~Parameters();						//!< Destructor
+	// Data members
+	double timeStep;						//!< Time step
+	int maximumNumberOfIterations;			//!< Maximum number of iterations
+	int numberOfPatches;					//!< Number of patches
+	int particlesPerCell;					//!< Particles per cell
 
-	void printValuesVector();					//!< Print raw input from valuesVector
-	void assignInputs();						//!< Assign values to member variables
-	void printMemberVariables();				//!< Print member variables
-	void processMesh();							//!< Process mesh file
-	void hitReturnToEnter();					//!< Keeps console window open
+	GridBasicInfo gridinfo;					//!< Basic grid properties
+	GridGeo gridgeo;						//!< Detailed grid info
+
+
+	// Constructor/destructor
+	Parameters();							//!< Default constructor
+	Parameters(std::string filename);		//!< Constructor
+	~Parameters();							//!< Destructor
+
+
+	// Methods
+	void printValuesVector();				//!< Print raw input from valuesVector
+	void assignInputs();					//!< Assign values to data members
+	void printDataMembers();				//!< Print data members
+	void processMesh();						//!< Process mesh file
+	void hitReturnToEnter();				//!< Keeps console window open
 	void logMessages(std::string message, 
-		std::string filename, int line);		//!< Log messages and warnings
-
-	double timeStep;				
-	int maximumNumberOfIterations, numberOfPatches, particlesPerCell;
-
-	GridBasicInfo gridinfo;
-	GridGeo gridgeo;
+		std::string filename, int line);	//!< Log messages and warnings
 };

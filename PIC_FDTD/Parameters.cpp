@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "Parameters.h"
 
@@ -9,6 +9,7 @@
 Parameters::Parameters()
 {
 }
+
 
 // Constructor
 Parameters::Parameters(std::string filename)
@@ -51,10 +52,12 @@ Parameters::Parameters(std::string filename)
 	}
 }
 
+
 // Destructor
 Parameters::~Parameters()
 {
 }
+
 
 // Print raw input from valuesVector
 void Parameters::printValuesVector()
@@ -69,7 +72,8 @@ void Parameters::printValuesVector()
 	}
 }
 
-// Assign values to member variables
+
+// Assign values to data members 
 void Parameters::assignInputs()
 {
 	if (!fileNotOpened)
@@ -121,8 +125,9 @@ void Parameters::assignInputs()
 	}
 }
 
-// Print member variables
-void Parameters::printMemberVariables()
+
+// Print data members
+void Parameters::printDataMembers()
 {
 	std::cout << "Time step: " << timeStep << std::endl;
 	std::cout << "Maximum number of iterations: " << maximumNumberOfIterations << std::endl;
@@ -131,14 +136,17 @@ void Parameters::printMemberVariables()
 	std::cout << "Mesh file path: " << meshFilePath << std::endl;
 }
 
+
 // Process mesh file
 void Parameters::processMesh()
 {
 	logMessages("Extracting mesh data", __FILE__, __LINE__);
-	precessingGridSU2(meshFilePath, processedMeshFile);
-	readGridFromFile(processedMeshFile + ".op2", gridinfo, gridgeo);
+
+	precessingGridSU2(meshFilePath, meshFile);
+	readGridFromFile(meshFile + ".op2", gridinfo, gridgeo);
 	processingGrid(gridinfo, gridgeo);
 }
+
 
 // Keeps console window open
 void Parameters::hitReturnToEnter()
@@ -149,6 +157,7 @@ void Parameters::hitReturnToEnter()
 	} 
 	while (std::cin.get() != '\n');
 }
+
 
 // Log messages and warnings
 void Parameters::logMessages(std::string message, std::string filename, int line)

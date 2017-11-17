@@ -1,21 +1,27 @@
 //! \file
 //! \brief Definition of VectorPatch class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #pragma once
 
 #include "Patch.h"
 
 //! \class VectorPatch
-//! \brief Definition
+//! \brief Create and manage a vector of Patch objects
 class VectorPatch
 {
 public:
+	// Data members
+	std::vector<Patch> patchesVector;			//!< Vector of Patch objects
+
+
+	// Constructor/destructor
 	VectorPatch();								//!< Default constructor
 	VectorPatch(Parameters *parametersList);	//!< Constructor
 	~VectorPatch();								//!< Destructor
-	void startPIC();							//!< Start the PIC loop within a VectorPatch object
+	
 
-	vector<Patch> patchesVector;
+	// Methods
+	void startPIC();							//!< Start the PIC loop within a VectorPatch object
 };

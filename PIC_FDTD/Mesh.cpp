@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "Parameters.h"
 #include "Mesh.h"
@@ -11,36 +11,37 @@ Mesh::Mesh()
 {
 }
 
+
 // Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {
+	// Extract data from gridinfo
 	numCells = localParametersList->gridinfo.NCM;
 	numFaces = localParametersList->gridinfo.NFM;
 	numGhost = localParametersList->gridinfo.NGM;
 	numNodes = localParametersList->gridinfo.NNM;
 	dimension = localParametersList->gridinfo.DIM;
 	
+	// Extract (vector) data from gridgeo
 	cellsVector.allocate(localParametersList->gridgeo.cells);
 	facesVector.allocate(localParametersList->gridgeo.faces);
 	ghostVector.allocate(localParametersList->gridgeo.ghost);
 	nodesVector.allocate(localParametersList->gridgeo.nodes);
 
+	// Find boundaries of each cell and identify adjacent/neighbouring cells
 	for (int i = 0; i < cellsVector.cells.size(); i++)
 	{
-		// Only need to check two opposite nodes to find left, right, top and bottom,
-		// however in order to be sure that a set of nodes contains two opposites, 
-		// need at least three of them (two opposites plus one adjacent, hence i<3)
-		
-		for (int j = 0; j < 3; j++)
-			
+		// Only need to check two opposite nodes to find cell boundaries, and 
+		// since nodes are ordered anticlockwise, this is satisfied by the first
+		// and third node, hence the j indices used
+		for (int j = 0; j < 3; j += 2)	
 		{
+			// Node vector is indexed from 0, nodeIDs from 1, hence the index shift (-1) below
 			int nodeID = cellsVector.cells[i].connectivity.nodeIDs[j] - 1;
-			// The nodeIDs are indexed from 1, but the nodes vector from 0, hence the -1 above
-
 			double x = nodesVector.nodes[nodeID].geometry.X.element(0, 0);
 			double y = nodesVector.nodes[nodeID].geometry.X.element(1, 0);
 
-
+			// Identify cell boundaries
 			if (j == 0)
 			{
 				cellsVector.cells[i].left = x;
@@ -69,10 +70,12 @@ Mesh::Mesh(Parameters *localParametersList)
 			}
 		}
 
-		int firstNodeID = cellsVector.cells[i].connectivity.nodeIDs[0] - 1;	// First node
-		double x = nodesVector.nodes[firstNodeID].geometry.X.element(0, 0);	
-		double y = nodesVector.nodes[firstNodeID].geometry.X.element(1, 0);
+		// Get position of first node again
+		int nodeID = cellsVector.cells[i].connectivity.nodeIDs[0] - 1;
+		double x = nodesVector.nodes[nodeID].geometry.X.element(0, 0);	
+		double y = nodesVector.nodes[nodeID].geometry.X.element(1, 0);
 		
+		// IDs of faces and their respective adjacent cells
 		int faceID_1 = cellsVector.cells[i].connectivity.faceIDs[0] - 1;
 		int leftCell_1 = facesVector.faces[faceID_1].connectivity.cl[0] - 1;
 		int rightCell_1 = facesVector.faces[faceID_1].connectivity.cr[0] - 1;
@@ -89,7 +92,8 @@ Mesh::Mesh(Parameters *localParametersList)
 		int leftCell_4 = facesVector.faces[faceID_4].connectivity.cl[0] - 1;
 		int rightCell_4 = facesVector.faces[faceID_4].connectivity.cr[0] - 1;
 
-		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)	// Bottom left node
+		// Identify position of adjacent cells based on location of first node
+		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)			// Bottom left node
 		{
 			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].rightCellID = leftCell_2 + rightCell_2 - i;
@@ -103,14 +107,14 @@ Mesh::Mesh(Parameters *localParametersList)
 			cellsVector.cells[i].leftCellID = leftCell_3 + rightCell_3 - i;
 			cellsVector.cells[i].bottomCellID = leftCell_4 + rightCell_4 - i;
 		}
-		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top) // Top right node
+		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)		// Top right node
 		{
 			cellsVector.cells[i].topCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].leftCellID = leftCell_2 + rightCell_2 - i;
 			cellsVector.cells[i].bottomCellID = leftCell_3 + rightCell_3 - i;
 			cellsVector.cells[i].rightCellID = leftCell_4 + rightCell_4 - i;
 		}
-		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)	// Top left node
+		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
 		{
 			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i;
@@ -120,11 +124,14 @@ Mesh::Mesh(Parameters *localParametersList)
 	}
 }
 
+
 // Destructor
 Mesh::~Mesh()
 {
 }
 
+
+// Assign particle IDs to a cell
 void Mesh::addParticlesToCell(int cellID, int particleID)
 {
 	cellsVector.cells[cellID].listOfParticles.push_back(particleID);

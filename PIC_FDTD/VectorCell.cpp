@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorCell class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "VectorCell.h"
 
@@ -10,12 +10,14 @@ VectorCell::VectorCell()
 {
 }
 
+
 // Destructor
 VectorCell::~VectorCell()
 {
 }
 
-// Allocate cells to cells attribute
+
+// Allocate CellBase elements to cells data member
 void VectorCell::allocate(std::vector<CellBase> cells)
 {
 	for (int i = 0; i < cells.size(); i++)

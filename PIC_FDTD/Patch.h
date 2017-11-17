@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Patch class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #pragma once
 
@@ -17,26 +17,35 @@
 #include "ParticlePusher.h"
 #include "VectorParticle.h"
 
-using namespace std;
-
 //! \class Patch
-//! \brief Definition
+//! \brief Handles all aspects of an instance of the simulation
 class Patch
 {
 private:
-	std::string tecplotMesh = "tecplotMeshC";
-	std::string tecplotSolution_T = "tecplotSolutionC_T";
+	// Data members
+	double time;									//!< Local simulation time
+	Parameters parametersList;						//!< Copy of parameters list
+	Mesh mesh;										//!< Details of mesh
+	VectorParticle particlesVector;					//!< Vector of resident particles
+	std::string tecplotMesh = "cMesh";				//!< Tecplot output mesh file
+	std::string tecplotSolution = "cSolution_T";	//!< Tecplot output solution file
+
+
+	// Methods
+	void generateOutput(std::string solutionName,
+		vector2D data, double time);				//!< Generate Tecplot output
 
 public:
+	// Data members
+	int patchID;									//!< Patch ID
+
+
+	// Constructor/destructor
 	Patch();										//!< Default constructor
 	Patch(Parameters *parametersList, int patchID);	//!< Constructor
 	~Patch();										//!< Destructor
-	void generateOutput(std::string solutionName, vector2D data, double t);		//!< Generate Tecplot output
-	void startPIC();								//!< Start the PIC loop within a Patch object
-	
-	int patchID;
-	double t = 0.0;
-	Parameters parametersList;
-	Mesh mesh;
-	VectorParticle particlesVector;
+
+
+	// Methods
+	void startPIC();								//!< Start the PIC loop within a Patch object	
 };

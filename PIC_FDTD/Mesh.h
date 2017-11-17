@@ -1,32 +1,41 @@
 //! \file
 //! \brief Definition of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #pragma once
-
 
 #include "VectorCell.h"
 #include "VectorFace.h"
 #include "VectorGhost.h"
 #include "VectorNode.h"
 
-class Parameters;		// Forward declaration to resolve circular dependency
+class Parameters;	// Forward declaration to resolve circular dependency 
 
 //! \class Mesh
-//! \brief Definition
+//! \brief Compiled mesh properties extracted from gridinfo and gridgeo
 class Mesh
 {
 public:
-	Mesh();										//!< Default constructor
-	Mesh(Parameters *localParametersList);		//!< Constructor
-	~Mesh();									//!< Destructor
+	// Data members
+	int numCells;							//!< Number of cells
+	int numFaces;							//!< Number of faces
+	int numGhost;							//!< Number of ghost cells
+	int numNodes;							//!< Number of nodes
+	int dimension;							//!< Dimension of mesh (2D)
+	VectorCell cellsVector;					//!< Vector of cells
+	VectorFace facesVector;					//!< Vector of faces
+	VectorGhost ghostVector;				//!< Vector of ghost cells
+	VectorNode nodesVector;					//!< Vector of nodes
 
-	void addParticlesToCell(int cellID, int particleID);
 
-	int numCells, numFaces, numGhost, numNodes, dimension;
-	VectorCell cellsVector;
-	VectorFace facesVector;
-	VectorGhost ghostVector;
-	VectorNode nodesVector;
+	// Constructor/destructor
+	Mesh();									//!< Default constructor
+	Mesh(Parameters *localParametersList);	//!< Constructor
+	~Mesh();								//!< Destructor
+
+
+	// Methods
+	void addParticlesToCell(int cellID, 
+		int particleID);					//!< Assign particle IDs to a cell
 };

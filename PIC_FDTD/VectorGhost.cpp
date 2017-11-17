@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorGhost class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "VectorGhost.h"
 
@@ -10,12 +10,14 @@ VectorGhost::VectorGhost()
 {
 }
 
+
 // Destructor
 VectorGhost::~VectorGhost()
 {
 }
 
-// Allocate cells to ghosts attribute
+
+// Allocate CellBase elements to ghosts data member
 void VectorGhost::allocate(std::vector<CellBase> cells)
 {
 	for (int i = 0; i < cells.size(); i++)

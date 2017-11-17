@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 09/11/2016.
+//  Last edited by Rahul Kalampattel, November 2017
+//  
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -224,24 +226,39 @@ bool isWallTypeBC(int bc);
 void faceNodeNumberingReverse(std::vector<int>& nodeList, int type);
 int faceCompare(std::vector<int>& F1_list, std::vector<int>& F2_list, int type); // [1] Same [-1] Different direction [0] Different
 
-// Grid File read and processing
+///////////////////////////////////////////////////////////////////////////////
+// Grid file read and processing
+///////////////////////////////////////////////////////////////////////////////
+
+// 1. Pre-processing
+// 1.1 SU2 input files
 void precessingGridSU2(const std::string& mesh_file_name_SU2);
 void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_file_name);
-
+// 1.2 FLUENT input files
 void precessingGridFLUENT(const std::string& mesh_file_name_Fluent);
 void precessingGridFLUENT(const std::string& mesh_file_name_Fluent, std::string& out_file_name);
 
+///////////////////////////////////////////////////////////////////////////////
+
+// 2. Processing
 void readGridFromFile(const std::string& mesh_file_name, GridBasicInfo& gridinfo, GridGeo& gridgeo);
 void processingGrid(GridBasicInfo& gridinfo, GridGeo& gridgeo);
 
+///////////////////////////////////////////////////////////////////////////////
+
+// 3. Post-processing
+// 3.1 Mesh data
 void writeGridGeoTecplot(const  std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata);
 void writeMeshTecplot(const std::string& title, Mesh& mesh);
+// 3.2 Solution data
+void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, 
+	GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);		// Cell based data
+void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, 
+	GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);		// Node based data
+void writeSolutionXY_N_Tecplot(const std::string& title, vector2D& data, int N);			// Point based data (N points)
+void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (N points at time t)
 
-void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
-void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);
-void writeSolutionXY_N_Tecplot(const std::string& title, vector2D& data, int N);
-void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, double t);
-
+///////////////////////////////////////////////////////////////////////////////
 
 /*
 // 3. class for Geometry and Datastrorage
