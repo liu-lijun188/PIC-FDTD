@@ -70,43 +70,53 @@ Mesh::Mesh(Parameters *localParametersList)
 		}
 
 		int firstNodeID = cellsVector.cells[i].connectivity.nodeIDs[0] - 1;	// First node
-		double x = nodesVector.nodes[firstNodeID].geometry.X.element(0, 0);
+		double x = nodesVector.nodes[firstNodeID].geometry.X.element(0, 0);	
 		double y = nodesVector.nodes[firstNodeID].geometry.X.element(1, 0);
-		int faceID;
+		
+		int faceID_1 = cellsVector.cells[i].connectivity.faceIDs[0] - 1;
+		int leftCell_1 = facesVector.faces[faceID_1].connectivity.cl[0] - 1;
+		int rightCell_1 = facesVector.faces[faceID_1].connectivity.cr[0] - 1;
+
+		int faceID_2 = cellsVector.cells[i].connectivity.faceIDs[1] - 1;
+		int leftCell_2 = facesVector.faces[faceID_2].connectivity.cl[0] - 1;
+		int rightCell_2 = facesVector.faces[faceID_2].connectivity.cr[0] - 1;
+
+		int faceID_3 = cellsVector.cells[i].connectivity.faceIDs[2] - 1;
+		int leftCell_3 = facesVector.faces[faceID_3].connectivity.cl[0] - 1;
+		int rightCell_3 = facesVector.faces[faceID_3].connectivity.cr[0] - 1;
+
+		int faceID_4 = cellsVector.cells[i].connectivity.faceIDs[3] - 1;
+		int leftCell_4 = facesVector.faces[faceID_4].connectivity.cl[0] - 1;
+		int rightCell_4 = facesVector.faces[faceID_4].connectivity.cr[0] - 1;
 
 		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)	// Bottom left node
 		{
-			faceID = cellsVector.cells[i].connectivity.faceIDs[0] - 1;
-			cellsVector.cells[i].bottomCellID = facesVector.faces[faceID].connectivity.cl[0] +
-				facesVector.faces[faceID].connectivity.cr[0] - i - 2;
-
-			faceID = cellsVector.cells[i].connectivity.faceIDs[1] - 1;
-			cellsVector.cells[i].rightCellID = facesVector.faces[faceID].connectivity.cl[0] +
-				facesVector.faces[faceID].connectivity.cr[0] - i - 2;
-
-			faceID = cellsVector.cells[i].connectivity.faceIDs[2] - 1;
-			cellsVector.cells[i].topCellID = facesVector.faces[faceID].connectivity.cl[0] +
-				facesVector.faces[faceID].connectivity.cr[0] - i - 2;
-
-			faceID = cellsVector.cells[i].connectivity.faceIDs[3] - 1;
-			cellsVector.cells[i].leftCellID = facesVector.faces[faceID].connectivity.cl[0] +
-				facesVector.faces[faceID].connectivity.cr[0] - i - 2;
+			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i;
+			cellsVector.cells[i].rightCellID = leftCell_2 + rightCell_2 - i;
+			cellsVector.cells[i].topCellID = leftCell_3 + rightCell_3 - i;
+			cellsVector.cells[i].leftCellID = leftCell_4 + rightCell_4 - i;
 		}
-		/*
+		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].bottom)	// Bottom right node
+		{
+			cellsVector.cells[i].rightCellID = leftCell_1 + rightCell_1 - i;
+			cellsVector.cells[i].topCellID = leftCell_2 + rightCell_2 - i;
+			cellsVector.cells[i].leftCellID = leftCell_3 + rightCell_3 - i;
+			cellsVector.cells[i].bottomCellID = leftCell_4 + rightCell_4 - i;
+		}
+		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top) // Top right node
+		{
+			cellsVector.cells[i].topCellID = leftCell_1 + rightCell_1 - i;
+			cellsVector.cells[i].leftCellID = leftCell_2 + rightCell_2 - i;
+			cellsVector.cells[i].bottomCellID = leftCell_3 + rightCell_3 - i;
+			cellsVector.cells[i].rightCellID = leftCell_4 + rightCell_4 - i;
+		}
 		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)	// Top left node
 		{
-
+			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i;
+			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i;
+			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i;
+			cellsVector.cells[i].topCellID = leftCell_4 + rightCell_4 - i;
 		}
-		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].bottom) // Bottom right node
-		{
-
-		}
-		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)	// Top right node
-		{
-
-		}
-		*/
-
 	}
 }
 

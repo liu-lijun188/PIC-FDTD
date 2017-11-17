@@ -18,7 +18,6 @@ Patch::Patch(Parameters *parametersList, int patchID)
 	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
 	mesh = Mesh(&this->parametersList);
 	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
-	//generateOutput(particlesVector.positionVector, mesh.numCells);
 	generateOutput(tecplotSolution_T, particlesVector.positionVector, t);	// Single particle
 }
 
@@ -32,7 +31,7 @@ void Patch::generateOutput(std::string solutionName, vector2D data, double t)
 {
 	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
 	writeMeshTecplot(tecplotMesh, mesh);
-	writeSolutionXY_T_Tecplot(solutionName, data, mesh.numCells, t);
+	writeSolutionXY_T_Tecplot(solutionName, data, 1, t);
 }
 
 // Start the PIC loop within a Patch object
