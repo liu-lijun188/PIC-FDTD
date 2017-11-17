@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorPatch class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "VectorPatch.h"
 
@@ -10,10 +10,12 @@ VectorPatch::VectorPatch()
 {
 }
 
+
 // Constructor
 VectorPatch::VectorPatch(Parameters *parametersList)
 {
 	parametersList->logMessages("Creating patches vector", __FILE__, __LINE__);
+	
 	for (int i = 0; i < parametersList->numberOfPatches; i++)
 	{
 		Patch patch(parametersList, i);
@@ -21,10 +23,12 @@ VectorPatch::VectorPatch(Parameters *parametersList)
 	}
 }
 
+
 // Destructor
 VectorPatch::~VectorPatch()
 {
 }
+
 
 // Start the PIC loop within a VectorPatch object
 void VectorPatch::startPIC()

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Patch class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "Patch.h"
 
@@ -10,41 +10,55 @@ Patch::Patch()
 {
 }
 
+
 // Constructor
 Patch::Patch(Parameters *parametersList, int patchID)
 {
+	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
+
+	time = 0;
 	this->patchID = patchID;
 	this->parametersList = *parametersList;
-	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__);
+
 	mesh = Mesh(&this->parametersList);
 	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
-	generateOutput(particlesVector.positionVector, mesh.numCells);
+
+	generateOutput(tecplotSolution, particlesVector.positionVector, time);	
 }
+
 
 // Destructor
 Patch::~Patch()
 {
 }
 
+
 // Generate Tecplot output
-void Patch::generateOutput(vector2D data, int N)
+void Patch::generateOutput(std::string solutionName, vector2D data, double time)
 {
 	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
+
 	writeMeshTecplot(tecplotMesh, mesh);
-	writeSolutionXYTecplot(tecplotSolution, data, N);
+	writeSolutionXY_T_Tecplot(solutionName, data, 1, time);	// Currently for a single particle
 }
+
 
 // Start the PIC loop within a Patch object
 void Patch::startPIC()
 {
 	parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__);
+
 	for (int i = 0; i < parametersList.maximumNumberOfIterations; i++)
 	{
-		ParticlePusher pusher();
-		MCC collisions();
-		ChargeProjector projector();
-		FDTD fdtd();
-		FieldSolver solver();
-		FieldInterpolator interpolator();
+		time += parametersList.timeStep;
+
+		ParticlePusher pusher(&parametersList, &mesh, &particlesVector);
+		generateOutput(tecplotSolution, particlesVector.positionVector, time);
+		
+		// MCC collisions();
+		// ChargeProjector projector();
+		// FDTD fdtd();
+		// FieldSolver solver();
+		// FieldInterpolator interpolator();
 	}
 }

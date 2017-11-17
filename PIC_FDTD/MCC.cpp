@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of MCC class 
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "MCC.h"
 

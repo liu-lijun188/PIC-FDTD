@@ -1,7 +1,7 @@
 //! \file
 //! \brief Entry point into the simulation
 //! \author Rahul Kalampattel
-//! \date Last updated October 2017
+//! \date Last updated November 2017
 
 #include "Simulation.h"
 
@@ -10,7 +10,7 @@ int main()
 	// Preprocessing of inputs
 	Parameters parametersList("inputs.txt");	
 	parametersList.assignInputs();				
-	parametersList.printMemberVariables();
+	parametersList.printDataMembers();
 	parametersList.processMesh();			
 
 	// Commence simulation
