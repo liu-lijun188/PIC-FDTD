@@ -6,6 +6,11 @@
 #include "ParticlePusher.h"
 
 // Default constructor
+ParticlePusher::ParticlePusher()
+{
+}
+
+// Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
 	for (int i = 0; i < particlesVector->numParticles; i++)

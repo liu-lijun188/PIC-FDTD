@@ -13,7 +13,7 @@ class Nodes : public NodeBase
 {
 public:
 	// Data members
-
+	double charge;				//!< Charge at the grid node
 
 	// Constructor/destructor
 	Nodes();					//!< Default constructor

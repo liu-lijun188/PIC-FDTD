@@ -56,7 +56,9 @@ void Patch::startPIC()
 		generateOutput(tecplotSolution, particlesVector.positionVector, time);
 		
 		// MCC collisions();
-		// ChargeProjector projector();
+
+		ChargeProjector projector(&parametersList, &mesh, &particlesVector);
+		
 		// FDTD fdtd();
 		// FieldSolver solver();
 		// FieldInterpolator interpolator();

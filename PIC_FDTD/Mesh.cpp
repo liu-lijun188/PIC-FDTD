@@ -70,6 +70,9 @@ Mesh::Mesh(Parameters *localParametersList)
 			}
 		}
 
+		cellsVector.cells[i].width = cellsVector.cells[i].right - cellsVector.cells[i].left;
+		cellsVector.cells[i].height = cellsVector.cells[i].top - cellsVector.cells[i].bottom;
+
 		// Get position of first node again
 		int nodeID = cellsVector.cells[i].connectivity.nodeIDs[0] - 1;
 		double x = nodesVector.nodes[nodeID].geometry.X.element(0, 0);	
@@ -95,6 +98,7 @@ Mesh::Mesh(Parameters *localParametersList)
 		// Identify position of adjacent cells based on location of first node
 		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)			// Bottom left node
 		{
+			cellsVector.cells[i].firstNodePosition = "BL";
 			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].rightCellID = leftCell_2 + rightCell_2 - i;
 			cellsVector.cells[i].topCellID = leftCell_3 + rightCell_3 - i;
@@ -102,6 +106,7 @@ Mesh::Mesh(Parameters *localParametersList)
 		}
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].bottom)	// Bottom right node
 		{
+			cellsVector.cells[i].firstNodePosition = "BR";
 			cellsVector.cells[i].rightCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].topCellID = leftCell_2 + rightCell_2 - i;
 			cellsVector.cells[i].leftCellID = leftCell_3 + rightCell_3 - i;
@@ -109,6 +114,7 @@ Mesh::Mesh(Parameters *localParametersList)
 		}
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)		// Top right node
 		{
+			cellsVector.cells[i].firstNodePosition = "TR";
 			cellsVector.cells[i].topCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].leftCellID = leftCell_2 + rightCell_2 - i;
 			cellsVector.cells[i].bottomCellID = leftCell_3 + rightCell_3 - i;
@@ -116,6 +122,7 @@ Mesh::Mesh(Parameters *localParametersList)
 		}
 		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
 		{
+			cellsVector.cells[i].firstNodePosition = "TL";
 			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i;
 			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i;
 			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i;

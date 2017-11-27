@@ -18,8 +18,9 @@ public:
 
 
 	// Constructor/destructor
+	ParticlePusher();									//!< Default constructor
 	ParticlePusher(Parameters *parametersList, 
-		Mesh *mesh, VectorParticle *particlesVector);	//!< Default constructor
+		Mesh *mesh, VectorParticle *particlesVector);	//!< Constructor
 	~ParticlePusher();									//!< Destructor
 
 
