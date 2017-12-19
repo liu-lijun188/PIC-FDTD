@@ -14,9 +14,12 @@ ChargeProjector::ChargeProjector()
 ChargeProjector::ChargeProjector(Parameters *parametersList,
 	Mesh *mesh, VectorParticle *particlesVector)
 {
-	// ***
-	// TODO: Method to set charge at all nodes to zero at the start of each step
-	// ***
+	// Set charge at all nodes to zero at the start of each step
+	// TODO: Could make this a method of VectorNode in future
+	for (int i = 0; i < mesh->numNodes; i++)
+	{
+		mesh->nodesVector.nodes[i].charge = 0;
+	}
 
 
 	for (int i = 0; i < particlesVector->numParticles; i++)

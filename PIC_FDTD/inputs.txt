@@ -5,11 +5,14 @@
 % names or their order should not be edited. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Some variables
+% Simulation parameters
 timeStep: 0.2
 maximumNumberOfIterations: 1 
 numberOfPatches: 1
 particlesPerCell: 1
+
+% Particle parameters
+charge: 1.6e-19
 
 % Some paths
 meshFilePath: coarseMesh.su2
