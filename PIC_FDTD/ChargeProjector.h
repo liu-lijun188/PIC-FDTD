@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include "Mesh.h"
+#include "Parameters.h"
+#include "VectorParticle.h"
+
 //! \class ChargeProjector
-//! \brief TODO - Projects quantities from particle to mesh locations
+//! \brief Projects quantities from particle to mesh locations
 class ChargeProjector
 {
 public:
@@ -14,8 +18,10 @@ public:
 
 
 	// Constructor/destructor
-	ChargeProjector();	//!< Default constructor
-	~ChargeProjector();	//!< Destructor
+	ChargeProjector();									//!< Default constructor
+	ChargeProjector(Parameters *parametersList,
+		Mesh *mesh, VectorParticle *particlesVector);	//!< Constructor
+	~ChargeProjector();									//!< Destructor
 
 
 	// Methods

@@ -35,6 +35,8 @@ public:
 	int numberOfPatches;					//!< Number of patches
 	int particlesPerCell;					//!< Particles per cell
 
+	double charge;							//!< Particle charge
+
 	GridBasicInfo gridinfo;					//!< Basic grid properties
 	GridGeo gridgeo;						//!< Detailed grid info
 

@@ -116,7 +116,16 @@ void Parameters::assignInputs()
 
 		try
 		{
-			meshFilePath = valuesVector[4];
+			charge = stod(valuesVector[4]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for charge!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			meshFilePath = valuesVector[5];
 		}
 		catch (std::invalid_argument&)
 		{
@@ -132,7 +141,8 @@ void Parameters::printDataMembers()
 	std::cout << "Time step: " << timeStep << std::endl;
 	std::cout << "Maximum number of iterations: " << maximumNumberOfIterations << std::endl;
 	std::cout << "Number of patches: " << numberOfPatches << std::endl;
-	std::cout << "Particle per cell: " << particlesPerCell << std::endl;
+	std::cout << "Particles per cell: " << particlesPerCell << std::endl;
+	std::cout << "Charge: " << charge << std::endl;
 	std::cout << "Mesh file path: " << meshFilePath << std::endl;
 }
 

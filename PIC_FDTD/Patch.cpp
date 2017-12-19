@@ -52,11 +52,16 @@ void Patch::startPIC()
 	{
 		time += parametersList.timeStep;
 
+		// Do the classes below really need to be defined as such, or can they
+		// be replaced with functions of the Patch class? 
+
 		ParticlePusher pusher(&parametersList, &mesh, &particlesVector);
 		generateOutput(tecplotSolution, particlesVector.positionVector, time);
 		
 		// MCC collisions();
-		// ChargeProjector projector();
+
+		ChargeProjector projector(&parametersList, &mesh, &particlesVector);
+		
 		// FDTD fdtd();
 		// FieldSolver solver();
 		// FieldInterpolator interpolator();
