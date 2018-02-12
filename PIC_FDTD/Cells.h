@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Cells class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -23,6 +23,7 @@ public:
 	int rightCellID;					//!< ID of adjacent right cell
 	int topCellID;						//!< ID of adjacent top (up) cell
 	int bottomCellID;					//!< ID of adjacent bottom (down) cell
+	bool ghost;							//!< Check is cell is a ghost
 	std::string firstNodePosition;		//!< Position of first node
 	std::vector<int> listOfParticles;	//!< List of particles in the cell
 
@@ -34,5 +35,6 @@ public:
 
 
 	// Methods
+	int minimumID();					//!< Find minimum adjacent ID
 
 };

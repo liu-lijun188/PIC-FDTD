@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #include "Parameters.h"
 
@@ -131,6 +131,42 @@ void Parameters::assignInputs()
 		{
 			logMessages("Invalid argument detected for mesh file path!!!", __FILE__, __LINE__);
 		}
+
+		try
+		{
+			xTest = stod(valuesVector[6]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for xTest!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			yTest = stod(valuesVector[7]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for yTest!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			uTest = stod(valuesVector[8]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for uTest!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			vTest = stod(valuesVector[9]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for vTest!!!", __FILE__, __LINE__);
+		}
 	}
 }
 
@@ -144,6 +180,10 @@ void Parameters::printDataMembers()
 	std::cout << "Particles per cell: " << particlesPerCell << std::endl;
 	std::cout << "Charge: " << charge << std::endl;
 	std::cout << "Mesh file path: " << meshFilePath << std::endl;
+	std::cout << "xTest: " << xTest << std::endl;
+	std::cout << "yTest: " << yTest << std::endl;
+	std::cout << "uTest: " << uTest << std::endl;
+	std::cout << "vTest: " << vTest << std::endl;
 }
 
 

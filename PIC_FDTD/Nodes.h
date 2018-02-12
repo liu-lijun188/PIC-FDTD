@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Nodes class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -14,6 +14,7 @@ class Nodes : public NodeBase
 public:
 	// Data members
 	double charge = 0;			//!< Charge at the grid node
+	bool internal;				//!< Check if node is internal
 
 	// Constructor/destructor
 	Nodes();					//!< Default constructor

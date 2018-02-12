@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Nodes class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #include "Nodes.h"
 
@@ -16,6 +16,7 @@ Nodes::Nodes(NodeBase baseNode)
 {
 	this->connectivity = baseNode.connectivity;
 	this->geometry = baseNode.geometry;
+	internal = false;
 }
 
 

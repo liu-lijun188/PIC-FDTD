@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Patch class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #include "Patch.h"
 
@@ -63,7 +63,8 @@ void Patch::startPIC()
 		ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 		
 		// FDTD fdtd();
-		// FieldSolver solver();
+
+		FieldSolver solver(&parametersList, &mesh, &particlesVector);
 		// FieldInterpolator interpolator();
 	}
 }

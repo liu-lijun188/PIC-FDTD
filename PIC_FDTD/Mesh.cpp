@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #include "Parameters.h"
 #include "Mesh.h"
@@ -111,6 +111,7 @@ Mesh::Mesh(Parameters *localParametersList)
 			cellsVector.cells[i].topCellID = leftCell_2 + rightCell_2 - i;
 			cellsVector.cells[i].leftCellID = leftCell_3 + rightCell_3 - i;
 			cellsVector.cells[i].bottomCellID = leftCell_4 + rightCell_4 - i;
+
 		}
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)		// Top right node
 		{
@@ -128,6 +129,17 @@ Mesh::Mesh(Parameters *localParametersList)
 			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i;
 			cellsVector.cells[i].topCellID = leftCell_4 + rightCell_4 - i;
 		}
+
+		// Check if cell is a ghost cell
+		int minimum = cellsVector.cells[i].minimumID();
+		if (minimum >= 0)
+		{
+			cellsVector.cells[i].ghost = false;
+			for (int j = 0; j < 4; j++)
+			{
+				nodesVector.nodes[cellsVector.cells[i].connectivity.nodeIDs[j] - 1].internal = true;
+			}
+		}			
 	}
 }
 
