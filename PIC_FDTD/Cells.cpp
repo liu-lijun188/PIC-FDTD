@@ -16,7 +16,6 @@ Cells::Cells(CellBase baseCell)
 {
 	this->connectivity = baseCell.connectivity;
 	this->geometry = baseCell.geometry;
-	ghost = true;
 }
 
 

@@ -36,6 +36,7 @@ public:
 	int particlesPerCell;					//!< Particles per cell
 
 	double charge;							//!< Particle charge
+	double epsilon0;						//!< Permittivity of free space (assumes vacuum)
 
 	double xTest, yTest, uTest, vTest;		//!< Test parameter		
 

@@ -13,13 +13,22 @@ class Nodes : public NodeBase
 {
 public:
 	// Data members
-	double charge = 0;			//!< Charge at the grid node
-	bool internal;				//!< Check if node is internal
+	int leftNodeID = -1;		//!< ID of node to left
+	int rightNodeID = -1;		//!< ID of node to right
+	int topNodeID = -1;			//!< ID of node to top
+	int bottomNodeID = -1;		//!< ID of node to bottom
+	bool internal = false;		//!< Check if node is internal
+
+	double charge = -1;			//!< Charge at the grid node
+	double rho = -1;			//!< Charge density at the grid node
+	double phi = -1;			//!< Potential at the grid node
+
 
 	// Constructor/destructor
 	Nodes();					//!< Default constructor
 	Nodes(NodeBase baseNode);	//!< Constructor
 	~Nodes();					//!< Destructor
+
 
 	// Methods
 

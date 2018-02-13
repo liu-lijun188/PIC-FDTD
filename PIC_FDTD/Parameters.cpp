@@ -125,7 +125,16 @@ void Parameters::assignInputs()
 
 		try
 		{
-			meshFilePath = valuesVector[5];
+			epsilon0 = stod(valuesVector[5]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for permittivity!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			meshFilePath = valuesVector[6];
 		}
 		catch (std::invalid_argument&)
 		{
@@ -134,7 +143,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			xTest = stod(valuesVector[6]);
+			xTest = stod(valuesVector[7]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -143,7 +152,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			yTest = stod(valuesVector[7]);
+			yTest = stod(valuesVector[8]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -152,7 +161,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			uTest = stod(valuesVector[8]);
+			uTest = stod(valuesVector[9]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -161,7 +170,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			vTest = stod(valuesVector[9]);
+			vTest = stod(valuesVector[10]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -179,6 +188,7 @@ void Parameters::printDataMembers()
 	std::cout << "Number of patches: " << numberOfPatches << std::endl;
 	std::cout << "Particles per cell: " << particlesPerCell << std::endl;
 	std::cout << "Charge: " << charge << std::endl;
+	std::cout << "Permittivity: " << epsilon0<< std::endl;
 	std::cout << "Mesh file path: " << meshFilePath << std::endl;
 	std::cout << "xTest: " << xTest << std::endl;
 	std::cout << "yTest: " << yTest << std::endl;

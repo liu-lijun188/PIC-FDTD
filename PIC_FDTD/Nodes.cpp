@@ -16,7 +16,6 @@ Nodes::Nodes(NodeBase baseNode)
 {
 	this->connectivity = baseNode.connectivity;
 	this->geometry = baseNode.geometry;
-	internal = false;
 }
 
 
