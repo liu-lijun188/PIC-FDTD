@@ -176,6 +176,15 @@ void Parameters::assignInputs()
 		{
 			logMessages("Invalid argument detected for vTest!!!", __FILE__, __LINE__);
 		}
+
+		try
+		{
+			numCellsWithParticles = stoi(valuesVector[11]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for numCellsWithParticles!!!", __FILE__, __LINE__);
+		}
 	}
 }
 
@@ -194,6 +203,7 @@ void Parameters::printDataMembers()
 	std::cout << "yTest: " << yTest << std::endl;
 	std::cout << "uTest: " << uTest << std::endl;
 	std::cout << "vTest: " << vTest << std::endl;
+	std::cout << "numCellsWithParticles: " << numCellsWithParticles << std::endl;
 }
 
 

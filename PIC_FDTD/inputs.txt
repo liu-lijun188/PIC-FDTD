@@ -7,7 +7,7 @@
 
 % Simulation parameters
 timeStep: 0.2
-maximumNumberOfIterations: 2 
+maximumNumberOfIterations: 1 
 numberOfPatches: 1
 particlesPerCell: 1
 
@@ -25,6 +25,7 @@ xTest: 0.5
 yTest: 0.5
 uTest: 0.02
 vTest: 0.02
+numCellsWithParticles: 1
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % End of input file

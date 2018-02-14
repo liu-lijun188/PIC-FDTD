@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorParticle class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #include "VectorParticle.h"
 
@@ -16,24 +16,23 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 {
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
 
-	//for (int i = 0; i < mesh->numCells; i++)	// Particle in every cell
-	int numCellsWithParticles = 1;				// Particle in a single cell
-	for (int i = 0; i < numCellsWithParticles; i++)	
+	//for (int i = 0; i < mesh->numCells; i++)							// Particle in every cell
+	for (int i = 0; i < parametersList->numCellsWithParticles; i++)		// Particle in a few cells
 	{
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
 		{
-			Particle particle(parametersList, mesh, patchID, i, j);
+			numParticles++;
+
+			Particle particle(parametersList, mesh, patchID, i, numParticles);
 			particleVector.push_back(particle);
 
 			positionVector.push_back(particle.position);
-			positionVector[i].push_back(particle.cellID);
-			positionVector[i].push_back(particle.particleID);
+			positionVector.back().push_back(particle.cellID);
+			positionVector.back().push_back(particle.particleID);
 
 			mesh->addParticlesToCell(particle.cellID, particle.particleID);
 		}
 	}
-
-	numParticles = particleVector.size();
 }
 
 
@@ -46,11 +45,17 @@ VectorParticle::~VectorParticle()
 // Update state of positionVector
 void VectorParticle::updatePositionVector(Particle *particle)
 {
-	positionVector.pop_back();
-	positionVector.push_back(particle->position);
+	// Resizing vectors is not a particularly efficient operation, consider some
+	// other means of storing data for plotting in future
 
-	// Currently set up for single cell testing, otherwise need to identify the
-	// correct cell in which to push_back
-	positionVector[0].push_back(particle->cellID);
-	positionVector[0].push_back(particle->particleID);
+	for (int i = 0; i < positionVector.size(); i++)
+	{
+		if (positionVector[i][3] == static_cast<double>(particle->particleID))
+		{
+			positionVector.insert(positionVector.begin() + i, particle->position);
+			positionVector[i].push_back(particle->cellID);
+			positionVector[i].push_back(particle->particleID);
+			positionVector.erase(positionVector.begin() + i + 1);
+		}
+	}
 }

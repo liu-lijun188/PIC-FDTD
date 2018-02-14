@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ChargeProjector class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #include "ChargeProjector.h"
 
@@ -28,10 +28,10 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		// of data for each calculation
 
 		int cellID = particlesVector->particleVector[i].cellID;
-		int nodeID_0 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[0];
-		int nodeID_1 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[1];
-		int nodeID_2 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[2];
-		int nodeID_3 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[3];
+		int nodeID_0 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[0] - 1;
+		int nodeID_1 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[1] - 1;
+		int nodeID_2 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[2] - 1;
+		int nodeID_3 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[3] - 1;
 
 		double left = mesh->cellsVector.cells[cellID].left;
 		double right = mesh->cellsVector.cells[cellID].right;

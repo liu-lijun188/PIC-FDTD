@@ -38,7 +38,8 @@ public:
 	double charge;							//!< Particle charge
 	double epsilon0;						//!< Permittivity of free space (assumes vacuum)
 
-	double xTest, yTest, uTest, vTest;		//!< Test parameter		
+	double xTest, yTest, uTest, vTest;		//!< Test parameter	
+	int numCellsWithParticles;				//!< Test parameter	
 
 	GridBasicInfo gridinfo;					//!< Basic grid properties
 	GridGeo gridgeo;						//!< Detailed grid info

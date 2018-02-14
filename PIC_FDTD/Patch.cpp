@@ -23,7 +23,7 @@ Patch::Patch(Parameters *parametersList, int patchID)
 	mesh = Mesh(&this->parametersList);
 	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
 
-	generateOutput(tecplotSolution, particlesVector.positionVector, time);	
+	generateOutput(tecplotSolution, particlesVector.positionVector, particlesVector.numParticles, time);
 }
 
 
@@ -34,12 +34,12 @@ Patch::~Patch()
 
 
 // Generate Tecplot output
-void Patch::generateOutput(std::string solutionName, vector2D data, double time)
+void Patch::generateOutput(std::string solutionName, vector2D data, int numParticles, double time)
 {
 	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
 
 	writeMeshTecplot(tecplotMesh, mesh);
-	writeSolutionXY_T_Tecplot(solutionName, data, 1, time);	// Currently for a single particle
+	writeSolutionXY_T_Tecplot(solutionName, data, numParticles, time);
 }
 
 
@@ -56,7 +56,8 @@ void Patch::startPIC()
 		// be replaced with functions of the Patch class? 
 
 		ParticlePusher pusher(&parametersList, &mesh, &particlesVector);
-		generateOutput(tecplotSolution, particlesVector.positionVector, time);
+		
+		generateOutput(tecplotSolution, particlesVector.positionVector, particlesVector.numParticles, time);
 		
 		// MCC collisions();
 
