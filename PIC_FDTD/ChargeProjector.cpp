@@ -37,8 +37,11 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		double right = mesh->cellsVector.cells[cellID].right;
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
+		
+		// TODO: Change these two to mesh level variables instead
 		double width = mesh->cellsVector.cells[cellID].width;
 		double height = mesh->cellsVector.cells[cellID].height;
+		
 		double x = particlesVector->particleVector[i].position[0];
 		double y = particlesVector->particleVector[i].position[1];
 
@@ -74,6 +77,14 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (top - y) / (width * height);
 			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (y - bottom) / (width * height);
 		}
+	}
+
+	// TODO: Same as width and height above for Cartesian mesh, replace
+	double h = 0.02;
+
+	for (int i = 0; i < mesh->numNodes; i++)
+	{
+		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / (h * h);
 	}
 }
 

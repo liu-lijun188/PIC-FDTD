@@ -36,6 +36,11 @@ public:
 	int particlesPerCell;					//!< Particles per cell
 
 	double charge;							//!< Particle charge
+
+	int maxSolverIterations;				//!< Maximum number of iterations for solver
+	double residualTolerance;				//!< Tolerance for solver residuals
+	double SORparameter;					//!< Successive over-relaxation parameter
+
 	double epsilon0;						//!< Permittivity of free space (assumes vacuum)
 
 	double xTest, yTest, uTest, vTest;		//!< Test parameter	
