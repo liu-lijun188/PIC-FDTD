@@ -27,7 +27,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		// Can change all of the below to references to avoid copying large amounts
 		// of data for each calculation
 
-		int cellID = particlesVector->particleVector[i].cellID;
+		int cellID = particlesVector->particleVector[i].cellID - 1;
 		int nodeID_0 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[0] - 1;
 		int nodeID_1 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[1] - 1;
 		int nodeID_2 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[2] - 1;

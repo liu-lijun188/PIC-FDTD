@@ -104,10 +104,10 @@ Mesh::Mesh(Parameters *localParametersList)
 		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)			// Bottom left node
 		{
 			cellsVector.cells[i].firstNodePosition = "BL";
-			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i;
-			cellsVector.cells[i].rightCellID = leftCell_2 + rightCell_2 - i;
-			cellsVector.cells[i].topCellID = leftCell_3 + rightCell_3 - i;
-			cellsVector.cells[i].leftCellID = leftCell_4 + rightCell_4 - i;
+			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i + 1;
+			cellsVector.cells[i].rightCellID = leftCell_2 + rightCell_2 - i + 1;
+			cellsVector.cells[i].topCellID = leftCell_3 + rightCell_3 - i + 1;
+			cellsVector.cells[i].leftCellID = leftCell_4 + rightCell_4 - i + 1;
 
 			nodesVector.nodes[nodeID1].rightNodeID = nodeID2 + 1;
 			nodesVector.nodes[nodeID1].topNodeID = nodeID4 + 1;
@@ -121,10 +121,10 @@ Mesh::Mesh(Parameters *localParametersList)
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].bottom)	// Bottom right node
 		{
 			cellsVector.cells[i].firstNodePosition = "BR";
-			cellsVector.cells[i].rightCellID = leftCell_1 + rightCell_1 - i;
-			cellsVector.cells[i].topCellID = leftCell_2 + rightCell_2 - i;
-			cellsVector.cells[i].leftCellID = leftCell_3 + rightCell_3 - i;
-			cellsVector.cells[i].bottomCellID = leftCell_4 + rightCell_4 - i;
+			cellsVector.cells[i].rightCellID = leftCell_1 + rightCell_1 - i + 1;
+			cellsVector.cells[i].topCellID = leftCell_2 + rightCell_2 - i + 1;
+			cellsVector.cells[i].leftCellID = leftCell_3 + rightCell_3 - i + 1;
+			cellsVector.cells[i].bottomCellID = leftCell_4 + rightCell_4 - i + 1;
 
 			nodesVector.nodes[nodeID1].topNodeID = nodeID2 + 1;
 			nodesVector.nodes[nodeID1].leftNodeID = nodeID4 + 1;
@@ -138,10 +138,10 @@ Mesh::Mesh(Parameters *localParametersList)
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)		// Top right node
 		{
 			cellsVector.cells[i].firstNodePosition = "TR";
-			cellsVector.cells[i].topCellID = leftCell_1 + rightCell_1 - i;
-			cellsVector.cells[i].leftCellID = leftCell_2 + rightCell_2 - i;
-			cellsVector.cells[i].bottomCellID = leftCell_3 + rightCell_3 - i;
-			cellsVector.cells[i].rightCellID = leftCell_4 + rightCell_4 - i;
+			cellsVector.cells[i].topCellID = leftCell_1 + rightCell_1 - i + 1;
+			cellsVector.cells[i].leftCellID = leftCell_2 + rightCell_2 - i + 1;
+			cellsVector.cells[i].bottomCellID = leftCell_3 + rightCell_3 - i + 1;
+			cellsVector.cells[i].rightCellID = leftCell_4 + rightCell_4 - i + 1;
 
 			nodesVector.nodes[nodeID1].leftNodeID = nodeID2 + 1;
 			nodesVector.nodes[nodeID1].bottomNodeID = nodeID4 + 1;
@@ -155,10 +155,10 @@ Mesh::Mesh(Parameters *localParametersList)
 		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
 		{
 			cellsVector.cells[i].firstNodePosition = "TL";
-			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i;
-			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i;
-			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i;
-			cellsVector.cells[i].topCellID = leftCell_4 + rightCell_4 - i;
+			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i + 1;
+			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i + 1;
+			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i + 1;
+			cellsVector.cells[i].topCellID = leftCell_4 + rightCell_4 - i + 1;
 
 			nodesVector.nodes[nodeID1].bottomNodeID = nodeID2 + 1;
 			nodesVector.nodes[nodeID1].rightNodeID = nodeID4 + 1;
@@ -196,5 +196,17 @@ Mesh::~Mesh()
 // Assign particle IDs to a cell
 void Mesh::addParticlesToCell(int cellID, int particleID)
 {
-	cellsVector.cells[cellID].listOfParticles.push_back(particleID);
+	cellsVector.cells[cellID - 1].listOfParticles.push_back(particleID);
+}
+
+// Remove particle IDs from a cell
+void Mesh::removeParticlesFromCell(int cellID, int particleID)
+{
+	for (int i = 0; i < cellsVector.cells[cellID - 1].listOfParticles.size(); i++)
+	{
+		if (cellsVector.cells[cellID - 1].listOfParticles[i] == particleID)
+		{
+			cellsVector.cells[cellID - 1].listOfParticles.erase(cellsVector.cells[cellID - 1].listOfParticles.begin() + i);
+		}
+	}
 }

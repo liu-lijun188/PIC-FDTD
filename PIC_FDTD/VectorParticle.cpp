@@ -23,7 +23,7 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 		{
 			numParticles++;
 
-			Particle particle(parametersList, mesh, patchID, i, numParticles);
+			Particle particle(parametersList, mesh, patchID, i + 1, numParticles);
 			particleVector.push_back(particle);
 
 			positionVector.push_back(particle.position);

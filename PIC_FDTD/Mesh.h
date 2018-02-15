@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -38,4 +38,6 @@ public:
 	// Methods
 	void addParticlesToCell(int cellID, 
 		int particleID);					//!< Assign particle IDs to a cell
+	void removeParticlesFromCell(int cellID,
+		int particleID);					//!< Remove particle IDs from a cell
 };

@@ -23,10 +23,10 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	this->basic.q = parametersList->charge;
 
 	// Place particle in cell (xTest, yTest)
-	position.push_back(mesh->cellsVector.cells[cellID].left * (1 - parametersList->xTest) + 
-		mesh->cellsVector.cells[cellID].right * (parametersList->xTest));			// x
-	position.push_back(mesh->cellsVector.cells[cellID].top * (parametersList->yTest) +
-		mesh->cellsVector.cells[cellID].bottom * (1 - parametersList->yTest));		// y
+	position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->xTest) + 
+		mesh->cellsVector.cells[cellID - 1].right * (parametersList->xTest));			// x
+	position.push_back(mesh->cellsVector.cells[cellID - 1].top * (parametersList->yTest) +
+		mesh->cellsVector.cells[cellID - 1].bottom * (1 - parametersList->yTest));		// y
 	
 	// Initial particle velocity (uTest, vTest)
 	velocity.push_back(parametersList->uTest);	// u
