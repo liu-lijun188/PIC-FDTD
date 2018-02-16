@@ -23,9 +23,9 @@ public:
 	double rho = -1;			//!< Charge density at the grid node
 	double phi = -1;			//!< Potential at the grid node
 
-	double Ex = -1;				//!< Electric field, x direction
-	double Ey = -1;				//!< Electric field, y direction
-
+	std::vector<double> fields
+	{ -1.0, -1.0, -1.0,-1.0 };	//!< Electromagnetic field (Ex, Ey, Bx, By)
+	
 	// Constructor/destructor
 	Nodes();					//!< Default constructor
 	Nodes(NodeBase baseNode);	//!< Constructor

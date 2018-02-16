@@ -66,6 +66,7 @@ void Patch::startPIC()
 		// FDTD fdtd();
 
 		FieldSolver solver(&parametersList, &mesh, &particlesVector);
-		// FieldInterpolator interpolator();
+		
+		FieldInterpolator interpolator(&parametersList, &mesh, &particlesVector);
 	}
 }

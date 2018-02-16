@@ -13,6 +13,13 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
+	// TODO: Do normal push for first time step, then afterwards use Lorentz force
+	// plus leapfrog/Boris methods
+
+	// TODO: Check that particles are not being pushed outside of the simulation
+	// domain, i.e. enforce boundary conditions (e.g. check if cellID of new cell
+	// is greater than 0 before entering...)
+
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// Update x position

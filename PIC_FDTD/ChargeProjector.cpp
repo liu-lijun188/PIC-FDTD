@@ -24,8 +24,8 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
-		// Can change all of the below to references to avoid copying large amounts
-		// of data for each calculation
+		// TODO: Can change all of the below to references to avoid copying large 
+		// amounts of data for each calculation
 
 		int cellID = particlesVector->particleVector[i].cellID - 1;
 		int nodeID_0 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[0] - 1;
@@ -38,7 +38,10 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
 		
-		// TODO: Change these two to mesh level variables instead
+		// TODO: Change these two to mesh level variables instead, also calculate
+		// length and width of entire simulation domain as well (assuming 
+		// rectangular) in order to allow for easy coordinate shifting during
+		// transport across periodic boundary conditions
 		double width = mesh->cellsVector.cells[cellID].width;
 		double height = mesh->cellsVector.cells[cellID].height;
 		
