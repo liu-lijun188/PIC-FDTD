@@ -29,7 +29,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 	{
 		for (int j = 0; j < mesh->numNodes; j++)
 		{
-			if (mesh->nodesVector.nodes[j].internal)
+			if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 			{
 				mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 					((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
@@ -49,7 +49,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 			for (int j = 0; j < mesh->numNodes; j++)
 			{
 
-				if (mesh->nodesVector.nodes[j].internal)
+				if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 				{
 					double residual =
 						(mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
@@ -73,7 +73,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 	// Electric field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
-		if (mesh->nodesVector.nodes[i].internal)
+		if (mesh->nodesVector.nodes[i].boundaryType == "internal")
 		{
 			mesh->nodesVector.nodes[i].Ex = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
 				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);

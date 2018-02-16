@@ -23,7 +23,7 @@ public:
 	int rightCellID = -1;				//!< ID of adjacent right cell
 	int topCellID = -1;					//!< ID of adjacent top (up) cell
 	int bottomCellID = -1;				//!< ID of adjacent bottom (down) cell
-	bool ghost = true;					//!< Check is cell is a ghost
+	std::string boundaryType;			//!< Position on boundary (internal if FALSE)
 	std::string firstNodePosition;		//!< Position of first node
 	std::vector<int> listOfParticles;	//!< List of particles in the cell
 
@@ -35,6 +35,5 @@ public:
 
 
 	// Methods
-	int minimumID();					//!< Find minimum adjacent ID
 
 };

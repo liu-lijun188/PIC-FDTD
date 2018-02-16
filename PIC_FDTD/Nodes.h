@@ -17,7 +17,7 @@ public:
 	int rightNodeID = -1;		//!< ID of node to right
 	int topNodeID = -1;			//!< ID of node to top
 	int bottomNodeID = -1;		//!< ID of node to bottom
-	bool internal = false;		//!< Check if node is internal
+	std::string boundaryType;	//!< Position on boundary (internal if FALSE)
 
 	double charge = -1;			//!< Charge at the grid node
 	double rho = -1;			//!< Charge density at the grid node

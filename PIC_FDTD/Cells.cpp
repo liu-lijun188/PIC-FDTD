@@ -23,18 +23,3 @@ Cells::Cells(CellBase baseCell)
 Cells::~Cells()
 {
 }
-
-// Find minimum adjacent ID
-int Cells::minimumID()
-{
-	int minimum = leftCellID;
-	
-	if (rightCellID < minimum)
-		minimum = rightCellID;
-	if (topCellID < minimum)
-		minimum = topCellID;
-	if (bottomCellID < minimum)
-		minimum = bottomCellID;
-
-	return minimum;
-}
