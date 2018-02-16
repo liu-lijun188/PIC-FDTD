@@ -2,7 +2,7 @@
 
 int gettimeofday(struct timeval* t,void* timezone)
 {       struct _timeb timebuffer;
-        _ftime( &timebuffer );
+        _ftime_s( &timebuffer );
         t->tv_sec=timebuffer.time;
         t->tv_usec=1000*timebuffer.millitm;
 		return 0;

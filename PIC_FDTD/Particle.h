@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Particle class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -15,17 +15,21 @@ class Particle : public species
 {
 public:
 	// Data members
-	int particleID;										//!< Particle ID
-	int cellID;											//!< Current cell ID
-	std::vector<double> position;						//!< Particle position vector
-	std::vector<double> velocity;						//!< Particle velocity vector
+	int particleID;							//!< Particle ID
+	int cellID;								//!< Current cell ID
+	std::vector<double> position;			//!< Particle position vector
+	std::vector<double> velocity;			//!< Particle velocity vector
 
+	std::vector<double> fields
+		{ -1.0, -1.0, -1.0, -1.0 }; 		//!< Electromagnetic field (Ex, Ey, Bx, By)
+	std::vector<double> lorentz	
+		{ -1.0,-1.0 };						//!< Lorentz force (Fx, Fy)
 
 	// Constructor/destructor
-	Particle();											//!< Default constructor
-	Particle(Parameters *parametersList, Mesh *mesh, 
-		int patchID, int cellID, int particleID);		//!< Constructor
-	~Particle();										//!< Destructor
+	Particle();								//!< Default constructor
+	Particle(Parameters *parametersList, Mesh *mesh, int patchID, 
+		int cellID, int particleID);		//!< Constructor
+	~Particle();							//!< Destructor
 
 
 	// Methods

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Patch class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -32,8 +32,8 @@ private:
 
 
 	// Methods
-	void generateOutput(std::string solutionName,
-		vector2D data, double time);				//!< Generate Tecplot output
+	void generateOutput(std::string solutionName, vector2D data,
+		int numParticles, double time);				//!< Generate Tecplot output
 
 public:
 	// Data members

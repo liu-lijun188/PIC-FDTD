@@ -7,15 +7,30 @@
 
 % Simulation parameters
 timeStep: 0.2
-maximumNumberOfIterations: 1 
+maximumNumberOfIterations: 3 
 numberOfPatches: 1
 particlesPerCell: 1
 
 % Particle parameters
 charge: 1.6e-19
 
-% Some paths
+% Solver parameters
+maxSolverIterations: 10
+residualTolerance: 0.1
+SORparameter: 1.1
+
+% Constants
+epsilon0: 1.0
+
+% Paths
 meshFilePath: coarseMesh.su2
+
+% Test parameters
+xTest: 0.5
+yTest: 0.5
+uTest: 0.0
+vTest: -0.06
+numCellsWithParticles: 1
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % End of input file

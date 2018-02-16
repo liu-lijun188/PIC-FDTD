@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -36,6 +36,15 @@ public:
 	int particlesPerCell;					//!< Particles per cell
 
 	double charge;							//!< Particle charge
+
+	int maxSolverIterations;				//!< Maximum number of iterations for solver
+	double residualTolerance;				//!< Tolerance for solver residuals
+	double SORparameter;					//!< Successive over-relaxation parameter
+
+	double epsilon0;						//!< Permittivity of free space (assumes vacuum)
+
+	double xTest, yTest, uTest, vTest;		//!< Test parameter	
+	int numCellsWithParticles;				//!< Test parameter	
 
 	GridBasicInfo gridinfo;					//!< Basic grid properties
 	GridGeo gridgeo;						//!< Detailed grid info

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of VectorParticle class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -14,7 +14,7 @@ class VectorParticle
 public:
 	// Data members
 	std::vector<Particle> particleVector;			//!< Vector of Particle objects
-	int numParticles;								//!< Size of particleVector								
+	int numParticles = 0;							//!< Size of particleVector								
 	vector2D positionVector;						//!< Store particle position, cell ID and particle ID for plotting
 
 
