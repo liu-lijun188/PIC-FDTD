@@ -420,13 +420,43 @@ Mesh::Mesh(Parameters *localParametersList)
 		}
 	}
 
-	// Function to find opposing cells
+	// Find connected cells based on periodic BCs
+	for (int i = 0; i < numCells; i++)
+	{
+		// Periodic cells in x direction
+		if (cellsVector.cells[i].boundaryType == "TL" || 
+			cellsVector.cells[i].boundaryType == "L" || 
+			cellsVector.cells[i].boundaryType == "BL")
+		{
+			int j = cellsVector.cells[i].rightCellID - 1;
+			while (cellsVector.cells[j].boundaryType != "TR" && 
+				cellsVector.cells[j].boundaryType != "R" && 
+				cellsVector.cells[j].boundaryType != "BR")
+			{
+				j = cellsVector.cells[j].rightCellID - 1; 
 
-	// TODO: for a cell marked to TL, opposing is cell TR
-	// Bottom cell for TL is opposed to bottom cell for TR, and so on
-	// Similar case when going horizontally, except with TL and BL, i.e. only 
-	// need to travel along two edges to work out the opposing sides
-	// Iterate through until top/right cell is negative
+			}
+			cellsVector.cells[i].periodicXCellID = j + 1;
+			cellsVector.cells[j].periodicXCellID = i + 1;
+		}
+
+		// Periodic cells in y direction
+		if (cellsVector.cells[i].boundaryType == "TL" || 
+			cellsVector.cells[i].boundaryType == "T" || 
+			cellsVector.cells[i].boundaryType == "TR")
+		{
+			int j = cellsVector.cells[i].bottomCellID - 1;
+			while (cellsVector.cells[j].boundaryType != "BL" && 
+				cellsVector.cells[j].boundaryType != "B" && 
+				cellsVector.cells[j].boundaryType != "BR")
+			{
+				j = cellsVector.cells[j].bottomCellID - 1;
+
+			}
+			cellsVector.cells[i].periodicYCellID = j + 1;
+			cellsVector.cells[j].periodicYCellID = i + 1;
+		}
+	}
 }
 
 

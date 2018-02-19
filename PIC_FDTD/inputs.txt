@@ -7,7 +7,7 @@
 
 % Simulation parameters
 timeStep: 0.2
-maximumNumberOfIterations: 3 
+maximumNumberOfIterations: 6 
 numberOfPatches: 1
 particlesPerCell: 1
 
@@ -28,8 +28,8 @@ meshFilePath: coarseMesh.su2
 % Test parameters
 xTest: 0.5
 yTest: 0.5
-uTest: 0.0
-vTest: -0.06
+uTest: -0.06
+vTest: -0.04
 numCellsWithParticles: 1
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
