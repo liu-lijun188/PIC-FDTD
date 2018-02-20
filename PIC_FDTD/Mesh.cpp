@@ -28,6 +28,8 @@ Mesh::Mesh(Parameters *localParametersList)
 	ghostVector.allocate(localParametersList->gridgeo.ghost);
 	nodesVector.allocate(localParametersList->gridgeo.nodes);
 
+	double hAverage = 0;
+
 	// Find boundaries of each cell and identify adjacent/neighbouring cells,
 	// also identify connected nodes
 	for (int i = 0; i < numCells; i++)
@@ -71,8 +73,8 @@ Mesh::Mesh(Parameters *localParametersList)
 			}
 		}
 
-		cellsVector.cells[i].width = cellsVector.cells[i].right - cellsVector.cells[i].left;
-		cellsVector.cells[i].height = cellsVector.cells[i].top - cellsVector.cells[i].bottom;
+		hAverage += cellsVector.cells[i].right - cellsVector.cells[i].left + 
+			cellsVector.cells[i].top - cellsVector.cells[i].bottom;
 
 		// Get position of first node
 		int nodeID1 = cellsVector.cells[i].connectivity.nodeIDs[0] - 1;
@@ -99,10 +101,6 @@ Mesh::Mesh(Parameters *localParametersList)
 		int leftCell_4 = facesVector.faces[faceID_4].connectivity.cl[0] - 1;
 		int rightCell_4 = facesVector.faces[faceID_4].connectivity.cr[0] - 1;
 
-		// TODO: Reorder if statements so that the internal case is first (most
-		// likely to be triggered for a regular mesh, hence can reduce time to
-		// identify boundary type)
-
 		// Identify position of adjacent cells based on location of first node,
 		// identify connected nodes, and positions of cells and nodes w.r.t.
 		// boundary of simulation domain
@@ -123,7 +121,16 @@ Mesh::Mesh(Parameters *localParametersList)
 			nodesVector.nodes[nodeID4].bottomNodeID = nodeID1 + 1;
 			nodesVector.nodes[nodeID4].rightNodeID = nodeID3 + 1;
 
-			if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
+			if (cellsVector.cells[i].leftCellID > 0 && cellsVector.cells[i].rightCellID > 0 &&
+				cellsVector.cells[i].topCellID > 0 && cellsVector.cells[i].bottomCellID > 0)
+			{
+				cellsVector.cells[i].boundaryType = "internal";
+				nodesVector.nodes[nodeID1].boundaryType = "internal";
+				nodesVector.nodes[nodeID2].boundaryType = "internal";
+				nodesVector.nodes[nodeID3].boundaryType = "internal";
+				nodesVector.nodes[nodeID4].boundaryType = "internal";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
 			{
 				cellsVector.cells[i].boundaryType = "BL";
 				nodesVector.nodes[nodeID1].boundaryType = "BL";
@@ -175,14 +182,6 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID3].boundaryType = "T";
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
-			else
-			{
-				cellsVector.cells[i].boundaryType = "internal";
-				nodesVector.nodes[nodeID1].boundaryType = "internal";
-				nodesVector.nodes[nodeID2].boundaryType = "internal";
-				nodesVector.nodes[nodeID3].boundaryType = "internal";
-				nodesVector.nodes[nodeID4].boundaryType = "internal";
-			}
 		}
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].bottom)	// Bottom right node
 		{
@@ -201,7 +200,16 @@ Mesh::Mesh(Parameters *localParametersList)
 			nodesVector.nodes[nodeID4].rightNodeID = nodeID1 + 1;
 			nodesVector.nodes[nodeID4].topNodeID = nodeID3 + 1;
 
-			if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
+			if (cellsVector.cells[i].leftCellID > 0 && cellsVector.cells[i].rightCellID > 0 &&
+				cellsVector.cells[i].topCellID > 0 && cellsVector.cells[i].bottomCellID > 0)
+			{
+				cellsVector.cells[i].boundaryType = "internal";
+				nodesVector.nodes[nodeID1].boundaryType = "internal";
+				nodesVector.nodes[nodeID2].boundaryType = "internal";
+				nodesVector.nodes[nodeID3].boundaryType = "internal";
+				nodesVector.nodes[nodeID4].boundaryType = "internal";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
 			{
 				cellsVector.cells[i].boundaryType = "BL";
 				nodesVector.nodes[nodeID1].boundaryType = "B";
@@ -253,14 +261,6 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID2].boundaryType = "T";
 				nodesVector.nodes[nodeID3].boundaryType = "T";
 			}
-			else
-			{
-				cellsVector.cells[i].boundaryType = "internal";
-				nodesVector.nodes[nodeID1].boundaryType = "internal";
-				nodesVector.nodes[nodeID2].boundaryType = "internal";
-				nodesVector.nodes[nodeID3].boundaryType = "internal";
-				nodesVector.nodes[nodeID4].boundaryType = "internal";
-			}
 		}
 		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)		// Top right node
 		{
@@ -279,7 +279,16 @@ Mesh::Mesh(Parameters *localParametersList)
 			nodesVector.nodes[nodeID4].topNodeID = nodeID1 + 1;
 			nodesVector.nodes[nodeID4].leftNodeID = nodeID3 + 1;
 
-			if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
+			if (cellsVector.cells[i].leftCellID > 0 && cellsVector.cells[i].rightCellID > 0 &&
+				cellsVector.cells[i].topCellID > 0 && cellsVector.cells[i].bottomCellID > 0)
+			{
+				cellsVector.cells[i].boundaryType = "internal";
+				nodesVector.nodes[nodeID1].boundaryType = "internal";
+				nodesVector.nodes[nodeID2].boundaryType = "internal";
+				nodesVector.nodes[nodeID3].boundaryType = "internal";
+				nodesVector.nodes[nodeID4].boundaryType = "internal";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
 			{
 				cellsVector.cells[i].boundaryType = "BL";
 				nodesVector.nodes[nodeID2].boundaryType = "L";
@@ -331,14 +340,6 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID1].boundaryType = "T";
 				nodesVector.nodes[nodeID2].boundaryType = "T";
 			}
-			else
-			{
-				cellsVector.cells[i].boundaryType = "internal";
-				nodesVector.nodes[nodeID1].boundaryType = "internal";
-				nodesVector.nodes[nodeID2].boundaryType = "internal";
-				nodesVector.nodes[nodeID3].boundaryType = "internal";
-				nodesVector.nodes[nodeID4].boundaryType = "internal";
-			}
 		}
 		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
 		{
@@ -357,7 +358,16 @@ Mesh::Mesh(Parameters *localParametersList)
 			nodesVector.nodes[nodeID4].leftNodeID = nodeID1 + 1;
 			nodesVector.nodes[nodeID4].bottomNodeID = nodeID3 + 1;
 
-			if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
+			if (cellsVector.cells[i].leftCellID > 0 && cellsVector.cells[i].rightCellID > 0 &&
+				cellsVector.cells[i].topCellID > 0 && cellsVector.cells[i].bottomCellID > 0)
+			{
+				cellsVector.cells[i].boundaryType = "internal";
+				nodesVector.nodes[nodeID1].boundaryType = "internal";
+				nodesVector.nodes[nodeID2].boundaryType = "internal";
+				nodesVector.nodes[nodeID3].boundaryType = "internal";
+				nodesVector.nodes[nodeID4].boundaryType = "internal";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
 			{
 				cellsVector.cells[i].boundaryType = "BL";
 				nodesVector.nodes[nodeID1].boundaryType = "L";
@@ -409,15 +419,8 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID1].boundaryType = "T";
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
-			else
-			{
-				cellsVector.cells[i].boundaryType = "internal";
-				nodesVector.nodes[nodeID1].boundaryType = "internal";
-				nodesVector.nodes[nodeID2].boundaryType = "internal";
-				nodesVector.nodes[nodeID3].boundaryType = "internal";
-				nodesVector.nodes[nodeID4].boundaryType = "internal";
-			}
 		}
+		h = hAverage / static_cast<double>((2 * numCells));
 	}
 
 	// Find connected cells based on periodic BCs

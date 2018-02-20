@@ -17,8 +17,6 @@ public:
 	double right = -1.0;				//!< Right cell boundary
 	double top = -1.0;					//!< Top (up) cell boundary
 	double bottom = -1.0;				//!< Bottom (down) cell boundary
-	double width = -1.0;				//!< Cell width
-	double height = -1.0;				//!< Cell height
 	int leftCellID = -1;				//!< ID of adjacent left cell
 	int rightCellID = -1;				//!< ID of adjacent right cell
 	int topCellID = -1;					//!< ID of adjacent top (up) cell

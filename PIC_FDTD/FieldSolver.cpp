@@ -14,14 +14,9 @@ FieldSolver::FieldSolver()
 FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
 	// Set potential at all nodes to zero at the start of each step
-	// TODO: Could make this a method of VectorNode in future
-	for (int i = 0; i < mesh->numNodes; i++)
-	{
-		mesh->nodesVector.nodes[i].phi = 0;
-	}
+	mesh->nodesVector.clearPhi();
 
-	// TODO: Make this a property of mesh and access it from there
-	double h = 0.02;
+	double h = mesh->h;
 
 	// Gauss-Seidel solver with successive over-relaxation (SOR)
 	// TODO: Enable switch statements to change solver type (GS-SOR, FFT, etc.)
@@ -42,7 +37,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 		}
 
 		// Check convergence
-		if (i % 9 == 0)
+		if (i != 0 && i % 9 == 0)
 		{
 			double residualSum = 0;
 

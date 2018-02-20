@@ -36,12 +36,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
 
-		// TODO: Change these two to mesh level variables instead, also calculate
-		// length and width of entire simulation domain as well (assuming 
-		// rectangular) in order to allow for easy coordinate shifting during
-		// transport across periodic boundary conditions
-		double width = mesh->cellsVector.cells[cellID].width;
-		double height = mesh->cellsVector.cells[cellID].height;
+		double hSquared = mesh->h * mesh->h;
 
 		double x = particlesVector->particleVector[i].position[0];
 		double y = particlesVector->particleVector[i].position[1];
@@ -54,10 +49,10 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 			for (int j = 0; j < 4; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (top - y) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (x - left) * (top - y) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (y - bottom) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (right - x) * (y - bottom) / (width * height);
+					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (top - y) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].fields[j] * (x - left) * (top - y) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (y - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].fields[j] * (right - x) * (y - bottom) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "BR")
@@ -65,10 +60,10 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 			for (int j = 0; j < 4; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (top - y) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (x - left) * (y - bottom) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (right - x) * (y - bottom) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (right - x) * (top - y) / (width * height);
+					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (top - y) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].fields[j] * (x - left) * (y - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].fields[j] * (right - x) * (y - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].fields[j] * (right - x) * (top - y) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TR")
@@ -76,10 +71,10 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 			for (int j = 0; j < 4; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (y - bottom) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (right - x) * (y - bottom) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (right - x) * (top - y) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (top - y) / (width * height);
+					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (y - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].fields[j] * (right - x) * (y - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].fields[j] * (right - x) * (top - y) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (top - y) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TL")
@@ -87,10 +82,10 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 			for (int j = 0; j < 4; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (y - bottom) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (right - x) * (top - y) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (top - y) / (width * height) +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (y - bottom) / (width * height);
+					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (y - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].fields[j] * (right - x) * (top - y) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (top - y) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (y - bottom) / hSquared;
 			}
 		}
 
@@ -99,7 +94,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		// proper cross product for magnetic field component
 		for (int j = 0; j < 2; j++)
 		{
-		particlesVector->particleVector[i].lorentz[j] = particlesVector->particleVector[i].basic.q *
+		particlesVector->particleVector[i].lorentz[j] = charge *
 			(particlesVector->particleVector[i].fields[j] + particlesVector->particleVector[i].velocity[j] *
 				particlesVector->particleVector[i].fields[j+2]);
 		}
