@@ -72,9 +72,14 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		}
 	}
 
+	// TODO: Account for fixed neutralising (background) charge (?)
+
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
 		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
+
+		// TODO: Assuming periodic BCs in the x direction, need to set rho(R) to 
+		// average(rho(R) + rho(opposite)), then set rho(opposite)=rho(R)
 	}
 }
 

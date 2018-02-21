@@ -50,16 +50,8 @@ void Patch::startPIC()
 
 	for (int i = 0; i < parametersList.maximumNumberOfIterations; i++)
 	{
-		time += parametersList.timeStep;
-
 		// Do the classes below really need to be defined as such, or can they
 		// be replaced with functions of the Patch class? 
-
-		ParticlePusher pusher(&parametersList, &mesh, &particlesVector);
-		
-		generateOutput(tecplotSolution, particlesVector.positionVector, particlesVector.numParticles, time);
-		
-		// MCC collisions();
 
 		ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 		
@@ -68,5 +60,13 @@ void Patch::startPIC()
 		FieldSolver solver(&parametersList, &mesh, &particlesVector);
 		
 		FieldInterpolator interpolator(&parametersList, &mesh, &particlesVector);
+
+		ParticlePusher pusher(&parametersList, &mesh, &particlesVector);
+
+		// MCC collisions();
+
+		time += parametersList.timeStep;
+
+		generateOutput(tecplotSolution, particlesVector.positionVector, particlesVector.numParticles, time);
 	}
 }

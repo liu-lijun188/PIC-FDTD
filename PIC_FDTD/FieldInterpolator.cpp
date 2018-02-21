@@ -19,6 +19,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 {
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
+		// TODO: Can take this step out and make it a function of VectorParticle
 		particlesVector->particleVector[i].fields = { 0.0,0.0,0.0,0.0 };
 		particlesVector->particleVector[i].lorentz = { 0.0, 0.0 };
 		

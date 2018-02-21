@@ -13,8 +13,14 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
-	// TODO: Do normal push for first time step, then afterwards use Lorentz force
-	// plus leapfrog/Boris methods
+	// TODO: Incorporate Boris methods to handle B field rotation
+
+	// TODO: Leapfrog method 
+	// If t==0, shift velocity back by half a time step, i.e. v += E*q*(0.5*dt/m), 
+	// where E*q is Lorentz force, dividing by m gives acceleration, 
+	// multiplying by dt gives velocity, and the 0.5 allows a half step shift.
+	// Then, for all time steps including t==0, v += E*q*(dt/m), and x += v*dt
+	// Remember to shift v forwards half a time step when plotting!!!
 
 	// Currently enforced BCs: fixed (sticky) walls in y direction, periodic in x
 

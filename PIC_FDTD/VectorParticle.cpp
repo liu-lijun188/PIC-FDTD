@@ -15,23 +15,35 @@ VectorParticle::VectorParticle()
 VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
-
-	//for (int i = 0; i < mesh->numCells; i++)							// Particle in every cell
-	for (int i = 0; i < parametersList->numCellsWithParticles; i++)		// Particle in a few cells
+	
+	// If 0 < numCellsWithParticles < numCells, seed particles in a few cells, 
+	// else seed in every cell
+	if (parametersList->numCellsWithParticles < 1 || 
+		parametersList->numCellsWithParticles > mesh->numCells)
 	{
-		for (int j = 0; j < parametersList->particlesPerCell; j++)
+		parametersList->numCellsWithParticles = mesh->numCells;
+	}
+
+	for (int i = 0; i < parametersList->numCellsWithParticles; i++)
+	{
+		// Check is particlesPerCell is a square number
+		if (sqrt(parametersList->particlesPerCell)  == round(sqrt(parametersList->particlesPerCell)))
 		{
-			numParticles++;
+			for (int j = 0; j < parametersList->particlesPerCell; j++)
+			{
+				numParticles++;
 
-			Particle particle(parametersList, mesh, patchID, i + 1, numParticles);
-			particleVector.push_back(particle);
+				Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
+				particleVector.push_back(particle);
 
-			positionVector.push_back(particle.position);
-			positionVector.back().push_back(particle.cellID);
-			positionVector.back().push_back(particle.particleID);
+				positionVector.push_back(particle.position);
+				positionVector.back().push_back(particle.cellID);
+				positionVector.back().push_back(particle.particleID);
 
-			mesh->addParticlesToCell(particle.cellID, particle.particleID);
+				mesh->addParticlesToCell(particle.cellID, particle.particleID);
+			}
 		}
+
 	}
 }
 

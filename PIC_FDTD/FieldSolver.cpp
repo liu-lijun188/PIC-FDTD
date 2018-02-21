@@ -24,6 +24,10 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 	{
 		for (int j = 0; j < mesh->numNodes; j++)
 		{
+			// TODO: Assuming periodic BCs in the x direction, for nodes on the 
+			// L boundary, use opposite node instead of left, similarly for nodes
+			// on the R, same applies for the four corner nodes
+
 			if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 			{
 				mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
@@ -43,7 +47,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 
 			for (int j = 0; j < mesh->numNodes; j++)
 			{
-
+				// TODO: Include other nodes in calculating residual sum
 				if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 				{
 					double residual =
@@ -63,11 +67,17 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 				break; 
 			}
 		}
+
+		// TODO: Enforce periodic BC on phi, phi(R) = phi(L)
 	}
 
 	// Electric field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
+		// TODO: Include other nodes as well, can use centred difference across
+		// boundary in the x case and for most y cases, for corner nodes the 
+		// forwards or backwards difference in y are required
+
 		if (mesh->nodesVector.nodes[i].boundaryType == "internal")
 		{
 			mesh->nodesVector.nodes[i].fields[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
