@@ -17,12 +17,10 @@ FieldInterpolator::FieldInterpolator()
 FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 	Mesh *mesh, VectorParticle *particlesVector)
 {
+	particlesVector->clearFields();
+
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
-		// TODO: Can take this step out and make it a function of VectorParticle
-		particlesVector->particleVector[i].fields = { 0.0,0.0,0.0,0.0 };
-		particlesVector->particleVector[i].lorentz = { 0.0, 0.0 };
-		
 		// TODO: Can change all of the below to references to avoid copying large 
 		// amounts of data for each calculation
 
@@ -93,6 +91,8 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		// Calculate Lorentz force
 		// TODO: Change to vector notation rather than components, then use 
 		// proper cross product for magnetic field component
+		// TODO: Consider moving this into ParticlePusher to save on repetition
+		// (no need to calculate the force in two steps...)
 		for (int j = 0; j < 2; j++)
 		{
 		particlesVector->particleVector[i].lorentz[j] = charge *

@@ -50,7 +50,7 @@ void Patch::startPIC()
 
 	for (int i = 0; i < parametersList.maximumNumberOfIterations; i++)
 	{
-		// Do the classes below really need to be defined as such, or can they
+		// TODO: Do the classes below really need to be defined as such, or can they
 		// be replaced with functions of the Patch class? 
 
 		ChargeProjector projector(&parametersList, &mesh, &particlesVector);
@@ -61,7 +61,7 @@ void Patch::startPIC()
 		
 		FieldInterpolator interpolator(&parametersList, &mesh, &particlesVector);
 
-		ParticlePusher pusher(&parametersList, &mesh, &particlesVector);
+		ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
 		// MCC collisions();
 

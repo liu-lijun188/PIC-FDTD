@@ -16,8 +16,8 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 {
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
 	
-	// If 0 < numCellsWithParticles < numCells, seed particles in a few cells, 
-	// else seed in every cell
+	// If 0 < numCellsWithParticles <= numCells, seed particles in a few cells, 
+	// else seed particles in every cell
 	if (parametersList->numCellsWithParticles < 1 || 
 		parametersList->numCellsWithParticles > mesh->numCells)
 	{
@@ -26,7 +26,9 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 
 	for (int i = 0; i < parametersList->numCellsWithParticles; i++)
 	{
-		// Check is particlesPerCell is a square number
+		// Check if particlesPerCell is a square number
+
+		// TODO: Add error message if particlesPerCell is not square
 		if (sqrt(parametersList->particlesPerCell)  == round(sqrt(parametersList->particlesPerCell)))
 		{
 			for (int j = 0; j < parametersList->particlesPerCell; j++)
@@ -69,5 +71,16 @@ void VectorParticle::updatePositionVector(Particle *particle)
 			positionVector[i].push_back(particle->particleID);
 			positionVector.erase(positionVector.begin() + i + 1);
 		}
+	}
+}
+
+
+// Clear fields and lorentz members of particleVector
+void VectorParticle::clearFields()
+{
+	for (int i = 0; i < numParticles; i++)
+	{
+		particleVector[i].fields = { 0.0,0.0,0.0,0.0 };
+		particleVector[i].lorentz = { 0.0, 0.0 };
 	}
 }

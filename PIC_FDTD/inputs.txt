@@ -12,7 +12,7 @@ numberOfPatches: 1
 particlesPerCell: 9
 
 % Particle parameters
-charge: 1.6e-19
+charge: -1.6e-19
 mass: 9.11e-31
 
 % Solver parameters

@@ -27,4 +27,5 @@ public:
 
 	// Methods
 	void updatePositionVector(Particle *particle);	//!< Update state of positionVector
+	void clearFields();								//!< Clear fields and lorentz members of particleVector
 };

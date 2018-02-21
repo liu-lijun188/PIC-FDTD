@@ -11,24 +11,35 @@ ParticlePusher::ParticlePusher()
 }
 
 // Constructor
-ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
+ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
 	// TODO: Incorporate Boris methods to handle B field rotation
 
-	// TODO: Leapfrog method 
-	// If t==0, shift velocity back by half a time step, i.e. v += E*q*(0.5*dt/m), 
-	// where E*q is Lorentz force, dividing by m gives acceleration, 
-	// multiplying by dt gives velocity, and the 0.5 allows a half step shift.
-	// Then, for all time steps including t==0, v += E*q*(dt/m), and x += v*dt
-	// Remember to shift v forwards half a time step when plotting!!!
+	// Leapfrog method - remember to shift v forwards 0.5 time steps when plotting!
+	if (time == 0.0)
+	{
+		for (int i = 0; i < particlesVector->numParticles; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				particlesVector->particleVector[i].velocity[j] -=
+					particlesVector->particleVector[i].lorentz[j] * 0.5 *
+					parametersList->timeStep / particlesVector->particleVector[i].basic.m;
+			}
+		}
+	}
 
 	// Currently enforced BCs: fixed (sticky) walls in y direction, periodic in x
-
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
+		// Update x velocity
+		particlesVector->particleVector[i].velocity[0] +=
+			particlesVector->particleVector[i].lorentz[0] * parametersList->timeStep / 
+			particlesVector->particleVector[i].basic.m;
+
 		// Update x position
-		particlesVector->particleVector[i].position[0] += 
-			parametersList->timeStep * particlesVector->particleVector[i].velocity[0]; 
+		particlesVector->particleVector[i].position[0] += parametersList->timeStep * 
+			particlesVector->particleVector[i].velocity[0]; 
 
 		double displacementL = particlesVector->particleVector[i].position[0] - 
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
@@ -89,9 +100,14 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].particleID);
 		}
 
+		// Update y velocity
+		particlesVector->particleVector[i].velocity[1] +=
+			particlesVector->particleVector[i].lorentz[1] * parametersList->timeStep /
+			particlesVector->particleVector[i].basic.m;
+
 		// Update y position
-		particlesVector->particleVector[i].position[1] +=
-			parametersList->timeStep * particlesVector->particleVector[i].velocity[1];
+		particlesVector->particleVector[i].position[1] += parametersList->timeStep * 
+			particlesVector->particleVector[i].velocity[1];
 
 		double displacementB = particlesVector->particleVector[i].position[1] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
