@@ -39,7 +39,7 @@ void Patch::generateOutput(std::string solutionName, vector2D data, int numParti
 	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
 
 	writeMeshTecplot(tecplotMesh, mesh);
-	writeSolutionXY_T_Tecplot(solutionName, data, numParticles, time);
+	writeSolutionXY_NTA_Tecplot(solutionName, data, numParticles, time);
 }
 
 

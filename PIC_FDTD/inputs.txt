@@ -6,10 +6,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Simulation parameters
-timeStep: 0.1
-maximumNumberOfIterations: 0 
+timeStep: 0.0005
+maximumNumberOfIterations: 4 
 numberOfPatches: 1
-particlesPerCell: 9
+particlesPerCell: 4
 
 % Particle parameters
 charge: -1.6e-19
@@ -31,7 +31,7 @@ xTest: 0.5
 yTest: 0.5
 uTest: 0.01
 vTest: -0.005
-numCellsWithParticles: 1
+numCellsWithParticles: 2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % End of input file

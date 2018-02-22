@@ -46,3 +46,13 @@ void VectorNode::clearPhi()
 		nodes[i].phi = 0;
 	}
 }
+
+
+// Clear fields members of nodes
+void VectorNode::clearFields()
+{
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		nodes[i].fields = { 0.0,0.0,0.0,0.0 };
+	}
+}

@@ -25,4 +25,5 @@ public:
 	void allocate(std::vector<NodeBase> nodes);	//!< Allocate NodeBase elements to nodes data member
 	void clearCharge();							//!< Set charge to 0 for all elements
 	void clearPhi();							//!< Set phi to 0 for all elements
+	void clearFields();							//!< Clear fields members of nodes
 };

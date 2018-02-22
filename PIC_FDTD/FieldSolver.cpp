@@ -13,8 +13,9 @@ FieldSolver::FieldSolver()
 // Constructor
 FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
-	// Set potential at all nodes to zero at the start of each step
+	// Set potential and fields at all nodes to zero at the start of each step
 	mesh->nodesVector.clearPhi();
+	mesh->nodesVector.clearFields();
 
 	double h = mesh->h;
 

@@ -21,6 +21,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	this->particleID = particleID;
 	this->cellID = cellID;
 	this->basic.q = parametersList->charge;
+	this->basic.m = parametersList->mass;
 
 	if (parametersList->particlesPerCell == 1)
 	{
