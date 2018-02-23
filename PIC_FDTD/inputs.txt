@@ -5,7 +5,7 @@
 % names or their order should not be edited. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Simulation parameters
+% Simulation parameters 
 timeStep: 0.0001
 maximumNumberOfIterations: 15 
 numberOfPatches: 1
