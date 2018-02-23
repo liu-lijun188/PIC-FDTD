@@ -3,7 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 09/11/2016.
-//  Last edited by Rahul Kalampattel, November 2017
+//  Last edited by Rahul Kalampattel, February 2018
 //  
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
@@ -253,10 +253,12 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh);
 // 3.2 Solution data
 void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, 
 	GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);		// Cell based data
-void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, 
-	GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);		// Node based data
-void writeSolutionXY_N_Tecplot(const std::string& title, vector2D& data, int N);			// Point based data (N points)
-void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (N points at time t)
+void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t);				// Node based data
+void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (plot all N points at each time step t)
+void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (plot all N points at each time step t, animated)
+void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N, double t); // Point based data (follow N individual points for each time step t)
+void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N, double t);// Point based data (follow N individual points for each time step t, animated)
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

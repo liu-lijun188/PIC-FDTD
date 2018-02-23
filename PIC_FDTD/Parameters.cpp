@@ -125,7 +125,16 @@ void Parameters::assignInputs()
 
 		try
 		{
-			maxSolverIterations = stoi(valuesVector[5]);
+			mass = stod(valuesVector[5]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for mass!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			maxSolverIterations = stoi(valuesVector[6]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -134,7 +143,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			residualTolerance = stod(valuesVector[6]);
+			residualTolerance = stod(valuesVector[7]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -143,7 +152,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			SORparameter = stod(valuesVector[7]);
+			SORparameter = stod(valuesVector[8]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -152,7 +161,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			epsilon0 = stod(valuesVector[8]);
+			epsilon0 = stod(valuesVector[9]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -161,7 +170,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			meshFilePath = valuesVector[9];
+			meshFilePath = valuesVector[10];
 		}
 		catch (std::invalid_argument&)
 		{
@@ -170,7 +179,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			xTest = stod(valuesVector[10]);
+			xTest = stod(valuesVector[11]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -179,7 +188,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			yTest = stod(valuesVector[11]);
+			yTest = stod(valuesVector[12]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -188,7 +197,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			uTest = stod(valuesVector[12]);
+			uTest = stod(valuesVector[13]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -197,7 +206,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			vTest = stod(valuesVector[13]);
+			vTest = stod(valuesVector[14]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -206,7 +215,7 @@ void Parameters::assignInputs()
 
 		try
 		{
-			numCellsWithParticles = stoi(valuesVector[14]);
+			numCellsWithParticles = stoi(valuesVector[15]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -224,6 +233,7 @@ void Parameters::printDataMembers()
 	std::cout << "Number of patches: " << numberOfPatches << std::endl;
 	std::cout << "Particles per cell: " << particlesPerCell << std::endl;
 	std::cout << "Charge: " << charge << std::endl;
+	std::cout << "Mass: " << mass << std::endl;
 	std::cout << "Maximum solver iterations: " << maxSolverIterations << std::endl;
 	std::cout << "Residual tolerance: " << residualTolerance << std::endl;
 	std::cout << "Successive over-relaxation parameter: " << SORparameter << std::endl;

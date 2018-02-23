@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of ParticlePusher class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated February 2018
 
 #pragma once
 
@@ -19,8 +19,8 @@ public:
 
 	// Constructor/destructor
 	ParticlePusher();									//!< Default constructor
-	ParticlePusher(Parameters *parametersList, 
-		Mesh *mesh, VectorParticle *particlesVector);	//!< Constructor
+	ParticlePusher(Parameters *parametersList, Mesh *mesh, 
+		VectorParticle *particlesVector, double time);	//!< Constructor
 	~ParticlePusher();									//!< Destructor
 
 

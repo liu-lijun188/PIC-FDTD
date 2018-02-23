@@ -15,12 +15,9 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	Mesh *mesh, VectorParticle *particlesVector)
 {
 	// Set charge at all nodes to zero at the start of each step
-	// TODO: Could make this a method of VectorNode in future
-	for (int i = 0; i < mesh->numNodes; i++)
-	{
-		mesh->nodesVector.nodes[i].charge = 0;
-	}
+	mesh->nodesVector.clearCharge();
 
+	double hSquared = mesh->h * mesh->h;
 
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
@@ -38,13 +35,6 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
 		
-		// TODO: Change these two to mesh level variables instead, also calculate
-		// length and width of entire simulation domain as well (assuming 
-		// rectangular) in order to allow for easy coordinate shifting during
-		// transport across periodic boundary conditions
-		double width = mesh->cellsVector.cells[cellID].width;
-		double height = mesh->cellsVector.cells[cellID].height;
-		
 		double x = particlesVector->particleVector[i].position[0];
 		double y = particlesVector->particleVector[i].position[1];
 
@@ -53,41 +43,43 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 
 		if (firstNodePosition == "BL")
 		{
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x) * (top - y) / (width * height);
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x - left) * (top - y) / (width * height);
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (y - bottom) / (width * height);
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x) * (y - bottom) / (width * height);
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x - left) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x) * (y - bottom) / hSquared;
 
 		}
 		else if (firstNodePosition == "BR")
 		{
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x - left) * (top - y) / (width * height);
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x - left) * (y - bottom) / (width * height);
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x) * (y - bottom) / (width * height);
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x) * (top - y) / (width * height);
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x - left) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x - left) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x) * (top - y) / hSquared;
 		}
 		else if (firstNodePosition == "TR")
 		{
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x - left) * (y - bottom) / (width * height);
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x) * (y - bottom) / (width * height);
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x) * (top - y) / (width * height);
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (top - y) / (width * height);
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x - left) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (top - y) / hSquared;
 		}
 		else if (firstNodePosition == "TL")
 		{	
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x) * (y - bottom) / (width * height);
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x) * (top - y) / (width * height);
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (top - y) / (width * height);
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (y - bottom) / (width * height);
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (y - bottom) / hSquared;
 		}
 	}
 
-	// TODO: Same as width and height above for Cartesian mesh, replace
-	double h = 0.02;
+	// TODO: Account for fixed neutralising (background) charge (?)
 
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
-		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / (h * h);
+		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
+
+		// TODO: Assuming periodic BCs in the x direction, need to set rho(R) to 
+		// average(rho(R) + rho(opposite)), then set rho(opposite)=rho(R)
 	}
 }
 

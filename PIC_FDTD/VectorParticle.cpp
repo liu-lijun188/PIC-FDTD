@@ -15,23 +15,39 @@ VectorParticle::VectorParticle()
 VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
-
-	//for (int i = 0; i < mesh->numCells; i++)							// Particle in every cell
-	for (int i = 0; i < parametersList->numCellsWithParticles; i++)		// Particle in a few cells
+	
+	// If 0 < numCellsWithParticles <= numCells, seed particles in a few cells, 
+	// else seed particles in every cell
+	if (parametersList->numCellsWithParticles < 1 || 
+		parametersList->numCellsWithParticles > mesh->numCells)
 	{
-		for (int j = 0; j < parametersList->particlesPerCell; j++)
+		parametersList->numCellsWithParticles = mesh->numCells;
+	}
+
+	for (int i = 0; i < parametersList->numCellsWithParticles; i++)
+	{
+		// Check if particlesPerCell is a square number
+
+		// TODO: Add error message if particlesPerCell is not square
+		if (sqrt(parametersList->particlesPerCell)  == round(sqrt(parametersList->particlesPerCell)))
 		{
-			numParticles++;
+			for (int j = 0; j < parametersList->particlesPerCell; j++)
+			{
+				numParticles++;
 
-			Particle particle(parametersList, mesh, patchID, i + 1, numParticles);
-			particleVector.push_back(particle);
+				Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
+				particleVector.push_back(particle);
 
-			positionVector.push_back(particle.position);
-			positionVector.back().push_back(particle.cellID);
-			positionVector.back().push_back(particle.particleID);
+				plotVector.push_back(particle.position);
+				plotVector.back().push_back(particle.velocity[0]);
+				plotVector.back().push_back(particle.velocity[1]);
+				plotVector.back().push_back(particle.cellID);
+				plotVector.back().push_back(particle.particleID);
 
-			mesh->addParticlesToCell(particle.cellID, particle.particleID);
+				mesh->addParticlesToCell(particle.cellID, particle.particleID);
+			}
 		}
+
 	}
 }
 
@@ -42,20 +58,33 @@ VectorParticle::~VectorParticle()
 }
 
 
-// Update state of positionVector
-void VectorParticle::updatePositionVector(Particle *particle)
+// Update state of plotVector
+void VectorParticle::updatePlotVector(Particle *particle)
 {
 	// Resizing vectors is not a particularly efficient operation, consider some
 	// other means of storing data for plotting in future
 
-	for (int i = 0; i < positionVector.size(); i++)
+	for (int i = 0; i < plotVector.size(); i++)
 	{
-		if (positionVector[i][3] == static_cast<double>(particle->particleID))
+		if (plotVector[i][5] == static_cast<double>(particle->particleID))
 		{
-			positionVector.insert(positionVector.begin() + i, particle->position);
-			positionVector[i].push_back(particle->cellID);
-			positionVector[i].push_back(particle->particleID);
-			positionVector.erase(positionVector.begin() + i + 1);
+			plotVector.insert(plotVector.begin() + i, particle->position);
+			plotVector[i].push_back(particle->velocity[0]);
+			plotVector[i].push_back(particle->velocity[1]);
+			plotVector[i].push_back(particle->cellID);
+			plotVector[i].push_back(particle->particleID);
+			plotVector.erase(plotVector.begin() + i + 1);
 		}
+	}
+}
+
+
+// Clear fields and lorentz members of particleVector
+void VectorParticle::clearFields()
+{
+	for (int i = 0; i < numParticles; i++)
+	{
+		particleVector[i].fields = { 0.0,0.0,0.0,0.0 };
+		particleVector[i].lorentz = { 0.0, 0.0 };
 	}
 }

@@ -13,15 +13,11 @@ FieldSolver::FieldSolver()
 // Constructor
 FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
-	// Set potential at all nodes to zero at the start of each step
-	// TODO: Could make this a method of VectorNode in future
-	for (int i = 0; i < mesh->numNodes; i++)
-	{
-		mesh->nodesVector.nodes[i].phi = 0;
-	}
+	// Set potential and fields at all nodes to zero at the start of each step
+	mesh->nodesVector.clearPhi();
+	mesh->nodesVector.clearFields();
 
-	// TODO: Make this a property of mesh and access it from there
-	double h = 0.02;
+	double h = mesh->h;
 
 	// Gauss-Seidel solver with successive over-relaxation (SOR)
 	// TODO: Enable switch statements to change solver type (GS-SOR, FFT, etc.)
@@ -29,6 +25,10 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 	{
 		for (int j = 0; j < mesh->numNodes; j++)
 		{
+			// TODO: Assuming periodic BCs in the x direction, for nodes on the 
+			// L boundary, use opposite node instead of left, similarly for nodes
+			// on the R, same applies for the four corner nodes
+
 			if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 			{
 				mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
@@ -42,13 +42,13 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 		}
 
 		// Check convergence
-		if (i % 9 == 0)
+		if (i != 0 && i % 9 == 0)
 		{
 			double residualSum = 0;
 
 			for (int j = 0; j < mesh->numNodes; j++)
 			{
-
+				// TODO: Include other nodes in calculating residual sum
 				if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 				{
 					double residual =
@@ -68,11 +68,17 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 				break; 
 			}
 		}
+
+		// TODO: Enforce periodic BC on phi, phi(R) = phi(L)
 	}
 
 	// Electric field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
+		// TODO: Include other nodes as well, can use centred difference across
+		// boundary in the x case and for most y cases, for corner nodes the 
+		// forwards or backwards difference in y are required
+
 		if (mesh->nodesVector.nodes[i].boundaryType == "internal")
 		{
 			mesh->nodesVector.nodes[i].fields[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -

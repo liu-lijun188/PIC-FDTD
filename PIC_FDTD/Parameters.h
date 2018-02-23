@@ -36,6 +36,7 @@ public:
 	int particlesPerCell;					//!< Particles per cell
 
 	double charge;							//!< Particle charge
+	double mass;							//!< Particle mass
 
 	int maxSolverIterations;				//!< Maximum number of iterations for solver
 	double residualTolerance;				//!< Tolerance for solver residuals

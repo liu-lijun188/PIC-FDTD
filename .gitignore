@@ -279,3 +279,8 @@ __pycache__/
 /PIC_FDTD/tecplotSolutionC_T.plt
 /PIC_FDTD/cMesh.plt
 /PIC_FDTD/cSolution_T.plt
+/scatter.lay
+/PIC_FDTD/cSolution_P.plt
+/scatter.sty
+/PIC_FDTD/cSolution_N.plt
+/nodes.lay

@@ -15,7 +15,7 @@ public:
 	// Data members
 	std::vector<Particle> particleVector;			//!< Vector of Particle objects
 	int numParticles = 0;							//!< Size of particleVector								
-	vector2D positionVector;						//!< Store particle position, cell ID and particle ID for plotting
+	vector2D plotVector;							//!< Store particle position, velocity, cell ID and particle ID for plotting
 
 
 	// Constructor/destructor
@@ -26,5 +26,6 @@ public:
 
 
 	// Methods
-	void updatePositionVector(Particle *particle);	//!< Update state of positionVector
+	void updatePlotVector(Particle *particle);		//!< Update state of plotVector
+	void clearFields();								//!< Clear fields and lorentz members of particleVector
 };

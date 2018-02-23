@@ -28,6 +28,7 @@ public:
 	VectorGhost ghostVector;				//!< Vector of ghost cells
 	VectorNode nodesVector;					//!< Vector of nodes
 
+	double h;								//!< Cell width/length (assume uniform)
 
 	// Constructor/destructor
 	Mesh();									//!< Default constructor

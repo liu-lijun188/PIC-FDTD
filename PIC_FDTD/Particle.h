@@ -21,14 +21,14 @@ public:
 	std::vector<double> velocity;			//!< Particle velocity vector
 
 	std::vector<double> fields
-		{ -1.0, -1.0, -1.0, -1.0 }; 		//!< Electromagnetic field (Ex, Ey, Bx, By)
+		{ -1.0, -1.0, -1.0, -1.0 }; 		//!< Electromagnetic fields (Ex, Ey, Bx, By)
 	std::vector<double> lorentz	
 		{ -1.0,-1.0 };						//!< Lorentz force (Fx, Fy)
 
 	// Constructor/destructor
 	Particle();								//!< Default constructor
-	Particle(Parameters *parametersList, Mesh *mesh, int patchID, 
-		int cellID, int particleID);		//!< Constructor
+	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, 
+		int particleID, int index);			//!< Constructor
 	~Particle();							//!< Destructor
 
 

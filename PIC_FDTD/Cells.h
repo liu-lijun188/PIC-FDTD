@@ -17,12 +17,12 @@ public:
 	double right = -1.0;				//!< Right cell boundary
 	double top = -1.0;					//!< Top (up) cell boundary
 	double bottom = -1.0;				//!< Bottom (down) cell boundary
-	double width = -1.0;				//!< Cell width
-	double height = -1.0;				//!< Cell height
 	int leftCellID = -1;				//!< ID of adjacent left cell
 	int rightCellID = -1;				//!< ID of adjacent right cell
 	int topCellID = -1;					//!< ID of adjacent top (up) cell
 	int bottomCellID = -1;				//!< ID of adjacent bottom (down) cell
+	int periodicXCellID = -1;			//!< ID of periodic cell, x direction (not valid for internal cells)
+	int	periodicYCellID = -1;			//!< ID of periodic cell, y direction (not valid for internal cells)
 	std::string boundaryType;			//!< Position on boundary (internal if FALSE)
 	std::string firstNodePosition;		//!< Position of first node
 	std::vector<int> listOfParticles;	//!< List of particles in the cell
