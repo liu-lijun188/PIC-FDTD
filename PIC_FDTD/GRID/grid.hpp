@@ -253,8 +253,7 @@ void writeMeshTecplot(const std::string& title, Mesh& mesh);
 // 3.2 Solution data
 void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo, 
 	GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);		// Cell based data
-void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, 
-	GridGeo& griddata, vector2D& data, std::vector<std::string>& variableNames, int N);		// Node based data
+void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t);				// Node based data
 void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (plot all N points at each time step t)
 void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (plot all N points at each time step t, animated)
 void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N, double t); // Point based data (follow N individual points for each time step t)

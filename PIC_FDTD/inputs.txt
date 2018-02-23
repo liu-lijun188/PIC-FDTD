@@ -6,10 +6,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Simulation parameters
-timeStep: 0.0005
-maximumNumberOfIterations: 4 
+timeStep: 0.0001
+maximumNumberOfIterations: 15 
 numberOfPatches: 1
-particlesPerCell: 4
+particlesPerCell: 16
 
 % Particle parameters
 charge: -1.6e-19
@@ -29,9 +29,9 @@ meshFilePath: coarseMesh.su2
 % Test parameters
 xTest: 0.5
 yTest: 0.5
-uTest: 0.01
-vTest: -0.005
-numCellsWithParticles: 2
+uTest: 0.005
+vTest: -0.0025
+numCellsWithParticles: 4
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % End of input file

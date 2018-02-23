@@ -23,29 +23,31 @@ class Patch
 {
 private:
 	// Data members
-	double time;									//!< Local simulation time
-	Parameters parametersList;						//!< Copy of parameters list
-	Mesh mesh;										//!< Details of mesh
-	VectorParticle particlesVector;					//!< Vector of resident particles
-	std::string tecplotMesh = "cMesh";				//!< Tecplot output mesh file
-	std::string tecplotSolution = "cSolution_T";	//!< Tecplot output solution file
+	double time;										//!< Local simulation time
+	Parameters parametersList;							//!< Copy of parameters list
+	Mesh mesh;											//!< Details of mesh
+	VectorParticle particlesVector;						//!< Vector of resident particles
+	std::string tecplotMesh = "cMesh";					//!< Tecplot output mesh file
+	std::string tecplotParticleSolution = "cSolution_P";//!< Tecplot particle solution file
+	std::string tecplotNodeSolution = "cSolution_N";	//!< Tecplot node solution file
 
 
 	// Methods
-	void generateOutput(std::string solutionName, vector2D data,
-		int numParticles, double time);				//!< Generate Tecplot output
+	void generateParticleOutput(vector2D data, 
+		int numParticles, double time);					//!< Generate Tecplot output for particles
+	void generateNodeOutput(Mesh mesh, double time);	//!< Generate Tecplot output for particles
 
 public:
 	// Data members
-	int patchID;									//!< Patch ID
+	int patchID;										//!< Patch ID
 
 
 	// Constructor/destructor
-	Patch();										//!< Default constructor
-	Patch(Parameters *parametersList, int patchID);	//!< Constructor
-	~Patch();										//!< Destructor
+	Patch();											//!< Default constructor
+	Patch(Parameters *parametersList, int patchID);		//!< Constructor
+	~Patch();											//!< Destructor
 
 
 	// Methods
-	void startPIC();								//!< Start the PIC loop within a Patch object	
+	void startPIC();									//!< Start the PIC loop within a Patch object	
 };

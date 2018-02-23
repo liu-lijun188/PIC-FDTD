@@ -24,7 +24,7 @@ public:
 	double phi = -1;			//!< Potential at the grid node
 
 	std::vector<double> fields
-	{ -1.0, -1.0, -1.0,-1.0 };	//!< Electromagnetic fields (Ex, Ey, Bx, By)
+	{ 0.0, 0.0, 0.0, 0.0 };	//!< Electromagnetic fields (Ex, Ey, Bx, By)
 	
 	// Constructor/destructor
 	Nodes();					//!< Default constructor

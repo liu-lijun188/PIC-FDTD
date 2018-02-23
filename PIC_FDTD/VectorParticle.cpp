@@ -38,9 +38,11 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 				Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
 				particleVector.push_back(particle);
 
-				positionVector.push_back(particle.position);
-				positionVector.back().push_back(particle.cellID);
-				positionVector.back().push_back(particle.particleID);
+				plotVector.push_back(particle.position);
+				plotVector.back().push_back(particle.velocity[0]);
+				plotVector.back().push_back(particle.velocity[1]);
+				plotVector.back().push_back(particle.cellID);
+				plotVector.back().push_back(particle.particleID);
 
 				mesh->addParticlesToCell(particle.cellID, particle.particleID);
 			}
@@ -56,20 +58,22 @@ VectorParticle::~VectorParticle()
 }
 
 
-// Update state of positionVector
-void VectorParticle::updatePositionVector(Particle *particle)
+// Update state of plotVector
+void VectorParticle::updatePlotVector(Particle *particle)
 {
 	// Resizing vectors is not a particularly efficient operation, consider some
 	// other means of storing data for plotting in future
 
-	for (int i = 0; i < positionVector.size(); i++)
+	for (int i = 0; i < plotVector.size(); i++)
 	{
-		if (positionVector[i][3] == static_cast<double>(particle->particleID))
+		if (plotVector[i][5] == static_cast<double>(particle->particleID))
 		{
-			positionVector.insert(positionVector.begin() + i, particle->position);
-			positionVector[i].push_back(particle->cellID);
-			positionVector[i].push_back(particle->particleID);
-			positionVector.erase(positionVector.begin() + i + 1);
+			plotVector.insert(plotVector.begin() + i, particle->position);
+			plotVector[i].push_back(particle->velocity[0]);
+			plotVector[i].push_back(particle->velocity[1]);
+			plotVector[i].push_back(particle->cellID);
+			plotVector[i].push_back(particle->particleID);
+			plotVector.erase(plotVector.begin() + i + 1);
 		}
 	}
 }

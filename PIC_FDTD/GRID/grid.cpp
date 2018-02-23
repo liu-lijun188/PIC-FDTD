@@ -1381,42 +1381,89 @@ void writeSolutionCellTecplot(const std::string& title, GridBasicInfo& gridinfo,
 
 
 // Node based data
-void writeSolutionNodeTecplot(const std::string& title, GridBasicInfo& gridinfo, GridGeo& griddata,
-                              vector2D& data, std::vector<std::string>& variableNames, int N)
+void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 {
-    // 1. Open file to write
-    std::string fileName;
-    fileName = title + "_sol.plt";
-    
-    std::ofstream grid_tecplot;
-    grid_tecplot.open(fileName.c_str());
-    
-    
-    // 2. Write header
-    grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
-    grid_tecplot << "FILETYPE = SOLUTION" << std::endl;
-    
-    grid_tecplot << std::scientific << std::setprecision(16) << "VARIABLES = ";
-    for (int i = 0; i < N; i++) grid_tecplot << " \" " << variableNames[i] << " \" ";
-    grid_tecplot << std::scientific << std::endl;
-    
-    grid_tecplot << "ZONE T=\"" << title << " solution" << "\"" << std::endl;
-    grid_tecplot << "DATAPACKING = POINT" << std::endl;
-    grid_tecplot << "NODES = "    << gridinfo.NNM << std::endl;
-    grid_tecplot << "ELEMENTS = " << gridinfo.NCM << std::endl;
-    
-    if (gridinfo.DIM == 2)	    grid_tecplot << "ZONETYPE = FEQUADRILATERAL" << std::endl;
-    else if (gridinfo.DIM == 3) grid_tecplot << "ZONETYPE = FEBRICK" << std::endl;
-    
-    
-    // 3. Write solution data
-    for (int c = 0; c < gridinfo.NNM; c++)
-    {
-        for (int i = 0; i < N; i++) grid_tecplot << data[c][i] << " ";
-        grid_tecplot << std::endl;
-    }
-    
-    grid_tecplot.close();
+	if (t == 0.0)
+	{
+		// 1. Open file to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str());
+
+
+		// 2. Write header
+		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+		grid_tecplot << "FILETYPE = FULL" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"Rho\" \"Phi\" \"E\" \"B\" \"NodeID\" \"Time\"" << std::endl;
+		grid_tecplot << "ZONE T = \"" << t << " seconds\", DATAPACKING = POINT, NODES = " <<
+			mesh.numNodes << ", ELEMENTS = " << mesh.numCells << ", SOLUTIONTIME = " <<
+			t << ", ZONETYPE = FEQUADRILATERAL, STRANDID = 1" << std::endl;
+
+
+		// 3. Write solution data
+		for (int c = 0; c < mesh.numNodes; c++)
+		{
+			grid_tecplot << std::scientific << std::setprecision(16) <<
+				mesh.nodesVector.nodes[c].geometry.X(0) << " " <<
+				mesh.nodesVector.nodes[c].geometry.X(1) << " " <<
+				mesh.nodesVector.nodes[c].rho << " " <<
+				mesh.nodesVector.nodes[c].phi << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
+					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2] +
+					mesh.nodesVector.nodes[c].fields[3] * mesh.nodesVector.nodes[c].fields[3]) << " " <<
+				c + 1 << " " << t << std::scientific << std::endl;
+		}
+		grid_tecplot << std::endl;
+
+
+		// 4. Write connectivity data
+		for (int c = 0; c < mesh.numCells; c++)
+		{
+				grid_tecplot << mesh.cellsVector.cells[c].connectivity.nodeIDs[0] << " ";
+				grid_tecplot << mesh.cellsVector.cells[c].connectivity.nodeIDs[1] << " ";
+				grid_tecplot << mesh.cellsVector.cells[c].connectivity.nodeIDs[2] << " ";
+				grid_tecplot << mesh.cellsVector.cells[c].connectivity.nodeIDs[3] << std::endl;
+		}
+		grid_tecplot << std::endl;
+
+		grid_tecplot.close();
+	}
+	else if (t > 0.0)
+	{
+		// 1. Open file to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str(), std::ios::app);
+
+
+		// 2. Write header
+		grid_tecplot << "ZONE T = \"" << t << " seconds\", DATAPACKING = POINT, NODES = " <<
+			mesh.numNodes << ", ELEMENTS = " << mesh.numCells << ", SOLUTIONTIME = " <<
+			t << ", ZONETYPE = FEQUADRILATERAL, STRANDID = 1" << 
+			", CONNECTIVITYSHAREZONE = 1, VARSHARELIST = ([1,2] = 1)" << std::endl;
+
+		// 3. Write solution data
+		for (int c = 0; c < mesh.numNodes; c++)
+		{
+			grid_tecplot << std::scientific << std::setprecision(16) <<
+				mesh.nodesVector.nodes[c].rho << " " <<
+				mesh.nodesVector.nodes[c].phi << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
+					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2] +
+					mesh.nodesVector.nodes[c].fields[3] * mesh.nodesVector.nodes[c].fields[3]) << " " <<
+				c + 1 << " " << t << std::scientific << std::endl;
+		}
+		grid_tecplot << std::endl;
+
+		grid_tecplot.close();
+	}
+
 }
 
 
@@ -1436,7 +1483,7 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
 		grid_tecplot << "ZONE DATAPACKING = POINT, T =\"" << t << " seconds\", I =" << N << std::endl;
 
 
@@ -1445,9 +1492,11 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 		for (int i = 0; i < N; i++)
 		{
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " " 
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1470,9 +1519,11 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 		for (int i = 0; i < N; i++)
 		{
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " " 
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1495,7 +1546,7 @@ void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N,
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
 		grid_tecplot << "ZONE DATAPACKING = POINT, T =\"" << t << " seconds\", I =" << N << ", SOLUTIONTIME = " << t << std::endl;
 
 
@@ -1504,9 +1555,11 @@ void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N,
 		for (int i = 0; i < N; i++)
 		{
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " "
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1529,9 +1582,11 @@ void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N,
 		for (int i = 0; i < N; i++)
 		{
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " "
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1554,18 +1609,20 @@ void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N,
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
 		
 
 		// 3. Write solution data
 
 		for (int i = 0; i < N; i++)
 		{
-			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][3]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][3]) << std::endl;
+			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][5]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][5]) << std::endl;
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " "
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3] 
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5]) 
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1583,11 +1640,13 @@ void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N,
 
 		for (int i = 0; i < N; i++)
 		{
-			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][3]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][3]) << std::endl;
+			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][5]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][5]) << std::endl;
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " "
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1610,18 +1669,20 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
 
 
 		// 3. Write solution data
 
 		for (int i = 0; i < N; i++)
 		{
-			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][3]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][3]) << ", SOLUTIONTIME = " << t << std::endl;
+			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][5]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][5]) << ", SOLUTIONTIME = " << t << std::endl;
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " "
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}
@@ -1639,11 +1700,13 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 
 		for (int i = 0; i < N; i++)
 		{
-			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][3]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][3]) << ", SOLUTIONTIME = " << t << std::endl;
+			grid_tecplot << "ZONE DATAPACKING = POINT, T = \"Particle " << static_cast<int>(data[i][5]) << "\", I = 1, STRANDID = " << static_cast<int>(data[i][5]) << ", SOLUTIONTIME = " << t << std::endl;
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
-				<< " " << data[i][1] << " " << static_cast<int>(data[i][2]) << " "
-				<< static_cast<int>(data[i][3]) << " " << t << std::scientific << std::endl;
+				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
+				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
+				<< " " << t << std::scientific << std::endl;
 		}
+		grid_tecplot << std::endl;
 
 		grid_tecplot.close();
 	}

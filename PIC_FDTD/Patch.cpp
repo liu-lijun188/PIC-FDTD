@@ -23,7 +23,10 @@ Patch::Patch(Parameters *parametersList, int patchID)
 	mesh = Mesh(&this->parametersList);
 	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
 
-	generateOutput(tecplotSolution, particlesVector.positionVector, particlesVector.numParticles, time);
+	writeMeshTecplot(tecplotMesh, mesh);
+
+	//generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
+	generateNodeOutput(mesh, time);
 }
 
 
@@ -34,14 +37,21 @@ Patch::~Patch()
 
 
 // Generate Tecplot output
-void Patch::generateOutput(std::string solutionName, vector2D data, int numParticles, double time)
+void Patch::generateParticleOutput(vector2D data, int numParticles, double time)
+{
+	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
+	
+	// Plot style can be T (plot all particles at each time step), TA (animated),
+	// NT (plot each particle over all time steps) and NTA (animated)  
+	writeSolutionXY_NTA_Tecplot(tecplotParticleSolution, data, numParticles, time);
+}
+
+void Patch::generateNodeOutput(Mesh mesh, double time)
 {
 	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
 
-	writeMeshTecplot(tecplotMesh, mesh);
-	writeSolutionXY_NTA_Tecplot(solutionName, data, numParticles, time);
+	writeSolutionNodeTecplot(tecplotNodeSolution, mesh, time);
 }
-
 
 // Start the PIC loop within a Patch object
 void Patch::startPIC()
@@ -67,6 +77,7 @@ void Patch::startPIC()
 
 		time += parametersList.timeStep;
 
-		generateOutput(tecplotSolution, particlesVector.positionVector, particlesVector.numParticles, time);
+		//generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
+		generateNodeOutput(mesh, time);
 	}
 }

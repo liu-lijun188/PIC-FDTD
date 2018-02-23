@@ -162,7 +162,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].particleID);
 		}
 
-		particlesVector->updatePositionVector(&particlesVector->particleVector[i]);
+		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
 	}
 }
 
