@@ -25,7 +25,7 @@ Patch::Patch(Parameters *parametersList, int patchID)
 
 	writeMeshTecplot(tecplotMesh, mesh);
 
-	//generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
+	generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 	generateNodeOutput(mesh, time);
 }
 
@@ -39,7 +39,7 @@ Patch::~Patch()
 // Generate Tecplot output
 void Patch::generateParticleOutput(vector2D data, int numParticles, double time)
 {
-	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
+	parametersList.logMessages("Generating Tecplot particle output", __FILE__, __LINE__);
 	
 	// Plot style can be T (plot all particles at each time step), TA (animated),
 	// NT (plot each particle over all time steps) and NTA (animated)  
@@ -48,7 +48,7 @@ void Patch::generateParticleOutput(vector2D data, int numParticles, double time)
 
 void Patch::generateNodeOutput(Mesh mesh, double time)
 {
-	parametersList.logMessages("Generating Tecplot output", __FILE__, __LINE__);
+	parametersList.logMessages("Generating Tecplot node output", __FILE__, __LINE__);
 
 	writeSolutionNodeTecplot(tecplotNodeSolution, mesh, time);
 }
@@ -77,7 +77,11 @@ void Patch::startPIC()
 
 		time += parametersList.timeStep;
 
-		//generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
-		generateNodeOutput(mesh, time);
+		// Generate plots only at intervals
+		if (static_cast<int>(time / parametersList.timeStep) % 3 == 0)
+		{
+			generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
+			generateNodeOutput(mesh, time);
+		}
 	}
 }

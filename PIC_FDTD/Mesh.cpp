@@ -460,6 +460,45 @@ Mesh::Mesh(Parameters *localParametersList)
 			cellsVector.cells[j].periodicYCellID = i + 1;
 		}
 	}
+
+
+	// Find connected nodes based on periodic BCs
+	for (int i = 0; i < numNodes; i++)
+	{
+		// Periodic nodes in x direction
+		if (nodesVector.nodes[i].boundaryType == "TL" ||
+			nodesVector.nodes[i].boundaryType == "L" ||
+			nodesVector.nodes[i].boundaryType == "BL")
+		{
+			int j = nodesVector.nodes[i].rightNodeID - 1;
+			while (nodesVector.nodes[j].boundaryType != "TR" &&
+				nodesVector.nodes[j].boundaryType != "R" &&
+				nodesVector.nodes[j].boundaryType != "BR")
+			{
+				j = nodesVector.nodes[j].rightNodeID - 1;
+
+			}
+			nodesVector.nodes[i].periodicXNodeID = j + 1;
+			nodesVector.nodes[j].periodicXNodeID = i + 1;
+		}
+
+		// Periodic nodes in y direction
+		if (nodesVector.nodes[i].boundaryType == "TL" ||
+			nodesVector.nodes[i].boundaryType == "T" ||
+			nodesVector.nodes[i].boundaryType == "TR")
+		{
+			int j = nodesVector.nodes[i].bottomNodeID - 1;
+			while (nodesVector.nodes[j].boundaryType != "BL" &&
+				nodesVector.nodes[j].boundaryType != "B" &&
+				nodesVector.nodes[j].boundaryType != "BR")
+			{
+				j = nodesVector.nodes[j].bottomNodeID - 1;
+
+			}
+			nodesVector.nodes[i].periodicYNodeID = j + 1;
+			nodesVector.nodes[j].periodicYNodeID = i + 1;
+		}
+	}
 }
 
 

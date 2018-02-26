@@ -29,7 +29,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 	}
 
-	// Currently enforced BCs: fixed (sticky) walls in y direction, periodic in x
+	// Currently enforced BCs: (pseudo) reflective in y direction, periodic in x
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// Update x velocity
@@ -129,9 +129,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// Stick particle to boundary
-				particlesVector->particleVector[i].position[1] =
+				// Reflect particle from boundary
+				particlesVector->particleVector[i].position[1] = -displacementB +
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+
+				// Reverse y velocity
+				particlesVector->particleVector[i].velocity[0] *= -1.0;
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -153,9 +156,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				// Stick particle to boundary
-				particlesVector->particleVector[i].position[1] =
+				// Reflect particle from boundary
+				particlesVector->particleVector[i].position[1] = -displacementT +
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+
+				// Reverse y velocity
+				particlesVector->particleVector[i].velocity[0] *= -1.0;
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,

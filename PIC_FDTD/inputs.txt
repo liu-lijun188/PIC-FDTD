@@ -6,10 +6,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Simulation parameters 
-timeStep: 0.0001
-maximumNumberOfIterations: 15 
+timeStep: 0.00002
+maximumNumberOfIterations: 60 
 numberOfPatches: 1
-particlesPerCell: 16
+particlesPerCell: 4
 
 % Particle parameters
 charge: -1.6e-19
@@ -24,14 +24,14 @@ SORparameter: 1.1
 epsilon0: 8.85e-12
 
 % Paths
-meshFilePath: coarseMesh.su2
+meshFilePath: mediumMesh.su2
 
 % Test parameters
 xTest: 0.5
 yTest: 0.5
-uTest: 0.005
-vTest: -0.0025
-numCellsWithParticles: 4
+uTest: 0.05
+vTest: 0
+numCellsWithParticles: 0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % End of input file
