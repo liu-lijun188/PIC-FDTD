@@ -43,6 +43,7 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 				plotVector.back().push_back(particle.velocity[1]);
 				plotVector.back().push_back(particle.cellID);
 				plotVector.back().push_back(particle.particleID);
+				plotVector.back().push_back(particle.basic.type);
 
 				mesh->addParticlesToCell(particle.cellID, particle.particleID);
 			}
@@ -73,6 +74,7 @@ void VectorParticle::updatePlotVector(Particle *particle)
 			plotVector[i].push_back(particle->velocity[1]);
 			plotVector[i].push_back(particle->cellID);
 			plotVector[i].push_back(particle->particleID);
+			plotVector[i].push_back(particle->basic.type);
 			plotVector.erase(plotVector.begin() + i + 1);
 		}
 	}

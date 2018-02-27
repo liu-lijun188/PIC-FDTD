@@ -9,7 +9,7 @@
 timeStep: 0.00002
 maximumNumberOfIterations: 60 
 numberOfPatches: 1
-particlesPerCell: 4
+particlesPerCell: 16
 
 % Particle parameters
 charge: -1.6e-19
@@ -29,8 +29,10 @@ meshFilePath: mediumMesh.su2
 % Test parameters
 xTest: 0.5
 yTest: 0.5
-uTest: 0.05
+uTest: 100
 vTest: 0
+xPerturbation: 0.0015
+yPerturbation: 0.0015
 numCellsWithParticles: 0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

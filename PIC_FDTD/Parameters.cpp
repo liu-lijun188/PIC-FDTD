@@ -212,10 +212,28 @@ void Parameters::assignInputs()
 		{
 			logMessages("Invalid argument detected for vTest!!!", __FILE__, __LINE__);
 		}
+		
+		try
+		{
+			xPerturbation = stod(valuesVector[15]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for xPerturbation!!!", __FILE__, __LINE__);
+		}
 
 		try
 		{
-			numCellsWithParticles = stoi(valuesVector[15]);
+			yPerturbation = stod(valuesVector[16]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logMessages("Invalid argument detected for yPerturbation!!!", __FILE__, __LINE__);
+		}
+
+		try
+		{
+			numCellsWithParticles = stoi(valuesVector[17]);
 		}
 		catch (std::invalid_argument&)
 		{
@@ -243,6 +261,8 @@ void Parameters::printDataMembers()
 	std::cout << "yTest: " << yTest << std::endl;
 	std::cout << "uTest: " << uTest << std::endl;
 	std::cout << "vTest: " << vTest << std::endl;
+	std::cout << "xPerturbation: " << xPerturbation << std::endl;
+	std::cout << "yPerturbation: " << yPerturbation << std::endl;
 	std::cout << "numCellsWithParticles: " << numCellsWithParticles << std::endl;
 }
 

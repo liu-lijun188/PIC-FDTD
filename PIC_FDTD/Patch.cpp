@@ -78,7 +78,7 @@ void Patch::startPIC()
 		time += parametersList.timeStep;
 
 		// Generate plots only at intervals
-		if (static_cast<int>(time / parametersList.timeStep) % 3 == 0)
+		if (static_cast<int>(time / parametersList.timeStep) % 1 == 0)
 		{
 			generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 			generateNodeOutput(mesh, time);

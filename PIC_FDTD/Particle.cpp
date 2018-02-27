@@ -4,6 +4,7 @@
 //! \date Last updated February 2018
 
 #include "Particle.h"
+#include <random>
 
 // Default constructor
 Particle::Particle()
@@ -33,6 +34,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	}
 	else
 	{
+
 		// Distribute particles uniformly in cell
 		double xratio = (0.5 + static_cast<double>(index % 
 			static_cast<int>(sqrt(parametersList->particlesPerCell)))) / 
@@ -49,10 +51,28 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	// TODO: Add some random perturbation to the initial position, but need to 
 	// make sure that the particle remains inside the simulation domain
 
+	// Initialise random number generator, distribution in range [0, 1000000]
+	std::mt19937 rng;
+	rng.seed(std::random_device()());
+	std::uniform_int_distribution<std::mt19937::result_type> dist(0, 1000000);
+
+	double xRandom = -0.5 + dist(rng) / (double)1000000;
+	double yRandom = -0.5 + dist(rng) / (double)1000000;
+
+	this->position[0] += parametersList->xPerturbation * xRandom;
+	this->position[1] += parametersList->yPerturbation * yRandom;
+
 	// Initial particle velocity (uTest, vTest)
 	velocity.push_back(parametersList->uTest);	// u
 	velocity.push_back(parametersList->vTest);	// v
 
+	// Extra setup for the two stream instability problem
+	this->basic.type = 1;
+	if (xRandom >= 0.0)
+	{
+		this->basic.type = -1;
+		this->velocity[0] *= -1.0;
+	}
 }
 
 

@@ -1483,7 +1483,7 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Type\" \"Time\"" << std::endl;
 		grid_tecplot << "ZONE DATAPACKING = POINT, T =\"" << t << " seconds\", I =" << N << std::endl;
 
 
@@ -1494,7 +1494,7 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1521,7 +1521,7 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1546,7 +1546,7 @@ void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N,
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Type\" \"Time\"" << std::endl;
 		grid_tecplot << "ZONE DATAPACKING = POINT, T =\"" << t << " seconds\", I =" << N << ", SOLUTIONTIME = " << t << std::endl;
 
 
@@ -1557,7 +1557,7 @@ void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N,
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1584,7 +1584,7 @@ void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N,
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1609,7 +1609,7 @@ void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N,
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Type\" \"Time\"" << std::endl;
 		
 
 		// 3. Write solution data
@@ -1620,7 +1620,7 @@ void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N,
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3] 
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5]) 
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1644,7 +1644,7 @@ void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N,
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1669,7 +1669,7 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 		// 2. Write header
 		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
 		grid_tecplot << "FILETYPE = FULL" << std::endl;
-		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Time\"" << std::endl;
+		grid_tecplot << "VARIABLES = \"X\" \"Y\" \"U\" \"V\" \"CellID\" \"ParticleID\" \"Type\" \"Time\"" << std::endl;
 
 
 		// 3. Write solution data
@@ -1680,7 +1680,7 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 
@@ -1704,7 +1704,7 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 			grid_tecplot << std::scientific << std::setprecision(16) << data[i][0]
 				<< " " << data[i][1] << " " << data[i][2] << " " << data[i][3]
 				<< " " << static_cast<int>(data[i][4]) << " " << static_cast<int>(data[i][5])
-				<< " " << t << std::scientific << std::endl;
+				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
 

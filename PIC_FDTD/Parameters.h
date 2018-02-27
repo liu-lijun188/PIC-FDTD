@@ -45,6 +45,7 @@ public:
 	double epsilon0;						//!< Permittivity of free space (assumes vacuum)
 
 	double xTest, yTest, uTest, vTest;		//!< Test parameter	
+	double xPerturbation, yPerturbation;	//!< Test parameter
 	int numCellsWithParticles;				//!< Test parameter	
 
 	GridBasicInfo gridinfo;					//!< Basic grid properties
