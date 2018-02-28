@@ -134,7 +134,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 
 				// Reverse y velocity
-				particlesVector->particleVector[i].velocity[0] *= -1.0;
+				particlesVector->particleVector[i].velocity[1] *= -1.0;
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -161,7 +161,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 
 				// Reverse y velocity
-				particlesVector->particleVector[i].velocity[0] *= -1.0;
+				particlesVector->particleVector[i].velocity[1] *= -1.0;
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
