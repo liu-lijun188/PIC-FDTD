@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ChargeProjector class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "ChargeProjector.h"
 
@@ -95,6 +95,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 				mesh->nodesVector.nodes[i].rho;
 		}
 	}
+	parametersList->logBrief("Charge projector completed", 1);
 }
 
 

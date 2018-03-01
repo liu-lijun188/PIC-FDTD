@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ParticlePusher class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "ParticlePusher.h"
 
@@ -9,6 +9,10 @@
 ParticlePusher::ParticlePusher()
 {
 }
+
+// TODO: Need to make sure that at no stage do particles move more than one cell,
+// e.g. after movement to the right, x should be less than cell[rightCellID].right, 
+// similarly for the other directions
 
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
@@ -170,6 +174,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
 	}
+	parametersList->logBrief("Particle pusher exited", 1);
 }
 
 

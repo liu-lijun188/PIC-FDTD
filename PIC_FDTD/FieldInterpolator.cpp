@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of FieldInterpolator class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "FieldInterpolator.h"
 
@@ -100,6 +100,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 				particlesVector->particleVector[i].fields[j+2]);
 		}
 	}
+	parametersList->logBrief("Field interpolator exited", 1);
 }
 
 

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of FieldSolver class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "FieldSolver.h"
 
@@ -121,6 +121,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 			
 			if (sqrt(residualSum / static_cast<double>(mesh->numNodes)) < parametersList->residualTolerance)
 			{
+				parametersList->logBrief("Solver convergence criteria met", 1);
 				break; 
 			}
 		}
@@ -216,6 +217,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 				mesh->nodesVector.nodes[i].phi) / h;
 		}
 	}
+	parametersList->logBrief("Field solver exited", 1);
 }
 
 // Destructor

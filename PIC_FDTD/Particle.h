@@ -1,9 +1,11 @@
 //! \file
 //! \brief Definition of Particle class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
+
+#include <random>
 
 #include "Parameters.h"
 #include "Mesh.h"

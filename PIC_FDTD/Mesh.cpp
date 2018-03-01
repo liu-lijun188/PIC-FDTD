@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "Parameters.h"
 #include "Mesh.h"
@@ -15,6 +15,8 @@ Mesh::Mesh()
 // Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {
+	localParametersList->logMessages("Starting additional mesh pre-processing", __FILE__, __LINE__, 1);
+
 	// Extract data from gridinfo
 	numCells = localParametersList->gridinfo.NCM;
 	numFaces = localParametersList->gridinfo.NFM;
@@ -499,6 +501,7 @@ Mesh::Mesh(Parameters *localParametersList)
 			nodesVector.nodes[j].periodicYNodeID = i + 1;
 		}
 	}
+	localParametersList->logBrief("Additional mesh pre-processing complete", 1);
 }
 
 

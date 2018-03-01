@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorParticle class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "VectorParticle.h"
 
@@ -14,42 +14,47 @@ VectorParticle::VectorParticle()
 // Constructor
 VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
-	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__);
+	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
 	
 	// If 0 < numCellsWithParticles <= numCells, seed particles in a few cells, 
 	// else seed particles in every cell
 	if (parametersList->numCellsWithParticles < 1 || 
 		parametersList->numCellsWithParticles > mesh->numCells)
 	{
+		parametersList->logBrief("Value of numCellsWithParticles has been changed", 2);
 		parametersList->numCellsWithParticles = mesh->numCells;
 	}
 
 	for (int i = 0; i < parametersList->numCellsWithParticles; i++)
 	{
 		// Check if particlesPerCell is a square number
-
-		// TODO: Add error message if particlesPerCell is not square
-		if (sqrt(parametersList->particlesPerCell)  == round(sqrt(parametersList->particlesPerCell)))
+		if (sqrt(parametersList->particlesPerCell) != round(sqrt(parametersList->particlesPerCell)))
 		{
-			for (int j = 0; j < parametersList->particlesPerCell; j++)
-			{
-				numParticles++;
-
-				Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
-				particleVector.push_back(particle);
-
-				plotVector.push_back(particle.position);
-				plotVector.back().push_back(particle.velocity[0]);
-				plotVector.back().push_back(particle.velocity[1]);
-				plotVector.back().push_back(particle.cellID);
-				plotVector.back().push_back(particle.particleID);
-				plotVector.back().push_back(particle.basic.type);
-
-				mesh->addParticlesToCell(particle.cellID, particle.particleID);
-			}
+			parametersList->logBrief("Value of particlesPerCell has been changed", 2);
+			parametersList->particlesPerCell = 1;
 		}
+		
+		for (int j = 0; j < parametersList->particlesPerCell; j++)
+		{
+			numParticles++;
 
+			Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
+			particleVector.push_back(particle);
+
+			plotVector.push_back(particle.position);
+			plotVector.back().push_back(particle.velocity[0]);
+			plotVector.back().push_back(particle.velocity[1]);
+			plotVector.back().push_back(particle.cellID);
+			plotVector.back().push_back(particle.particleID);
+			plotVector.back().push_back(particle.basic.type);
+
+			mesh->addParticlesToCell(particle.cellID, particle.particleID);
+		}
+		
 	}
+	parametersList->logMessages("Generated " + std::to_string(numParticles) +
+		" particles in " + std::to_string(parametersList->numCellsWithParticles) + 
+		" cells", __FILE__, __LINE__, 1);
 }
 
 

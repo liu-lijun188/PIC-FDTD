@@ -1,10 +1,9 @@
 //! \file
 //! \brief Implementation of Particle class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "Particle.h"
-#include <random>
 
 // Default constructor
 Particle::Particle()
@@ -15,10 +14,6 @@ Particle::Particle()
 // Constructor
 Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, int particleID, int index)
 {
-	parametersList->logMessages("Generating particle " + std::to_string(particleID) + 
-		" in cell " + std::to_string(cellID) + " in patch " + std::to_string(patchID),
-		__FILE__, __LINE__);
-	
 	this->particleID = particleID;
 	this->cellID = cellID;
 	this->basic.q = parametersList->charge;
@@ -48,9 +43,6 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 			mesh->cellsVector.cells[cellID - 1].bottom * (1 - yratio));		// y
 	}
 
-	// TODO: Add some random perturbation to the initial position, but need to 
-	// make sure that the particle remains inside the simulation domain
-
 	// Initialise random number generator, distribution in range [0, 1000000]
 	std::mt19937 rng;
 	rng.seed(std::random_device()());
@@ -58,6 +50,8 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 
 	double xRandom = -0.5 + dist(rng) / (double)1000000;
 	double yRandom = -0.5 + dist(rng) / (double)1000000;
+
+	// TODO: Check that particle remains inside the simulation domain
 
 	this->position[0] += parametersList->xPerturbation * xRandom;
 	this->position[1] += parametersList->yPerturbation * yRandom;
