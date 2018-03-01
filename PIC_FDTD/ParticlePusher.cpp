@@ -10,10 +10,6 @@ ParticlePusher::ParticlePusher()
 {
 }
 
-// TODO: Need to make sure that at no stage do particles move more than one cell,
-// e.g. after movement to the right, x should be less than cell[rightCellID].right, 
-// similarly for the other directions
-
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
@@ -33,6 +29,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 	}
 
+	// TODO: Enable BCs to be selected through input file
+
 	// Currently enforced BCs: (pseudo) reflective in y direction, periodic in x
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
@@ -49,6 +47,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
 		double displacementR = particlesVector->particleVector[i].position[0] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+
+		if (abs(displacementL) >= mesh->h || abs(displacementR) >= mesh->h)
+		{
+			parametersList->logBrief(" Particle has moved more than one cell length", 3);
+			break;
+		}
 
 		// Update cell ID in x direction, exiting left
 		if (displacementL < 0.0)
@@ -117,6 +121,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 		double displacementT = particlesVector->particleVector[i].position[1] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+
+		if (abs(displacementB) >= mesh->h || abs(displacementT) >= mesh->h)
+		{
+			parametersList->logBrief(" Particle has moved more than one cell length", 3);
+			break;
+		}
 
 		// Update cell ID in y direction, exiting bottom
 		if (displacementB < 0.0)

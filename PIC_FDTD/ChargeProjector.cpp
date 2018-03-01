@@ -95,7 +95,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 				mesh->nodesVector.nodes[i].rho;
 		}
 	}
-	parametersList->logBrief("Charge projector completed", 1);
+	parametersList->logBrief("Charge projector exited", 1);
 }
 
 

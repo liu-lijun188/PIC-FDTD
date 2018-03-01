@@ -40,7 +40,7 @@ private:
 public:
 	// Data members
 	int patchID;										//!< Patch ID
-
+	int numErrors;										//!< Public copy of numErrors from parametersList
 
 	// Constructor/destructor
 	Patch();											//!< Default constructor

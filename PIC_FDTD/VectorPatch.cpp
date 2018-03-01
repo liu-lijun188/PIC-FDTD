@@ -36,5 +36,6 @@ void VectorPatch::startPIC()
 	for (unsigned int i = 0; i < patchesVector.size(); i++)
 	{
 		patchesVector[i].startPIC();
+		numErrors += patchesVector[i].numErrors;
 	}
 }

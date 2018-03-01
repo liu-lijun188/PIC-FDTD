@@ -18,6 +18,7 @@ Simulation::Simulation(Parameters *parametersList)
 	
 	VectorPatch patchesVector(parametersList);
 	patchesVector.startPIC();
+	parametersList->numErrors = patchesVector.numErrors;
 
 	parametersList->logMessages("Simulation complete", __FILE__, __LINE__, 1);
 }

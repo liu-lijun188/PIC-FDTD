@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of VectorPatch class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -13,6 +13,7 @@ class VectorPatch
 {
 public:
 	// Data members
+	int numErrors = 0;							//!< Sum of errors in Patch objects
 	std::vector<Patch> patchesVector;			//!< Vector of Patch objects
 
 

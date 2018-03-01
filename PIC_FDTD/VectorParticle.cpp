@@ -67,8 +67,8 @@ VectorParticle::~VectorParticle()
 // Update state of plotVector
 void VectorParticle::updatePlotVector(Particle *particle)
 {
-	// Resizing vectors is not a particularly efficient operation, consider some
-	// other means of storing data for plotting in future
+	// TODO: Resizing vectors is not a particularly efficient operation, consider 
+	// some other means of storing data for plotting in future
 
 	for (int i = 0; i < plotVector.size(); i++)
 	{
