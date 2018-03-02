@@ -3,6 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 25/08/2016.
+//  Last edited by Rahul Kalampattel, March 2018
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -115,6 +116,7 @@ matrix operator* (const matrix& a, const matrix& b);
 matrix operator* (const matrix& a, const double b);
 matrix operator* (const double a, const matrix& b);
 
+matrix operator*= (matrix& a, double b);
 
 // Linear algebra functions
 matrix minorMatrix(const matrix&a, const int r, const int c);

@@ -271,6 +271,9 @@ void Parameters::assignInputs()
 
 		plotFrequency = stoi(valuesVector[18]);
 		logBrief("plotFrequency: " + valuesVector[18], 1);
+
+		meshScalingParameter = stod(valuesVector[19]);
+		logBrief("meshScalingParameter: " + valuesVector[19], 1);
 	}
 }
 

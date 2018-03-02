@@ -32,6 +32,12 @@ Mesh::Mesh(Parameters *localParametersList)
 
 	double hAverage = 0;
 
+	// Scale mesh
+	for (int i = 0; i < numNodes; i++)
+	{
+		nodesVector.nodes[i].geometry.X *= localParametersList->meshScalingParameter;
+	}
+
 	// Find boundaries of each cell and identify adjacent/neighbouring cells,
 	// also identify connected nodes
 	for (int i = 0; i < numCells; i++)
