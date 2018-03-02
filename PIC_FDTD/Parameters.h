@@ -1,10 +1,11 @@
 //! \file
 //! \brief Definition of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
+#include <chrono>
 #include <ctime>
 #include <exception>
 #include <fstream>
@@ -24,9 +25,9 @@ private:
 	std::string meshFilePath;				//!< Path of mesh file
 	std::string meshFile = "processedMesh";	//!< Name of processed mesh file
 
-	bool fileNotOpened = false;				//!< Check if log file is open 
+	bool fileNotOpened = false;				//!< Check if input file was opened 
 	bool firstLog = true;					//!< Check if this is the first log entry
-	clock_t initialTime;					//!< Global simulation time
+	std::chrono::system_clock::time_point initialTime;	//!< Global simulation time
 
 public:
 	// Data members
@@ -45,7 +46,12 @@ public:
 	double epsilon0;						//!< Permittivity of free space (assumes vacuum)
 
 	double xTest, yTest, uTest, vTest;		//!< Test parameter	
+	double xPerturbation, yPerturbation;	//!< Test parameter
 	int numCellsWithParticles;				//!< Test parameter	
+	int plotFrequency;						//!< Test parameter
+	double meshScalingParameter;			//!< Test parameter
+
+	int numErrors = 0;						//!< Number of errors detected during simulation
 
 	GridBasicInfo gridinfo;					//!< Basic grid properties
 	GridGeo gridgeo;						//!< Detailed grid info
@@ -58,11 +64,10 @@ public:
 
 
 	// Methods
-	void printValuesVector();				//!< Print raw input from valuesVector
 	void assignInputs();					//!< Assign values to data members
-	void printDataMembers();				//!< Print data members
 	void processMesh();						//!< Process mesh file
-	void hitReturnToEnter();				//!< Keeps console window open
-	void logMessages(std::string message, 
-		std::string filename, int line);	//!< Log messages and warnings
+	void logMessages(std::string message, std::string filename, 
+		int line, int messageType);			//!< Log messages, warnings and errors
+	void logBrief(std::string message, 
+		int messageType);					//!< Log brief messages
 };

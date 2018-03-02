@@ -3,6 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 25/08/2016.
+//  Last edited by Rahul Kalampattel, March 2018
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -665,6 +666,21 @@ matrix operator* (const double a, const matrix& b)
     return res;
 }
 
+
+matrix operator*= (matrix& a, double b)
+{
+	int m = a.sizeRow();
+	int n = a.sizeCol();
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			a(i, j) = a.element(i, j) * b;
+		}
+	}
+
+	return a;
+}
 
 
 // Linear algebra functions

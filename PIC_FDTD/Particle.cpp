@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Particle class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "Particle.h"
 
@@ -14,10 +14,6 @@ Particle::Particle()
 // Constructor
 Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, int particleID, int index)
 {
-	parametersList->logMessages("Generating particle " + std::to_string(particleID) + 
-		" in cell " + std::to_string(cellID) + " in patch " + std::to_string(patchID),
-		__FILE__, __LINE__);
-	
 	this->particleID = particleID;
 	this->cellID = cellID;
 	this->basic.q = parametersList->charge;
@@ -33,6 +29,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	}
 	else
 	{
+
 		// Distribute particles uniformly in cell
 		double xratio = (0.5 + static_cast<double>(index % 
 			static_cast<int>(sqrt(parametersList->particlesPerCell)))) / 
@@ -46,13 +43,40 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 			mesh->cellsVector.cells[cellID - 1].bottom * (1 - yratio));		// y
 	}
 
-	// TODO: Add some random perturbation to the initial position, but need to 
-	// make sure that the particle remains inside the simulation domain
+	// Initialise random number generator, distribution in range [0, 1000000]
+	std::mt19937 rng;
+	rng.seed(std::random_device()());
+	std::uniform_int_distribution<std::mt19937::result_type> dist(0, 1000000);
+
+	double xRandom = -0.5 + dist(rng) / (double)1000000;
+	double yRandom = -0.5 + dist(rng) / (double)1000000;
+
+	// Add random variation to particle position and check it remains inside cell
+
+	this->position[0] += parametersList->xPerturbation * xRandom;
+	if (this->position[0] < mesh->cellsVector.cells[this->cellID - 1].left ||
+		this->position[0] > mesh->cellsVector.cells[this->cellID - 1].right)
+	{
+		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
+	}
+	this->position[1] += parametersList->yPerturbation * yRandom;
+	if (this->position[1] < mesh->cellsVector.cells[this->cellID - 1].bottom ||
+		this->position[1] > mesh->cellsVector.cells[this->cellID - 1].top)
+	{
+		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
+	}
 
 	// Initial particle velocity (uTest, vTest)
 	velocity.push_back(parametersList->uTest);	// u
 	velocity.push_back(parametersList->vTest);	// v
 
+	// Extra setup for the two stream instability problem
+	this->basic.type = 1;
+	if (xRandom >= 0.0)
+	{
+		this->basic.type = -1;
+		this->velocity[0] *= -1.0;
+	}
 }
 
 

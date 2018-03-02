@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "Parameters.h"
 #include "Mesh.h"
@@ -15,6 +15,8 @@ Mesh::Mesh()
 // Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {
+	localParametersList->logMessages("Starting additional mesh pre-processing", __FILE__, __LINE__, 1);
+
 	// Extract data from gridinfo
 	numCells = localParametersList->gridinfo.NCM;
 	numFaces = localParametersList->gridinfo.NFM;
@@ -29,6 +31,12 @@ Mesh::Mesh(Parameters *localParametersList)
 	nodesVector.allocate(localParametersList->gridgeo.nodes);
 
 	double hAverage = 0;
+
+	// Scale mesh
+	for (int i = 0; i < numNodes; i++)
+	{
+		nodesVector.nodes[i].geometry.X *= localParametersList->meshScalingParameter;
+	}
 
 	// Find boundaries of each cell and identify adjacent/neighbouring cells,
 	// also identify connected nodes
@@ -460,6 +468,46 @@ Mesh::Mesh(Parameters *localParametersList)
 			cellsVector.cells[j].periodicYCellID = i + 1;
 		}
 	}
+
+
+	// Find connected nodes based on periodic BCs
+	for (int i = 0; i < numNodes; i++)
+	{
+		// Periodic nodes in x direction
+		if (nodesVector.nodes[i].boundaryType == "TL" ||
+			nodesVector.nodes[i].boundaryType == "L" ||
+			nodesVector.nodes[i].boundaryType == "BL")
+		{
+			int j = nodesVector.nodes[i].rightNodeID - 1;
+			while (nodesVector.nodes[j].boundaryType != "TR" &&
+				nodesVector.nodes[j].boundaryType != "R" &&
+				nodesVector.nodes[j].boundaryType != "BR")
+			{
+				j = nodesVector.nodes[j].rightNodeID - 1;
+
+			}
+			nodesVector.nodes[i].periodicXNodeID = j + 1;
+			nodesVector.nodes[j].periodicXNodeID = i + 1;
+		}
+
+		// Periodic nodes in y direction
+		if (nodesVector.nodes[i].boundaryType == "TL" ||
+			nodesVector.nodes[i].boundaryType == "T" ||
+			nodesVector.nodes[i].boundaryType == "TR")
+		{
+			int j = nodesVector.nodes[i].bottomNodeID - 1;
+			while (nodesVector.nodes[j].boundaryType != "BL" &&
+				nodesVector.nodes[j].boundaryType != "B" &&
+				nodesVector.nodes[j].boundaryType != "BR")
+			{
+				j = nodesVector.nodes[j].bottomNodeID - 1;
+
+			}
+			nodesVector.nodes[i].periodicYNodeID = j + 1;
+			nodesVector.nodes[j].periodicYNodeID = i + 1;
+		}
+	}
+	localParametersList->logBrief("Additional mesh pre-processing complete", 1);
 }
 
 

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ParticlePusher class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "ParticlePusher.h"
 
@@ -29,7 +29,9 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 	}
 
-	// Currently enforced BCs: fixed (sticky) walls in y direction, periodic in x
+	// TODO: Enable BCs to be selected through input file
+
+	// Currently enforced BCs: (pseudo) reflective in y direction, periodic in x
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// Update x velocity
@@ -45,6 +47,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
 		double displacementR = particlesVector->particleVector[i].position[0] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+
+		if (abs(displacementL) >= mesh->h || abs(displacementR) >= mesh->h)
+		{
+			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
+			break;
+		}
 
 		// Update cell ID in x direction, exiting left
 		if (displacementL < 0.0)
@@ -114,6 +122,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		double displacementT = particlesVector->particleVector[i].position[1] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 
+		if (abs(displacementB) >= mesh->h || abs(displacementT) >= mesh->h)
+		{
+			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
+			break;
+		}
+
 		// Update cell ID in y direction, exiting bottom
 		if (displacementB < 0.0)
 		{
@@ -129,9 +143,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// Stick particle to boundary
-				particlesVector->particleVector[i].position[1] =
+				// Reflect particle from boundary
+				particlesVector->particleVector[i].position[1] = -displacementB +
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+
+				// Reverse y velocity
+				particlesVector->particleVector[i].velocity[1] *= -1.0;
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -153,9 +170,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				// Stick particle to boundary
-				particlesVector->particleVector[i].position[1] =
+				// Reflect particle from boundary
+				particlesVector->particleVector[i].position[1] = -displacementT +
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+
+				// Reverse y velocity
+				particlesVector->particleVector[i].velocity[1] *= -1.0;
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -164,6 +184,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
 	}
+	parametersList->logBrief("Particle pusher exited", 1);
 }
 
 

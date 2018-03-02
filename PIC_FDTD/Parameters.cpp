@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "Parameters.h"
 
@@ -14,7 +14,7 @@ Parameters::Parameters()
 // Constructor
 Parameters::Parameters(std::string filename)
 {
-	initialTime = clock();
+	initialTime = std::chrono::system_clock::now();
 	std::ifstream inputFile(filename);	// Open input file
 	
 	char firstCharacter;
@@ -23,7 +23,7 @@ Parameters::Parameters(std::string filename)
 
 	if (inputFile.is_open())
 	{
-		logMessages("Reading inputs", __FILE__, __LINE__);
+		logMessages("Reading inputs", __FILE__, __LINE__, 1);
 
 		while (!inputFile.eof())	// Continue until the end of the file is reached
 		{
@@ -47,7 +47,7 @@ Parameters::Parameters(std::string filename)
 	}
 	else
 	{
-		logMessages("Unable to open input file!!!", __FILE__, __LINE__);
+		logMessages("Unable to open input file", __FILE__, __LINE__, 3);
 		fileNotOpened = true;
 	}
 }
@@ -59,60 +59,79 @@ Parameters::~Parameters()
 }
 
 
-// Print raw input from valuesVector
-void Parameters::printValuesVector()
-{
-	if (valuesVector.size() != 0)
-	{
-		for (size_t i = 0; i < valuesVector.size(); i++)
-		{
-			std::cout << "Parameter " << i + 1 << " is: " << valuesVector[i] << std::endl;
-		}
-		std::cout << std::endl;
-	}
-}
-
-
 // Assign values to data members 
 void Parameters::assignInputs()
 {
+	logMessages("Printing input parameters", __FILE__, __LINE__, 1);
 	if (!fileNotOpened)
 	{
 		try
 		{
 			timeStep = stod(valuesVector[0]);
+			if (timeStep < 0.0)
+				throw 1;
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for time step!!!", __FILE__, __LINE__);
+			logBrief("Invalid type detected for time step", 3);
 		}
+		catch (int error)
+		{
+			logBrief("Time step should be positive", 3);
+		}
+		logBrief("Time step: " + valuesVector[0], 1);
+
 
 		try
 		{
 			maximumNumberOfIterations = stoi(valuesVector[1]);
+			if (maximumNumberOfIterations < 0)
+				throw 1;
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for maximum number of iterations!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for maximum number of iterations", 3);
 		}
-		
+		catch (int error)
+		{
+			logBrief("Maximum number of iterations should be positive", 3);
+		}
+		logBrief("Maximum number of iterations: " + valuesVector[1], 1);
+
+
 		try
 		{
 			numberOfPatches = stoi(valuesVector[2]);
+			if (numberOfPatches < 0)
+				throw 1;
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for number of patches!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for number of patches", 3);
 		}
-		
+		catch (int error)
+		{
+			logBrief("Number of patches should be positive", 3);
+		}
+		logBrief("Number of patches: " + valuesVector[2], 1);
+
+
 		try
 		{
 			particlesPerCell = stoi(valuesVector[3]);
+			if (particlesPerCell < 1)
+				throw 1;
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for particles per cell!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for particles per cell", 3);
 		}
+		catch (int error)
+		{
+			logBrief("Particles per cell should be positive", 3);
+		}
+		logBrief("Particles per cell: " + valuesVector[3], 1);
+
 
 		try
 		{
@@ -120,44 +139,86 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for charge!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for charge", 3);
 		}
+		logBrief("Charge: " + valuesVector[4], 1);
+
 
 		try
 		{
 			mass = stod(valuesVector[5]);
+			if (mass < 0.0)
+			{
+				throw 1;
+			}
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for mass!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for mass", 3);
 		}
+		catch (int error)
+		{
+			logBrief("Mass should be positive", 3);
+		}
+		logBrief("Mass: " + valuesVector[5], 1);
+
 
 		try
 		{
 			maxSolverIterations = stoi(valuesVector[6]);
+			if (maxSolverIterations < 0)
+			{
+				throw 1;
+			}
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for maximum solver iterations!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for maximum solver iterations", 3);
 		}
+		catch (int error)
+		{
+			logBrief("Maximum solver iterations should be positive", 3);
+		}
+		logBrief("Maximum solver iterations: " + valuesVector[6], 1);
+
 
 		try
 		{
 			residualTolerance = stod(valuesVector[7]);
+			if (residualTolerance < 0.0)
+			{
+				throw 1;
+			}
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for residual tolerance!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for residual tolerance", 3);
 		}
+		catch (int error)
+		{
+			logBrief("Residual tolerance should be positive", 3);
+		}
+		logBrief("Residual tolerance: " + valuesVector[7], 1);
+
 
 		try
 		{
 			SORparameter = stod(valuesVector[8]);
+			if (SORparameter < 1.0)
+			{
+				throw 1;
+			}
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for successive over-relaxation parameter!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for successive over-relaxation parameter", 3);
 		}
+		catch (int error)
+		{
+			logBrief("Successive over-relaxation parameter should be positive", 3);
+		}
+		logBrief("Successive over-relaxation parameter: " + valuesVector[8], 1);
+
 
 		try
 		{
@@ -165,8 +226,10 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for permittivity!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for permittivity", 3);
 		}
+		logBrief("Permittivity: " + valuesVector[9], 1);
+
 
 		try
 		{
@@ -174,83 +237,51 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logMessages("Invalid argument detected for mesh file path!!!", __FILE__, __LINE__);
+			logBrief("Invalid argument detected for mesh file path", 3);
 		}
+		logBrief("Mesh file path: " + valuesVector[10], 1);
 
-		try
-		{
-			xTest = stod(valuesVector[11]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logMessages("Invalid argument detected for xTest!!!", __FILE__, __LINE__);
-		}
 
-		try
-		{
-			yTest = stod(valuesVector[12]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logMessages("Invalid argument detected for yTest!!!", __FILE__, __LINE__);
-		}
+		xTest = stod(valuesVector[11]);
+		logBrief("xTest: " + valuesVector[11], 1);
 
-		try
-		{
-			uTest = stod(valuesVector[13]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logMessages("Invalid argument detected for uTest!!!", __FILE__, __LINE__);
-		}
 
-		try
-		{
-			vTest = stod(valuesVector[14]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logMessages("Invalid argument detected for vTest!!!", __FILE__, __LINE__);
-		}
+		yTest = stod(valuesVector[12]);
+		logBrief("yTest: " + valuesVector[12], 1);
+	
 
-		try
-		{
-			numCellsWithParticles = stoi(valuesVector[15]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logMessages("Invalid argument detected for numCellsWithParticles!!!", __FILE__, __LINE__);
-		}
+		uTest = stod(valuesVector[13]);
+		logBrief("uTest: " + valuesVector[13], 1);
+
+
+		vTest = stod(valuesVector[14]);
+		logBrief("vTest: " + valuesVector[14], 1);
+
+
+		xPerturbation = stod(valuesVector[15]);
+		logBrief("xPerturbation: " + valuesVector[15], 1);
+		
+
+		yPerturbation = stod(valuesVector[16]);
+		logBrief("yPerturbation: " + valuesVector[16], 1);
+		
+
+		numCellsWithParticles = stoi(valuesVector[17]);
+		logBrief("numCellsWithParticles: " + valuesVector[17], 1);
+
+		plotFrequency = stoi(valuesVector[18]);
+		logBrief("plotFrequency: " + valuesVector[18], 1);
+
+		meshScalingParameter = stod(valuesVector[19]);
+		logBrief("meshScalingParameter: " + valuesVector[19], 1);
 	}
-}
-
-
-// Print data members
-void Parameters::printDataMembers()
-{
-	std::cout << "Time step: " << timeStep << std::endl;
-	std::cout << "Maximum number of iterations: " << maximumNumberOfIterations << std::endl;
-	std::cout << "Number of patches: " << numberOfPatches << std::endl;
-	std::cout << "Particles per cell: " << particlesPerCell << std::endl;
-	std::cout << "Charge: " << charge << std::endl;
-	std::cout << "Mass: " << mass << std::endl;
-	std::cout << "Maximum solver iterations: " << maxSolverIterations << std::endl;
-	std::cout << "Residual tolerance: " << residualTolerance << std::endl;
-	std::cout << "Successive over-relaxation parameter: " << SORparameter << std::endl;
-	std::cout << "Permittivity: " << epsilon0<< std::endl;
-	std::cout << "Mesh file path: " << meshFilePath << std::endl;
-	std::cout << "xTest: " << xTest << std::endl;
-	std::cout << "yTest: " << yTest << std::endl;
-	std::cout << "uTest: " << uTest << std::endl;
-	std::cout << "vTest: " << vTest << std::endl;
-	std::cout << "numCellsWithParticles: " << numCellsWithParticles << std::endl;
 }
 
 
 // Process mesh file
 void Parameters::processMesh()
 {
-	logMessages("Extracting mesh data", __FILE__, __LINE__);
+	logMessages("Extracting mesh data", __FILE__, __LINE__, 1);
 
 	precessingGridSU2(meshFilePath, meshFile);
 	readGridFromFile(meshFile + ".op2", gridinfo, gridgeo);
@@ -258,30 +289,43 @@ void Parameters::processMesh()
 }
 
 
-// Keeps console window open
-void Parameters::hitReturnToEnter()
+// Log messages, warnings and errors
+void Parameters::logMessages(std::string message, std::string filename, int line, int messageType)
 {
-	do 
-	{
-		std::cout << std::endl << "Press the return key to continue . . .";
-	} 
-	while (std::cin.get() != '\n');
-}
+	std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+	std::chrono::duration<double> duration;
+	duration = currentTime - initialTime;
 
-
-// Log messages and warnings
-void Parameters::logMessages(std::string message, std::string filename, int line)
-{
-	clock_t currentTime;
 	if (!firstLog)
 	{
 		std::ofstream logFile("logFile.txt", std::ios::app);	// Open log file, 'append' write mode
 
 		if (logFile.is_open())
-		{
-			currentTime = clock() - initialTime;
-			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << "\t\t" << 
-				message << " (" << filename << ", " << line << ")" << std::endl;
+		{	
+			if (messageType == 1)
+			{
+				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
+					filename + ", line " + std::to_string(line) + ")" << message <<
+					std::right << std::setw(100 - message.length()) << "Elapsed time: " +
+					std::to_string(duration.count()) + " seconds" << std::endl;
+			}
+			else if (messageType == 2)
+			{
+				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
+					filename + ", line " + std::to_string(line) + ")" << "## WARNING: " +
+					message << std::right << std::setw(100 - message.length()) << 
+					"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
+					std::endl;
+			}
+			else if (messageType == 3)
+			{
+				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
+					filename + ", line " + std::to_string(line) + ")" << "#### ERROR: " + 
+					message << std::right << std::setw(100 - message.length()) << 
+					"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
+					std::endl;
+				numErrors += 1;
+			}
 			logFile.close();
 		}
 		else
@@ -296,17 +340,53 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 
 		if (logFile.is_open())
 		{
+			std::time_t clockTime = std::chrono::system_clock::to_time_t(currentTime);
+			logFile << "Simulation start time: " << std::ctime(&clockTime) << std::endl;
 			
-			currentTime = clock() - initialTime;
-			logFile << static_cast<float>(1000 * currentTime) / CLOCKS_PER_SEC << "\t\t" <<
-				message << " (" << filename << ", " << line << ")" << std::endl;
+			logFile << std::left << std::setfill('.') << std::setw(45) << "(" + 
+				filename + ", line " + std::to_string(line) + ")" << message << 
+				std::right << std::setw(100 - message.length()) << "Elapsed time: " + 
+				std::to_string(duration.count()) + " seconds" << std::endl;
 			logFile.close();
 		}
 		else
 		{
 			std::cout << "Unable to open log file!!!" << std::endl;
 		}
+		std::cout << message << std::endl;
 		firstLog = false;
 	}
 
+}
+
+
+// Log brief messages
+void Parameters::logBrief(std::string message, int messageType)
+{
+	std::ofstream logFile("logFile.txt", std::ios::app);	// Open log file, 'append' write mode
+
+	if (logFile.is_open())
+	{
+		if (messageType == 1)
+		{
+			logFile << std::left << std::setw(45) << " " << message << std::endl;
+			logFile.close();
+		}
+		else if (messageType == 2)
+		{
+			logFile << std::left << std::setw(45) << " " << "## WARNING: " + message << std::endl;
+			logFile.close();
+		}
+		else if (messageType == 3)
+		{
+			logFile << std::left << std::setw(45) << " " << "#### ERROR: " + message << std::endl;
+			logFile.close();
+			numErrors += 1;
+		}
+	}
+	else
+	{
+		std::cout << "Unable to open log file!!!" << std::endl;
+	}
+	std::cout << message << std::endl;
 }

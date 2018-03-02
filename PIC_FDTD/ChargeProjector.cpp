@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ChargeProjector class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "ChargeProjector.h"
 
@@ -19,6 +19,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 
 	double hSquared = mesh->h * mesh->h;
 
+	// Project charge to nodes
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// TODO: Can change all of the below to references to avoid copying large 
@@ -72,15 +73,29 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		}
 	}
 
-	// TODO: Account for fixed neutralising (background) charge (?)
-
+	// Calculate charge density (charge / cell area)
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
 		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
-
-		// TODO: Assuming periodic BCs in the x direction, need to set rho(R) to 
-		// average(rho(R) + rho(opposite)), then set rho(opposite)=rho(R)
+		
+		// Account for fixed neutralising (background) charge (???)
+		mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * parametersList->charge) / mesh->numCells);
 	}
+
+	// Account for periodic BCs in x direction
+	for (int i = 0; i < mesh->numNodes; i++)
+	{
+		if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
+			mesh->nodesVector.nodes[i].boundaryType == "L" ||
+			mesh->nodesVector.nodes[i].boundaryType == "BL")
+		{
+			mesh->nodesVector.nodes[i].rho = 0.5 * (mesh->nodesVector.nodes[i].rho + 
+				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho);
+			mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho = 
+				mesh->nodesVector.nodes[i].rho;
+		}
+	}
+	parametersList->logBrief("Charge projector exited", 1);
 }
 
 
