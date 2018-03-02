@@ -22,7 +22,7 @@ int main()
 
 	if (parametersList.numErrors != 0)
 	{
-		parametersList.logMessages("Program exited unsuccessfully", __FILE__, __LINE__, 1);
+		parametersList.logMessages("Program exited UNSUCCESSFULLY", __FILE__, __LINE__, 1);
 		return -1;
 	}
 	else

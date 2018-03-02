@@ -268,6 +268,9 @@ void Parameters::assignInputs()
 
 		numCellsWithParticles = stoi(valuesVector[17]);
 		logBrief("numCellsWithParticles: " + valuesVector[17], 1);
+
+		plotFrequency = stoi(valuesVector[18]);
+		logBrief("plotFrequency: " + valuesVector[18], 1);
 	}
 }
 
@@ -300,14 +303,14 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 			{
 				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
 					filename + ", line " + std::to_string(line) + ")" << message <<
-					std::right << std::setw(95 - message.length()) << "Elapsed time: " +
+					std::right << std::setw(100 - message.length()) << "Elapsed time: " +
 					std::to_string(duration.count()) + " seconds" << std::endl;
 			}
 			else if (messageType == 2)
 			{
 				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
 					filename + ", line " + std::to_string(line) + ")" << "## WARNING: " +
-					message << std::right << std::setw(95 - message.length()) << 
+					message << std::right << std::setw(100 - message.length()) << 
 					"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
 					std::endl;
 			}
@@ -315,7 +318,7 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 			{
 				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
 					filename + ", line " + std::to_string(line) + ")" << "#### ERROR: " + 
-					message << std::right << std::setw(95 - message.length()) << 
+					message << std::right << std::setw(100 - message.length()) << 
 					"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
 					std::endl;
 				numErrors += 1;
@@ -339,7 +342,7 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 			
 			logFile << std::left << std::setfill('.') << std::setw(45) << "(" + 
 				filename + ", line " + std::to_string(line) + ")" << message << 
-				std::right << std::setw(95 - message.length()) << "Elapsed time: " + 
+				std::right << std::setw(100 - message.length()) << "Elapsed time: " + 
 				std::to_string(duration.count()) + " seconds" << std::endl;
 			logFile.close();
 		}

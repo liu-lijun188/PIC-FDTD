@@ -51,10 +51,20 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	double xRandom = -0.5 + dist(rng) / (double)1000000;
 	double yRandom = -0.5 + dist(rng) / (double)1000000;
 
-	// TODO: Check that particle remains inside the simulation domain
+	// Add random variation to particle position and check it remains inside cell
 
 	this->position[0] += parametersList->xPerturbation * xRandom;
+	if (this->position[0] < mesh->cellsVector.cells[this->cellID - 1].left ||
+		this->position[0] > mesh->cellsVector.cells[this->cellID - 1].right)
+	{
+		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
+	}
 	this->position[1] += parametersList->yPerturbation * yRandom;
+	if (this->position[1] < mesh->cellsVector.cells[this->cellID - 1].bottom ||
+		this->position[1] > mesh->cellsVector.cells[this->cellID - 1].top)
+	{
+		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
+	}
 
 	// Initial particle velocity (uTest, vTest)
 	velocity.push_back(parametersList->uTest);	// u

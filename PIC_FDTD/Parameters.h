@@ -48,6 +48,7 @@ public:
 	double xTest, yTest, uTest, vTest;		//!< Test parameter	
 	double xPerturbation, yPerturbation;	//!< Test parameter
 	int numCellsWithParticles;				//!< Test parameter	
+	int plotFrequency;						//!< Test parameter
 
 	int numErrors = 0;						//!< Number of errors detected during simulation
 

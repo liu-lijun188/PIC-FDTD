@@ -53,11 +53,11 @@ void Patch::generateNodeOutput(Mesh mesh, double time)
 // Start the PIC loop within a Patch object
 void Patch::startPIC()
 {
-	parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
-
 	numErrors = parametersList.numErrors;
 	if (numErrors == 0)
 	{
+		parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
+
 		for (int i = 0; i < parametersList.maximumNumberOfIterations; i++)
 		{
 			parametersList.logMessages("Starting iteration " + std::to_string(i + 1),
@@ -68,45 +68,26 @@ void Patch::startPIC()
 
 			ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 
-			numErrors = parametersList.numErrors;
-			if (numErrors != 0)
-			{
-				break;
-			}
-
 			// FDTD fdtd();
 
 			FieldSolver solver(&parametersList, &mesh, &particlesVector);
 
-			numErrors = parametersList.numErrors;
-			if (numErrors != 0)
-			{
-				break;
-			}
-
 			FieldInterpolator interpolator(&parametersList, &mesh, &particlesVector);
-
-			numErrors = parametersList.numErrors;
-			if (numErrors != 0)
-			{
-				break;
-			}
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
+			// MCC collisions();
+
 			numErrors = parametersList.numErrors;
 			if (numErrors != 0)
 			{
 				break;
 			}
 
-			// MCC collisions();
-
 			time += parametersList.timeStep;
 
-			// TODO: Turn this into a parameter
-			// Generate plots only at intervals
-			if (static_cast<int>(time / parametersList.timeStep) % 2 == 0)
+			// Generate plots at specified intervals
+			if (static_cast<int>(time / parametersList.timeStep) % parametersList.plotFrequency == 0)
 			{
 				generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 				generateNodeOutput(mesh, time);

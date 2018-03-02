@@ -50,7 +50,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		if (abs(displacementL) >= mesh->h || abs(displacementR) >= mesh->h)
 		{
-			parametersList->logBrief(" Particle has moved more than one cell length", 3);
+			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
 			break;
 		}
 
@@ -124,7 +124,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		if (abs(displacementB) >= mesh->h || abs(displacementT) >= mesh->h)
 		{
-			parametersList->logBrief(" Particle has moved more than one cell length", 3);
+			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
 			break;
 		}
 

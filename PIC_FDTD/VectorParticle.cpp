@@ -21,7 +21,7 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 	if (parametersList->numCellsWithParticles < 1 || 
 		parametersList->numCellsWithParticles > mesh->numCells)
 	{
-		parametersList->logBrief("Value of numCellsWithParticles has been changed", 2);
+		parametersList->logBrief("Value of numCellsWithParticles has been changed to " + std::to_string(mesh->numCells), 2);
 		parametersList->numCellsWithParticles = mesh->numCells;
 	}
 
@@ -30,7 +30,7 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 		// Check if particlesPerCell is a square number
 		if (sqrt(parametersList->particlesPerCell) != round(sqrt(parametersList->particlesPerCell)))
 		{
-			parametersList->logBrief("Value of particlesPerCell has been changed", 2);
+			parametersList->logBrief("Value of particlesPerCell has been changed to 1", 2);
 			parametersList->particlesPerCell = 1;
 		}
 		
