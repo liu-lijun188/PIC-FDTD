@@ -45,7 +45,7 @@ meshFilePath: coarseMesh.su2
 
 
 %------------------------------------------------------------------------------
-% Test parameters
+% Test parameters (to be removed or incorporated into other sections later)
 %------------------------------------------------------------------------------
 xTest: 0.5
 yTest: 0.5
@@ -56,6 +56,9 @@ yPerturbation: 0.0015
 numCellsWithParticles: 1
 plotFrequency: 2
 meshScalingParameter: 1.0
+solverType: GS
+xBC: periodic
+yBC: reflective
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------------------------------------------------------

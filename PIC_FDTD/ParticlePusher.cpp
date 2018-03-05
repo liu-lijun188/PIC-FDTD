@@ -29,9 +29,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 	}
 
-	// TODO: Enable BCs to be selected through input file
-
-	// Currently enforced BCs: (pseudo) reflective in y direction, periodic in x
+	// Currently available BCs: pseudo-reflective/elastic, periodic
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// Update x velocity
@@ -66,15 +64,28 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].cellID =
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].leftCellID;
 			}
-			// Particle crosses left boundary
+			// Particle crosses left boundary of domain
 			else
-			{	
-				particlesVector->particleVector[i].cellID =
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
+			{
+				if (parametersList->xBC == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
 
-				// Shift x position
-				particlesVector->particleVector[i].position[0] = displacementL +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+					// Shift x position
+					particlesVector->particleVector[i].position[0] = displacementL +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+				}
+				else if (parametersList->xBC == "reflective")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[0] = -displacementL +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
+
+					// Reverse x velocity
+					particlesVector->particleVector[i].velocity[0] *= -1.0;
+				}
+
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -96,12 +107,24 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses right boundary
 			else
 			{
-				particlesVector->particleVector[i].cellID =
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
+				if (parametersList->xBC == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
 
-				// Shift x position
-				particlesVector->particleVector[i].position[0] = displacementR +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
+					// Shift x position
+					particlesVector->particleVector[i].position[0] = displacementR +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
+				}
+				else if (parametersList->xBC == "reflective")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[0] = -displacementR +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+
+					// Reverse x velocity
+					particlesVector->particleVector[i].velocity[0] *= -1.0;
+				}
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -143,12 +166,24 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// Reflect particle from boundary
-				particlesVector->particleVector[i].position[1] = -displacementB +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+				if (parametersList->yBC == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
 
-				// Reverse y velocity
-				particlesVector->particleVector[i].velocity[1] *= -1.0;
+					// Shift y position
+					particlesVector->particleVector[i].position[0] = displacementB +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+				}
+				else if (parametersList->yBC == "reflective")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[1] = -displacementB +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+
+					// Reverse y velocity
+					particlesVector->particleVector[i].velocity[1] *= -1.0;
+				}
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -170,12 +205,24 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				// Reflect particle from boundary
-				particlesVector->particleVector[i].position[1] = -displacementT +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+				if (parametersList->yBC == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
 
-				// Reverse y velocity
-				particlesVector->particleVector[i].velocity[1] *= -1.0;
+					// Shift y position
+					particlesVector->particleVector[i].position[0] = displacementT +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+				}
+				else if (parametersList->yBC == "reflective")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[1] = -displacementT +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+
+					// Reverse y velocity
+					particlesVector->particleVector[i].velocity[1] *= -1.0;
+				}
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,

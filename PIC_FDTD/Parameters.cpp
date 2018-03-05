@@ -274,6 +274,15 @@ void Parameters::assignInputs()
 
 		meshScalingParameter = stod(valuesVector[19]);
 		logBrief("meshScalingParameter: " + valuesVector[19], 1);
+
+		solverType = valuesVector[20];
+		logBrief("solverType: " + valuesVector[20], 1);
+
+		xBC = valuesVector[21];
+		logBrief("xBC: " + valuesVector[21], 1);
+
+		yBC = valuesVector[22];
+		logBrief("yBC: " + valuesVector[22], 1);
 	}
 }
 
