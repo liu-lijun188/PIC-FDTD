@@ -70,6 +70,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	velocity.push_back(parametersList->uTest);	// u
 	velocity.push_back(parametersList->vTest);	// v
 
+	// TODO: Make this an option from the input file
 	// Extra setup for the two stream instability problem
 	this->basic.type = 1;
 	if (xRandom >= 0.0)
@@ -84,3 +85,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 Particle::~Particle()
 {
 }
+
+// TODO: Implement methods to create/destroy particles over time in the simulation, 
+// placing them in the desired location and identifying the relevant cell, while 
+// updating all relevant parameters (numParticles, particlesVector, plotVector, etc.)

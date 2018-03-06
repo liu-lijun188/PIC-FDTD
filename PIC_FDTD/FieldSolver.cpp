@@ -241,6 +241,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 		}
 	}
 
+	// TODO: Account for magnetic field
 	// Electric field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{

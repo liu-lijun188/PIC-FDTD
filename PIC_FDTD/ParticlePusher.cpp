@@ -29,6 +29,10 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 	}
 
+	// TODO: Implement open boundaries, where particles leave the domain and are
+	// removed from the global particles list, with new particles injected (from
+	// the opposite side??) if charge balance is required
+
 	// Currently available BCs: pseudo-reflective/elastic, periodic
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
@@ -46,7 +50,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		double displacementR = particlesVector->particleVector[i].position[0] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
 
-		if (abs(displacementL) >= mesh->h || abs(displacementR) >= mesh->h)
+		if ((displacementL < 0.0 && abs(displacementL) >= mesh->h) || (displacementR > 0.0 && abs(displacementR) >= mesh->h))
 		{
 			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
 			break;
@@ -145,7 +149,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		double displacementT = particlesVector->particleVector[i].position[1] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 
-		if (abs(displacementB) >= mesh->h || abs(displacementT) >= mesh->h)
+		if ((displacementB < 0.0 && abs(displacementB) >= mesh->h) || (displacementT > 0.0 && abs(displacementT) >= mesh->h))
 		{
 			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
 			break;
