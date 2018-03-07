@@ -6,7 +6,7 @@
 #pragma once
 
 //! \class FDTD
-//! \brief TODO - Resolves an external EM field using the FDTD method
+//! \brief TODO: Resolves an external EM field using the FDTD method
 class FDTD
 {
 public:

@@ -78,6 +78,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	{
 		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
 		
+		// TODO: Test this independently
 		// Account for fixed neutralising (background) charge (???)
 		mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * parametersList->charge) / mesh->numCells);
 	}

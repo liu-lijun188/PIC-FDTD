@@ -9,7 +9,7 @@
 #include "VectorPatch.h"
 
 //! \class Simulation
-//! \brief TODO - Assign mesh to patches and perform load balancing
+//! \brief TODO: Assign mesh to patches and perform load balancing
 class Simulation
 {
 public: 

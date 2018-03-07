@@ -283,6 +283,9 @@ void Parameters::assignInputs()
 
 		yBC = valuesVector[22];
 		logBrief("yBC: " + valuesVector[22], 1);
+
+		twoStream = stoi(valuesVector[23]);
+		logBrief("twoStream: " + valuesVector[23], 1);
 	}
 }
 

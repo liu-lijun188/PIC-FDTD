@@ -10,6 +10,7 @@
 
 %------------------------------------------------------------------------------
 % Simulation parameters 
+% TODO: Separate time step for FDTD solver or other species (e.g. ions vs electrons)
 %------------------------------------------------------------------------------
 timeStep: 0.00002
 maximumNumberOfIterations: 7 
@@ -19,6 +20,10 @@ particlesPerCell: 1
 
 %------------------------------------------------------------------------------
 % Particle parameters
+% TODO: Add parameter for charge to mass ratio, use if charge==mass==0.0
+% TODO: Parameters for multi-species simulation
+% TODO: Add parameters for Maxwellian particle velocity distribution (seeding)
+% TODO: Add section for field parameters (external EM fields, location, time, etc.)
 %------------------------------------------------------------------------------
 charge: -1.602e-19
 mass: 9.11e-31
@@ -45,7 +50,9 @@ meshFilePath: coarseMesh.su2
 
 
 %------------------------------------------------------------------------------
-% Test parameters (to be removed or incorporated into other sections later)
+% Test parameters 
+% TODO: Remove or incorporate parameters into other sections 
+% TODO: Change two-stream parameter to proper Boolean
 %------------------------------------------------------------------------------
 xTest: 0.5
 yTest: 0.5
@@ -59,6 +66,7 @@ meshScalingParameter: 1.0
 solverType: GS
 xBC: periodic
 yBC: reflective
+twoStream: 1
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------------------------------------------------------

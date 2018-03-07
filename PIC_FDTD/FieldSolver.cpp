@@ -19,9 +19,10 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 
 	double h = mesh->h;
 
-	// Gauss-Seidel solver with successive over-relaxation (SOR)
+	// TODO: Check that time step is fine enough for solver stability
 	for (int i = 0; i < parametersList->maxSolverIterations; i++)
 	{
+		// Gauss-Seidel solver with successive over-relaxation (SOR)
 		if (parametersList->solverType == "GS")
 		{
 			for (int j = 0; j < mesh->numNodes; j++)

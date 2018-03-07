@@ -52,6 +52,7 @@ public:
 	double meshScalingParameter;			//!< Test parameter
 	std::string solverType;					//!< Test parameter
 	std::string xBC, yBC;					//!< Test parameter
+	int twoStream;							//!< Test parameter
 
 	int numErrors = 0;						//!< Number of errors detected during simulation
 

@@ -70,13 +70,15 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	velocity.push_back(parametersList->uTest);	// u
 	velocity.push_back(parametersList->vTest);	// v
 
-	// TODO: Make this an option from the input file
-	// Extra setup for the two stream instability problem
-	this->basic.type = 1;
-	if (xRandom >= 0.0)
+	// Extra setup for the two-stream instability problem
+	if (parametersList->twoStream == 1)
 	{
-		this->basic.type = -1;
-		this->velocity[0] *= -1.0;
+		this->basic.type = 1;
+		if (xRandom >= 0.0)
+		{
+			this->basic.type = -1;
+			this->velocity[0] *= -1.0;
+		}
 	}
 }
 

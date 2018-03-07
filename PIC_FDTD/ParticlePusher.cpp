@@ -13,8 +13,13 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
-	// TODO: Incorporate Boris methods to handle B field rotation
+	// TODO: Incorporate Boris method to handle B field rotation of velocity 
+	// (half acceleration, rotation, then half acceleration)
 
+	// TODO: Consider working with normalised equations (e.g. x/h, t/timeStep, etc.)
+	// to reduce number of computations at each stage
+
+	// TODO: Check that time step is fine enough for pusher stability
 	// Leapfrog method - remember to shift v forwards 0.5 time steps when plotting!
 	if (time == 0.0)
 	{
@@ -235,6 +240,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
 	}
+
+	// TODO: Shift v forwards half a time step to sync v and x for plotting
+
+	// TODO: Calculate kinetic energy of particle and record (or do this later 
+	// when plotting), similarly for potential energy
+
 	parametersList->logBrief("Particle pusher exited", 1);
 }
 
