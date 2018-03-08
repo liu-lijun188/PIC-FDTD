@@ -41,6 +41,9 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 			mesh->cellsVector.cells[cellID - 1].right * xratio);			// x
 		position.push_back(mesh->cellsVector.cells[cellID - 1].top * yratio +
 			mesh->cellsVector.cells[cellID - 1].bottom * (1 - yratio));		// y
+
+		// TODO: Method for distributing particles when simulation is axisymmetric,
+		// need to have more particles as distance from axis increases (?)
 	}
 
 	// Initialise random number generator, distribution in range [0, 1000000]

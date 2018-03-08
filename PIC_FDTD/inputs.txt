@@ -64,9 +64,12 @@ numCellsWithParticles: 1
 plotFrequency: 2
 meshScalingParameter: 1.0
 solverType: GS
-xBC: periodic
-yBC: reflective
+xBCType: periodic
+xBCValue: 0.0
+yBCType: dirichlet
+yBCValue: 0.0
 twoStream: 1
+axisymmetric: 0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------------------------------------------------------

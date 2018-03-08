@@ -86,7 +86,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	// Account for periodic BCs 
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
-		if (parametersList->xBC == "periodic")
+		if (parametersList->xBCType == "periodic")
 		{
 			if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
 				mesh->nodesVector.nodes[i].boundaryType == "L" ||
@@ -98,7 +98,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 					mesh->nodesVector.nodes[i].rho;
 			}
 		}
-		if (parametersList->yBC == "periodic")
+		if (parametersList->yBCType == "periodic")
 		{
 			if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
 				mesh->nodesVector.nodes[i].boundaryType == "T" ||
