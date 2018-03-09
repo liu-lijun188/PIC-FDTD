@@ -328,9 +328,118 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 		}
 		else if (parametersList->axisymmetric == 1)
 		{
-			// TODO: Different set of solvers for axisymmetric case, Poisson 
-			// equation is different in cylindrical coordinates, also need to
-			// treat the axis of symmetry as a separate BC
+			// TODO: Corner node equations
+
+			for (int j = 0; j < mesh->numNodes; j++)
+			{
+				if (mesh->nodesVector.nodes[j].boundaryType == "internal")
+				{
+					mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
+						((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi + 
+							(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1,0))) *
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi + 
+							(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+							(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+				}
+				else if (mesh->nodesVector.nodes[j].boundaryType == "L")
+				{
+					if (parametersList->xBCType == "periodic")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicXNodeID - 1].phi +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+					}
+					else if (parametersList->xBCType == "dirichlet")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->xBCValue;
+					}
+					else if (parametersList->xBCType == "neumann")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi - 
+								h * parametersList->xBCValue) +	(1 - parametersList->SORparameter) * 
+								mesh->nodesVector.nodes[j].phi;
+					}
+				}
+				else if (mesh->nodesVector.nodes[j].boundaryType == "R")
+				{
+					if (parametersList->xBCType == "periodic")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicXNodeID - 1].phi +
+								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+					}
+					else if (parametersList->xBCType == "dirichlet")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->xBCValue;
+					}
+					else if (parametersList->xBCType == "neumann")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+								h * parametersList->xBCValue) + (1 - parametersList->SORparameter) *
+							mesh->nodesVector.nodes[j].phi;
+					}
+				}
+				else if (mesh->nodesVector.nodes[j].boundaryType == "T")
+				{
+					// Periodic y BCs not valid for axisymmetric simulation since 
+					// bottom boundary is actually an axis 
+
+					if (parametersList->yBCType == "dirichlet")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->yBCValue;
+					}
+					else if (parametersList->yBCType == "neumann")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							(h * h * ((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) +
+								(parametersList->yBCValue / mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+								h * parametersList->yBCValue) + (1 - parametersList->SORparameter) *
+								mesh->nodesVector.nodes[j].phi;
+					}
+				}
+				else if (mesh->nodesVector.nodes[j].boundaryType == "B")
+				{
+					// Bottom nodes must always obey the symmetry BC
+					
+					mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
+						((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+							2 *	mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi) +
+							(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+				}
+			}
+
 		}
 	}
 
