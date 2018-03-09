@@ -13,8 +13,13 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
-	// TODO: Incorporate Boris methods to handle B field rotation
+	// TODO: Incorporate Boris method to handle B field rotation of velocity 
+	// (half acceleration, rotation, then half acceleration)
 
+	// TODO: Consider working with normalised equations (e.g. x/h, t/timeStep, etc.)
+	// to reduce number of computations at each stage
+
+	// TODO: Check that time step is fine enough for pusher stability
 	// Leapfrog method - remember to shift v forwards 0.5 time steps when plotting!
 	if (time == 0.0)
 	{
@@ -29,9 +34,15 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 	}
 
-	// TODO: Enable BCs to be selected through input file
+	// TODO: Implement open boundaries, where particles leave the domain and are
+	// removed from the global particles list, with new particles injected (from
+	// the opposite side??) if charge balance is required
 
-	// Currently enforced BCs: (pseudo) reflective in y direction, periodic in x
+	// TODO: At the moment both Dirichlet and Neumann BCs cause reflection, however
+	// in waves, Dirichlet causes a sign change while Neumann does not (perfect 
+	// reflection) - check whether this is also correct for particle simulation
+
+	// Currently available BCs: periodic, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// Update x velocity
@@ -48,7 +59,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		double displacementR = particlesVector->particleVector[i].position[0] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
 
-		if (abs(displacementL) >= mesh->h || abs(displacementR) >= mesh->h)
+		if ((displacementL < 0.0 && abs(displacementL) >= mesh->h) || (displacementR > 0.0 && abs(displacementR) >= mesh->h))
 		{
 			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
 			break;
@@ -66,15 +77,29 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].cellID =
 					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].leftCellID;
 			}
-			// Particle crosses left boundary
+			// Particle crosses left boundary of domain
 			else
-			{	
-				particlesVector->particleVector[i].cellID =
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
+			{
+				if (parametersList->xBCType == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
 
-				// Shift x position
-				particlesVector->particleVector[i].position[0] = displacementL +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+					// Shift x position
+					particlesVector->particleVector[i].position[0] = displacementL +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+				}
+				else if (parametersList->xBCType == "dirichlet" || 
+						 parametersList->xBCType == "neumann")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[0] = -displacementL +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
+
+					// Reverse x velocity
+					particlesVector->particleVector[i].velocity[0] *= -1.0;
+				}
+
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -96,12 +121,25 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses right boundary
 			else
 			{
-				particlesVector->particleVector[i].cellID =
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
+				if (parametersList->xBCType == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
 
-				// Shift x position
-				particlesVector->particleVector[i].position[0] = displacementR +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
+					// Shift x position
+					particlesVector->particleVector[i].position[0] = displacementR +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
+				}
+				else if (parametersList->xBCType == "dirichlet" || 
+						 parametersList->xBCType == "neumann")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[0] = -displacementR +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
+
+					// Reverse x velocity
+					particlesVector->particleVector[i].velocity[0] *= -1.0;
+				}
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -122,7 +160,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		double displacementT = particlesVector->particleVector[i].position[1] -
 			mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 
-		if (abs(displacementB) >= mesh->h || abs(displacementT) >= mesh->h)
+		if ((displacementB < 0.0 && abs(displacementB) >= mesh->h) || (displacementT > 0.0 && abs(displacementT) >= mesh->h))
 		{
 			parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
 			break;
@@ -143,12 +181,25 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// Reflect particle from boundary
-				particlesVector->particleVector[i].position[1] = -displacementB +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+				if (parametersList->yBCType == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
 
-				// Reverse y velocity
-				particlesVector->particleVector[i].velocity[1] *= -1.0;
+					// Shift y position
+					particlesVector->particleVector[i].position[0] = displacementB +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+				}
+				else if (parametersList->yBCType == "dirichlet" || 
+						 parametersList->yBCType == "neumann")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[1] = -displacementB +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+
+					// Reverse y velocity
+					particlesVector->particleVector[i].velocity[1] *= -1.0;
+				}
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -170,12 +221,25 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				// Reflect particle from boundary
-				particlesVector->particleVector[i].position[1] = -displacementT +
-					mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+				if (parametersList->yBCType == "periodic")
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
 
-				// Reverse y velocity
-				particlesVector->particleVector[i].velocity[1] *= -1.0;
+					// Shift y position
+					particlesVector->particleVector[i].position[0] = displacementT +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+				}
+				else if (parametersList->yBCType == "dirichlet" ||
+						 parametersList->yBCType == "neumann")
+				{
+					// Reflect particle from boundary
+					particlesVector->particleVector[i].position[1] = -displacementT +
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+
+					// Reverse y velocity
+					particlesVector->particleVector[i].velocity[1] *= -1.0;
+				}
 			}
 
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
@@ -184,6 +248,12 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
 	}
+
+	// TODO: Shift v forwards half a time step to sync v and x for plotting
+
+	// TODO: Calculate kinetic energy of particle and record (or do this later 
+	// when plotting), similarly for potential energy
+
 	parametersList->logBrief("Particle pusher exited", 1);
 }
 

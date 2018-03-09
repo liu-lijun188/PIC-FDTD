@@ -6,7 +6,7 @@
 #pragma once
 
 //! \class MCC
-//! \brief TODO - Handles collisions between particles
+//! \brief TODO: Handles collisions between particles
 class MCC
 {
 public:

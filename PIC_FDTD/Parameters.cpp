@@ -274,6 +274,27 @@ void Parameters::assignInputs()
 
 		meshScalingParameter = stod(valuesVector[19]);
 		logBrief("meshScalingParameter: " + valuesVector[19], 1);
+
+		solverType = valuesVector[20];
+		logBrief("solverType: " + valuesVector[20], 1);
+
+		xBCType = valuesVector[21];
+		logBrief("xBCType: " + valuesVector[21], 1);
+
+		xBCValue = stod(valuesVector[22]);
+		logBrief("xBCValue: " + valuesVector[22], 1);
+
+		yBCType = valuesVector[23];
+		logBrief("yBCType: " + valuesVector[23], 1);
+
+		yBCValue = stod(valuesVector[24]);
+		logBrief("yBCValue: " + valuesVector[24], 1);
+
+		twoStream = stoi(valuesVector[25]);
+		logBrief("twoStream: " + valuesVector[25], 1);
+
+		axisymmetric = stoi(valuesVector[26]);
+		logBrief("axisymmetric: " + valuesVector[26], 1);
 	}
 }
 

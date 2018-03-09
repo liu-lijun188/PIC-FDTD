@@ -41,6 +41,9 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 			mesh->cellsVector.cells[cellID - 1].right * xratio);			// x
 		position.push_back(mesh->cellsVector.cells[cellID - 1].top * yratio +
 			mesh->cellsVector.cells[cellID - 1].bottom * (1 - yratio));		// y
+
+		// TODO: Method for distributing particles when simulation is axisymmetric,
+		// need to have more particles as distance from axis increases (?)
 	}
 
 	// Initialise random number generator, distribution in range [0, 1000000]
@@ -70,12 +73,15 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	velocity.push_back(parametersList->uTest);	// u
 	velocity.push_back(parametersList->vTest);	// v
 
-	// Extra setup for the two stream instability problem
-	this->basic.type = 1;
-	if (xRandom >= 0.0)
+	// Extra setup for the two-stream instability problem
+	if (parametersList->twoStream == 1)
 	{
-		this->basic.type = -1;
-		this->velocity[0] *= -1.0;
+		this->basic.type = 1;
+		if (xRandom >= 0.0)
+		{
+			this->basic.type = -1;
+			this->velocity[0] *= -1.0;
+		}
 	}
 }
 
@@ -84,3 +90,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 Particle::~Particle()
 {
 }
+
+// TODO: Implement methods to create/destroy particles over time in the simulation, 
+// placing them in the desired location and identifying the relevant cell, while 
+// updating all relevant parameters (numParticles, particlesVector, plotVector, etc.)

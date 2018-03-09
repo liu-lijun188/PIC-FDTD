@@ -78,22 +78,39 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	{
 		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
 		
+		// TODO: Test this independently
 		// Account for fixed neutralising (background) charge (???)
 		mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * parametersList->charge) / mesh->numCells);
 	}
 
-	// Account for periodic BCs in x direction
+	// Account for periodic BCs 
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
-		if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
-			mesh->nodesVector.nodes[i].boundaryType == "L" ||
-			mesh->nodesVector.nodes[i].boundaryType == "BL")
+		if (parametersList->xBCType == "periodic")
 		{
-			mesh->nodesVector.nodes[i].rho = 0.5 * (mesh->nodesVector.nodes[i].rho + 
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho);
-			mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho = 
-				mesh->nodesVector.nodes[i].rho;
+			if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
+				mesh->nodesVector.nodes[i].boundaryType == "L" ||
+				mesh->nodesVector.nodes[i].boundaryType == "BL")
+			{
+				mesh->nodesVector.nodes[i].rho = 0.5 * (mesh->nodesVector.nodes[i].rho +
+					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho);
+				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho =
+					mesh->nodesVector.nodes[i].rho;
+			}
 		}
+		if (parametersList->yBCType == "periodic")
+		{
+			if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
+				mesh->nodesVector.nodes[i].boundaryType == "T" ||
+				mesh->nodesVector.nodes[i].boundaryType == "TR")
+			{
+				mesh->nodesVector.nodes[i].rho = 0.5 * (mesh->nodesVector.nodes[i].rho +
+					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicYNodeID - 1].rho);
+				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicYNodeID - 1].rho =
+					mesh->nodesVector.nodes[i].rho;
+			}
+		}
+
 	}
 	parametersList->logBrief("Charge projector exited", 1);
 }
