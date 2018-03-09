@@ -38,6 +38,10 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// removed from the global particles list, with new particles injected (from
 	// the opposite side??) if charge balance is required
 
+	// TODO: At the moment both Dirichlet and Neumann BCs cause reflection, however
+	// in waves, Dirichlet causes a sign change while Neumann does not (perfect 
+	// reflection) - check whether this is also correct for particle simulation
+
 	// Currently available BCs: periodic, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
@@ -85,7 +89,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[0] = displacementL +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
 				}
-				else if (parametersList->xBCType == "dirichlet")
+				else if (parametersList->xBCType == "dirichlet" || 
+						 parametersList->xBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[0] = -displacementL +
@@ -125,7 +130,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[0] = displacementR +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
 				}
-				else if (parametersList->xBCType == "dirichlet")
+				else if (parametersList->xBCType == "dirichlet" || 
+						 parametersList->xBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[0] = -displacementR +
@@ -184,7 +190,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[0] = displacementB +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 				}
-				else if (parametersList->yBCType == "dirichlet")
+				else if (parametersList->yBCType == "dirichlet" || 
+						 parametersList->yBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[1] = -displacementB +
@@ -223,7 +230,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[0] = displacementT +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 				}
-				else if (parametersList->yBCType == "dirichlet")
+				else if (parametersList->yBCType == "dirichlet" ||
+						 parametersList->yBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[1] = -displacementT +

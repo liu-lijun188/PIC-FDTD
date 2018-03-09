@@ -66,13 +66,14 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 					}
 					else if (parametersList->xBCType == "neumann")
 					{
-						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
-							(parametersList->xBCValue * h * h +
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
 								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
-								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi - 
+								parametersList->xBCValue * h) +	(1 - parametersList->SORparameter) * 
+								mesh->nodesVector.nodes[j].phi;
 					}
-
 				}
 				else if (mesh->nodesVector.nodes[j].boundaryType == "R")
 				{
@@ -92,13 +93,14 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 					}
 					else if (parametersList->xBCType == "neumann")
 					{
-						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
-							(parametersList->xBCValue * h * h +
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
 								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
-								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+								parametersList->xBCValue * h) + (1 - parametersList->SORparameter) *
+								mesh->nodesVector.nodes[j].phi;
 					}
-
 				}
 				else if (mesh->nodesVector.nodes[j].boundaryType == "T")
 				{
@@ -118,11 +120,13 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 					}
 					else if (parametersList->yBCType == "neumann")
 					{
-						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
-							(parametersList->yBCValue * h * h +
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
 								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi) +
-								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+								parametersList->yBCValue * h) + (1 - parametersList->SORparameter) *
+								mesh->nodesVector.nodes[j].phi;
 					}
 				}
 				else if (mesh->nodesVector.nodes[j].boundaryType == "B")
@@ -143,11 +147,13 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 					}
 					else if (parametersList->yBCType == "neumann")
 					{
-						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
-							(parametersList->yBCValue * h * h +	
+						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
+							((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
 								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi) +
-								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi -
+								parametersList->yBCValue * h) + (1 - parametersList->SORparameter) *
+								mesh->nodesVector.nodes[j].phi;
 					}
 				}
 				else 
@@ -196,11 +202,64 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 						}
 					}
+					else if (parametersList->xBCType == "neumann" &&
+						     parametersList->yBCType == "neumann")
+					{
+						if (mesh->nodesVector.nodes[j].boundaryType == "TL")
+						{
+							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
+								((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi + 
+									h * (parametersList->yBCValue - parametersList->xBCValue)) +
+									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+						}
+						else if (mesh->nodesVector.nodes[j].boundaryType == "BL")
+						{
+							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
+								((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi -
+									h * (parametersList->yBCValue + parametersList->xBCValue)) +
+									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+						}
+						else if (mesh->nodesVector.nodes[j].boundaryType == "TR")
+						{
+							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
+								((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+									h * (parametersList->yBCValue + parametersList->xBCValue)) +
+									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+						}
+						else if (mesh->nodesVector.nodes[j].boundaryType == "BR")
+						{
+							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
+								((mesh->nodesVector.nodes[j].rho / parametersList->epsilon0) * h * h +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+									h * (parametersList->xBCValue - parametersList->yBCValue)) +
+									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
+						}
+					}
+					else if (parametersList->xBCType == "dirichlet" &&
+							 parametersList->yBCType == "dirichlet")
+					{
+						mesh->nodesVector.nodes[j].phi = 0.5 * (parametersList->xBCValue + 
+							parametersList->yBCValue);
+					}
+					else if (parametersList->xBCType == "dirichlet")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->xBCValue;
+					}
+					else if (parametersList->yBCType == "dirichlet")
+					{
+						mesh->nodesVector.nodes[j].phi = parametersList->yBCValue;
+					}
 					else
 					{
-						// TODO: Fix this
-						// Dirichlet boundary condition of phi = 0 at corner nodes
-						mesh->nodesVector.nodes[j].phi = 0;
+						parametersList->logBrief("Unable to resolve corner BCs", 2);
+						mesh->nodesVector.nodes[j].phi = 0.0;
 					}
 				}
 			}
