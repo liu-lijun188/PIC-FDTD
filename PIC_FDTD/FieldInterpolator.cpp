@@ -19,6 +19,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 {
 	particlesVector->clearFields();
 
+	# pragma omp parallel for num_threads(parametersList->numThreads)
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// TODO: Can change all of the below to references to avoid copying large 

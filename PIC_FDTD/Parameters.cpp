@@ -295,6 +295,9 @@ void Parameters::assignInputs()
 
 		axisymmetric = stoi(valuesVector[26]);
 		logBrief("axisymmetric: " + valuesVector[26], 1);
+
+		numThreads = stoi(valuesVector[27]);
+		logBrief("numThreads: " + valuesVector[27], 1);
 	}
 }
 

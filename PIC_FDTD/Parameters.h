@@ -15,6 +15,8 @@
 
 #include "GRID/grid.hpp"
 
+#include "omp.h"
+
 //! \class Parameters 
 //! \brief Handles pre-processing of input parameters
 class Parameters
@@ -55,6 +57,7 @@ public:
 	double xBCValue, yBCValue;				//!< Test parameter
 	int twoStream;							//!< Test parameter
 	int axisymmetric;						//!< Test parameter
+	int numThreads;						//!< Test parameter
 
 	int numErrors = 0;						//!< Number of errors detected during simulation
 

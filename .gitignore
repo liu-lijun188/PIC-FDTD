@@ -285,3 +285,5 @@ __pycache__/
 /PIC_FDTD/cSolution_N.plt
 /nodes.lay
 /twoStream.lay
+/test.mcr
+/rotate.mcr

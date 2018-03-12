@@ -46,13 +46,14 @@ epsilon0: 8.85e-12
 %------------------------------------------------------------------------------
 % Paths
 %------------------------------------------------------------------------------
-meshFilePath: coarseMesh.su2
+meshFilePath: fineMesh.su2
 
 
 %------------------------------------------------------------------------------
 % Test parameters 
 % TODO: Remove or incorporate parameters into other sections 
 % TODO: Change two-stream parameter to proper Boolean
+% TODO: Add section for parallelisation parameters
 %------------------------------------------------------------------------------
 xTest: 0.5
 yTest: 0.5
@@ -60,7 +61,7 @@ uTest: 10
 vTest: 0
 xPerturbation: 0.0015
 yPerturbation: 0.0015
-numCellsWithParticles: 1
+numCellsWithParticles: 0
 plotFrequency: 2
 meshScalingParameter: 1.0
 solverType: GS
@@ -70,6 +71,7 @@ yBCType: dirichlet
 yBCValue: 0.0
 twoStream: 1
 axisymmetric: 0
+numThreads: 2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------------------------------------------------------
