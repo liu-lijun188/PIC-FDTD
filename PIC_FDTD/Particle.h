@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <random>
-
 #include "Parameters.h"
 #include "Mesh.h"
 #include "CHEM\species.hpp"
@@ -23,9 +21,8 @@ public:
 	std::vector<double> velocity;			//!< Particle velocity vector
 
 	std::vector<double> fields
-		{ -1.0, -1.0, -1.0, -1.0 }; 		//!< Electromagnetic fields (Ex, Ey, Bx, By)
-	std::vector<double> lorentz	
-		{ -1.0,-1.0 };						//!< Lorentz force (Fx, Fy)
+		{ -1.0, -1.0, -1.0 };		 		//!< Electromagnetic fields (Ex, Ey, Bz)
+
 
 	// Constructor/destructor
 	Particle();								//!< Default constructor

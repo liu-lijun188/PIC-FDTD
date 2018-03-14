@@ -88,18 +88,6 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (y - bottom) / hSquared;
 			}
 		}
-
-		// Calculate Lorentz force
-		// TODO: Change to vector notation rather than components, then use 
-		// proper cross product for magnetic field component
-		// TODO: Consider moving this into ParticlePusher to save on repetition
-		// (no need to calculate the force in two steps...)
-		for (int j = 0; j < 2; j++)
-		{
-		particlesVector->particleVector[i].lorentz[j] = charge *
-			(particlesVector->particleVector[i].fields[j] + particlesVector->particleVector[i].velocity[j] *
-				particlesVector->particleVector[i].fields[j+2]);
-		}
 	}
 	parametersList->logBrief("Field interpolator exited", 1);
 }

@@ -363,23 +363,31 @@ void Parameters::assignInputs()
 
 		try
 		{
-			xBfield = stod(valuesVector[18]);
+			zBfield = stod(valuesVector[18]);
 		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for x magnetic field", 3);
+			logBrief("Invalid argument detected for z magnetic field", 3);
 		}
-		logBrief("Magnetic field in x direction: " + valuesVector[18], 1);
+		logBrief("Magnetic field in z direction: " + valuesVector[18], 1);
 
 		try
 		{
-			yBfield = stod(valuesVector[19]);
+			FDTDtimeStep = stod(valuesVector[19]);
+			if (FDTDtimeStep < 0.0)
+			{
+				throw 1;
+			}
 		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for y magnetic field", 3);
+			logBrief("Invalid argument detected for FDTD time step", 3);
 		}
-		logBrief("Magnetic field in y direction: " + valuesVector[19], 1);
+		catch (int error)
+		{
+			logBrief("FDTD time step should be positive", 3);
+		}
+		logBrief("FDTD time step in y direction: " + valuesVector[19], 1);
 
 
 		// Mesh parameters
@@ -433,7 +441,7 @@ void Parameters::assignInputs()
 		{
 			logBrief("Solver type should be GS or FFT", 3);
 		}
-		logBrief("solverType: " + valuesVector[22], 1);
+		logBrief("Solver type: " + valuesVector[22], 1);
 
 
 		try
@@ -510,9 +518,9 @@ void Parameters::assignInputs()
 		}
 		catch (int error)
 		{
-			logBrief("x boundary condition type should be periodic, dirichlet or neumann", 3);
+			logBrief("Boundary condition x type should be periodic, dirichlet or neumann", 3);
 		}
-		logBrief("x boundary condition type: " + valuesVector[26], 1);
+		logBrief("Boundary condition x type: " + valuesVector[26], 1);
 
 
 		try
@@ -523,7 +531,7 @@ void Parameters::assignInputs()
 		{
 			logBrief("Invalid argument detected for x boundary condition value", 3);
 		}
-		logBrief("x boundary condition value: " + valuesVector[27], 1);
+		logBrief("Boundary condition x value: " + valuesVector[27], 1);
 
 
 		try
@@ -543,9 +551,9 @@ void Parameters::assignInputs()
 		}
 		catch (int error)
 		{
-			logBrief("y boundary condition type should be periodic, dirichlet or neumann", 3);
+			logBrief("Boundary condition y type should be periodic, dirichlet or neumann", 3);
 		}
-		logBrief("y boundary condition type: " + valuesVector[28], 1);
+		logBrief("Boundary condition y type: " + valuesVector[28], 1);
 
 
 		try
@@ -556,7 +564,7 @@ void Parameters::assignInputs()
 		{
 			logBrief("Invalid argument detected for y boundary condition value", 3);
 		}
-		logBrief("y boundary condition value: " + valuesVector[29], 1);
+		logBrief("Boundary condition y value: " + valuesVector[29], 1);
 
 
 		// Parallelisation parameters

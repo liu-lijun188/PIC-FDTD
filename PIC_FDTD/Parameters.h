@@ -10,6 +10,7 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -61,8 +62,8 @@ public:
 	// Field parameters
 	double xEfield;							//!< External x electric field
 	double yEfield;							//!< External y electric field
-	double xBfield;							//!< External x magnetic field
-	double yBfield;							//!< External y magnetic field
+	double zBfield;							//!< External z magnetic field
+	double FDTDtimeStep;					//!< Time step for FDTD solver
 
 	// Mesh parameters
 	std::string meshFilePath;				//!< Path of mesh file

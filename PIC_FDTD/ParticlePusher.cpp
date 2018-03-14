@@ -13,9 +13,6 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
-	// TODO: Incorporate Boris method to handle B field rotation of velocity 
-	// (half acceleration, rotation, then half acceleration)
-
 	// TODO: Consider working with normalised equations (e.g. x/h, t/timeStep, etc.)
 	// to reduce number of computations at each stage
 
@@ -25,12 +22,19 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	{
 		for (int i = 0; i < particlesVector->numParticles; i++)
 		{
-			for (int j = 0; j < 2; j++)
-			{
-				particlesVector->particleVector[i].velocity[j] -=
-					particlesVector->particleVector[i].lorentz[j] * 0.5 *
-					parametersList->timeStep / particlesVector->particleVector[i].basic.m;
-			}
+			particlesVector->particleVector[i].velocity[0] -=
+				particlesVector->particleVector[i].basic.q * 
+				(particlesVector->particleVector[i].fields[0] +
+					particlesVector->particleVector[i].fields[2] * 
+					particlesVector->particleVector[i].velocity[1]) * 0.5 *
+				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
+		
+			particlesVector->particleVector[i].velocity[1] -=
+				particlesVector->particleVector[i].basic.q *
+				(particlesVector->particleVector[i].fields[1] -
+					particlesVector->particleVector[i].fields[2] *
+					particlesVector->particleVector[i].velocity[0]) * 0.5 *
+				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		}
 	}
 
@@ -45,6 +49,9 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// Currently available BCs: periodic, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
+		// TODO: Incorporate Boris method to handle B field rotation of velocity 
+		// (half acceleration, rotation, then half acceleration)
+
 		// Update x velocity
 		particlesVector->particleVector[i].velocity[0] +=
 			particlesVector->particleVector[i].lorentz[0] * parametersList->timeStep / 
@@ -145,6 +152,9 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
 				particlesVector->particleVector[i].particleID);
 		}
+
+		// TODO: Incorporate Boris method to handle B field rotation of velocity 
+		// (half acceleration, rotation, then half acceleration)
 
 		// Update y velocity
 		particlesVector->particleVector[i].velocity[1] +=

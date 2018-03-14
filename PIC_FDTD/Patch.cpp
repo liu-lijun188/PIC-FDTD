@@ -68,7 +68,7 @@ void Patch::startPIC()
 
 			ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 
-			// FDTD fdtd();
+			FDTD fdtd(&parametersList, &mesh);
 
 			FieldSolver solver(&parametersList, &mesh, &particlesVector);
 
@@ -76,7 +76,7 @@ void Patch::startPIC()
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
-			// MCC collisions();
+			MCC collisions(&parametersList, &particlesVector);
 
 			numErrors = parametersList.numErrors;
 			if (numErrors != 0)

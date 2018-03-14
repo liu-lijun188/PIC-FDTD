@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Patch class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -41,6 +41,7 @@ public:
 	// Data members
 	int patchID;										//!< Patch ID
 	int numErrors;										//!< Public copy of numErrors from parametersList
+
 
 	// Constructor/destructor
 	Patch();											//!< Default constructor
