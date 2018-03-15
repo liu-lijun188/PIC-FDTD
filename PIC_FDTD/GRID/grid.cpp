@@ -3,7 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 10/11/2016.
-//  Last edited by Rahul Kalampattel, February 2018
+//  Last edited by Rahul Kalampattel, March 2018
 //  
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
@@ -1412,8 +1412,7 @@ void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 				mesh.nodesVector.nodes[c].phi << " " <<
 				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
 					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2] +
-					mesh.nodesVector.nodes[c].fields[3] * mesh.nodesVector.nodes[c].fields[3]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2]) << " " <<
 				c + 1 << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
@@ -1455,8 +1454,7 @@ void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 				mesh.nodesVector.nodes[c].phi << " " <<
 				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
 					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2] +
-					mesh.nodesVector.nodes[c].fields[3] * mesh.nodesVector.nodes[c].fields[3]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2]) << " " <<
 				c + 1 << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;

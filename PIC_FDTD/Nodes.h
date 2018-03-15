@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Nodes class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -26,7 +26,7 @@ public:
 	double phi = -1;			//!< Potential at the grid node
 
 	std::vector<double> fields
-	{ 0.0, 0.0, 0.0, 0.0 };	//!< Electromagnetic fields (Ex, Ey, Bx, By)
+	{ 0.0, 0.0, 0.0 };	//!< Electromagnetic fields (Ex, Ey, Bz)
 	
 	// Constructor/destructor
 	Nodes();					//!< Default constructor

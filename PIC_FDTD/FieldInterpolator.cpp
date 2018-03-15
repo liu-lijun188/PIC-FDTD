@@ -46,7 +46,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 
 		if (firstNodePosition == "BL")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (top - y) / hSquared +
@@ -57,7 +57,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		}
 		else if (firstNodePosition == "BR")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (top - y) / hSquared +
@@ -68,7 +68,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		}
 		else if (firstNodePosition == "TR")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (y - bottom) / hSquared +
@@ -79,7 +79,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		}
 		else if (firstNodePosition == "TL")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (y - bottom) / hSquared +
