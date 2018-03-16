@@ -446,7 +446,6 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 		}
 	}
 
-	// TODO: Account for magnetic field
 	// Electric field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
@@ -619,6 +618,13 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 			}
 		}
 	}
+
+	// Magnetic field
+	for (int i = 0; i < mesh->numNodes; i++)
+	{
+		mesh->nodesVector.nodes[i].fields[2] = parametersList->zBfield;
+	}
+
 	parametersList->logBrief("Field solver exited", 1);
 }
 

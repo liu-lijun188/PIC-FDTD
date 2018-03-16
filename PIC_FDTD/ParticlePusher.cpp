@@ -22,6 +22,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	{
 		for (int i = 0; i < particlesVector->numParticles; i++)
 		{
+			double vXInitial = particlesVector->particleVector[i].velocity[0];
+
 			particlesVector->particleVector[i].velocity[0] -=
 				particlesVector->particleVector[i].basic.q * 
 				(particlesVector->particleVector[i].fields[0] +
@@ -33,8 +35,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].basic.q *
 				(particlesVector->particleVector[i].fields[1] -
 					particlesVector->particleVector[i].fields[2] *
-					particlesVector->particleVector[i].velocity[0]) * 0.5 *
-				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
+					vXInitial) * 0.5 * parametersList->timeStep / 
+				particlesVector->particleVector[i].basic.m;
 		}
 	}
 
@@ -53,10 +55,10 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		// 1. Half acceleration
 		double vXMinus = particlesVector->particleVector[i].velocity[0] + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep * 
-			particlesVector->particleVector[i].fields[0] * particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].fields[0] / particlesVector->particleVector[i].basic.m;
 		double vYMinus = particlesVector->particleVector[i].velocity[1] + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].fields[1] * particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].fields[1] / particlesVector->particleVector[i].basic.m;
 
 		// 2. Rotation
 		double tVector = particlesVector->particleVector[i].basic.q * 0.5 *
@@ -73,11 +75,11 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		// 3. Half acceleration
 		particlesVector->particleVector[i].velocity[0] = vXPlus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].fields[0] * particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].fields[0] / particlesVector->particleVector[i].basic.m;
 
 		particlesVector->particleVector[i].velocity[1] = vYPlus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].fields[1] * particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].fields[1] / particlesVector->particleVector[i].basic.m;
 
 		// Update x position
 		particlesVector->particleVector[i].position[0] += parametersList->timeStep * 
