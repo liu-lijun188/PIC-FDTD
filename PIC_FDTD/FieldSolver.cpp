@@ -19,12 +19,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 
 	double h = mesh->h;
 
-	// TODO: Test cases for Neumann BC's, change to modified five point stencil 
-	// (implicit ghost point method) to obtain more accuracy
-
-	// TODO: Improve the finite difference formulations used on boundaries and 
-	// corner nodes in existing cases, check that both BCs and governing equations
-	// are satisfied (currently the former is true, Poisson equation is not checked)
+	// TODO: Test edge cases for all BC's 
 
 	// TODO: Check that time step is fine enough for solver stability
 	for (int i = 0; i < parametersList->maxSolverIterations; i++)

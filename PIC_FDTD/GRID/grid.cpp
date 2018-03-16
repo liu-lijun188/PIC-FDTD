@@ -1709,3 +1709,51 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 		grid_tecplot.close();
 	}
 }
+
+// Time based data (plot data from over the course of the simulation)
+void writeSolution_T_Tecplot(const std::string& title, double EK, double EP, int N, double t)
+{
+	if (t == 0.0)
+	{
+		// 1. Open file to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str());
+
+
+		// 2. Write header
+		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+		grid_tecplot << "FILETYPE = FULL" << std::endl;
+		grid_tecplot << "VARIABLES = \"EK\" \"EP\" \"Total\" \"Time\"" << std::endl;
+
+
+		// 3. Write solution data
+
+		grid_tecplot << "ZONE DATAPACKING = POINT, I = " << N + 1 << std::endl;
+		grid_tecplot << std::scientific << std::setprecision(16) << EK << " " <<
+			EP << " " << sqrt(EK * EK) + sqrt(EP * EP) << " " << t << std::scientific <<
+			std::endl;
+
+		grid_tecplot.close();
+	}
+	else if (t > 0.0)
+	{
+		// 1. Open File to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str(), std::ios::app);
+
+
+		// 2. Write solution data
+
+		grid_tecplot << std::scientific << std::setprecision(16) << EK << " " <<
+			EP << " " << sqrt(EK * EK) + sqrt(EP * EP) << " " << t << std::scientific <<
+			std::endl;
+
+		grid_tecplot.close();
+	}
+}

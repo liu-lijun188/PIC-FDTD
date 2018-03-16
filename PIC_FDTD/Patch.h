@@ -30,12 +30,14 @@ private:
 	std::string tecplotMesh = "cMesh";					//!< Tecplot output mesh file
 	std::string tecplotParticleSolution = "cSolution_P";//!< Tecplot particle solution file
 	std::string tecplotNodeSolution = "cSolution_N";	//!< Tecplot node solution file
-
+	std::string tecplotGlobalSolution = "cSolution_G";	//!< Tecplot global solution file
 
 	// Methods
 	void generateParticleOutput(vector2D data, 
 		int numParticles, double time);					//!< Generate Tecplot output for particles
-	void generateNodeOutput(Mesh mesh, double time);	//!< Generate Tecplot output for particles
+	void generateNodeOutput(Mesh mesh, double time);	//!< Generate Tecplot output for nodes
+	void Patch::generateGlobalOutput(double EK,
+		double EP, int N, double time);					//!< Generate Tecplot output for global parameters
 
 public:
 	// Data members

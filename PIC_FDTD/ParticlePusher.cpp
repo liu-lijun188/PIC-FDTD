@@ -51,6 +51,11 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// Currently available BCs: periodic, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
+		// TODO: Check that rotation angle is sufficiently small -> for given particle
+		// parameters and magnetic field, the time step must be adjusted. Rotation
+		// for one time step should be less than 90 degrees. Only need to check 
+		// this once (part of Parameters class?)y
+
 		// Update velocity using Boris method:
 		// 1. Half acceleration
 		double vXMinus = particlesVector->particleVector[i].velocity[0] + 0.5 *

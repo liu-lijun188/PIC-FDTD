@@ -3,7 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 09/11/2016.
-//  Last edited by Rahul Kalampattel, February 2018
+//  Last edited by Rahul Kalampattel, March 2018
 //  
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
@@ -258,7 +258,7 @@ void writeSolutionXY_T_Tecplot(const std::string& title, vector2D& data, int N, 
 void writeSolutionXY_TA_Tecplot(const std::string& title, vector2D& data, int N, double t);	// Point based data (plot all N points at each time step t, animated)
 void writeSolutionXY_NT_Tecplot(const std::string& title, vector2D& data, int N, double t); // Point based data (follow N individual points for each time step t)
 void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N, double t);// Point based data (follow N individual points for each time step t, animated)
-
+void writeSolution_T_Tecplot(const std::string& title, double EK, double EP, int N, double t);// Time based data (plot data from over the course of the simulation)
 
 ///////////////////////////////////////////////////////////////////////////////
 
