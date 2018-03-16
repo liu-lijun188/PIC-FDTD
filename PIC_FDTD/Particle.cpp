@@ -21,11 +21,11 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 
 	if (parametersList->particlesPerCell == 1)
 	{
-		// Place particle in cell at location (xTest, yTest)
-		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->xTest) +
-			mesh->cellsVector.cells[cellID - 1].right * parametersList->xTest);			// x
-		position.push_back(mesh->cellsVector.cells[cellID - 1].top * parametersList->yTest +
-			mesh->cellsVector.cells[cellID - 1].bottom * (1 - parametersList->yTest));		// y
+		// Place particle in cell at location (xInitial, yInitial)
+		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->xInitial) +
+			mesh->cellsVector.cells[cellID - 1].right * parametersList->xInitial);			// x
+		position.push_back(mesh->cellsVector.cells[cellID - 1].top * parametersList->yInitial +
+			mesh->cellsVector.cells[cellID - 1].bottom * (1 - parametersList->yInitial));		// y
 	}
 	else
 	{
@@ -69,12 +69,12 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
 	}
 
-	// Initial particle velocity (uTest, vTest)
-	velocity.push_back(parametersList->uTest);	// u
-	velocity.push_back(parametersList->vTest);	// v
+	// Initial particle velocity (uInitial, vInitial)
+	velocity.push_back(parametersList->uInitial);	// u
+	velocity.push_back(parametersList->vInitial);	// v
 
 	// Extra setup for the two-stream instability problem
-	if (parametersList->twoStream == 1)
+	if (parametersList->twoStream)
 	{
 		this->basic.type = 1;
 		if (xRandom >= 0.0)

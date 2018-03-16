@@ -3,7 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 10/11/2016.
-//  Last edited by Rahul Kalampattel, February 2018
+//  Last edited by Rahul Kalampattel, March 2018
 //  
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
@@ -1412,8 +1412,7 @@ void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 				mesh.nodesVector.nodes[c].phi << " " <<
 				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
 					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2] +
-					mesh.nodesVector.nodes[c].fields[3] * mesh.nodesVector.nodes[c].fields[3]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2]) << " " <<
 				c + 1 << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
@@ -1455,8 +1454,7 @@ void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 				mesh.nodesVector.nodes[c].phi << " " <<
 				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
 					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2] +
-					mesh.nodesVector.nodes[c].fields[3] * mesh.nodesVector.nodes[c].fields[3]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2]) << " " <<
 				c + 1 << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
@@ -1707,6 +1705,54 @@ void writeSolutionXY_NTA_Tecplot(const std::string& title, vector2D& data, int N
 				<< " " << static_cast<int>(data[i][6]) << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
+
+		grid_tecplot.close();
+	}
+}
+
+// Time based data (plot data from over the course of the simulation)
+void writeSolution_T_Tecplot(const std::string& title, double EK, double EP, int N, double t)
+{
+	if (t == 0.0)
+	{
+		// 1. Open file to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str());
+
+
+		// 2. Write header
+		grid_tecplot << "TITLE = \"" << title << "\"" << std::endl;
+		grid_tecplot << "FILETYPE = FULL" << std::endl;
+		grid_tecplot << "VARIABLES = \"EK\" \"EP\" \"Total\" \"Time\"" << std::endl;
+
+
+		// 3. Write solution data
+
+		grid_tecplot << "ZONE DATAPACKING = POINT, I = " << N + 1 << std::endl;
+		grid_tecplot << std::scientific << std::setprecision(16) << EK << " " <<
+			EP << " " << sqrt(EK * EK) + sqrt(EP * EP) << " " << t << std::scientific <<
+			std::endl;
+
+		grid_tecplot.close();
+	}
+	else if (t > 0.0)
+	{
+		// 1. Open File to write
+		std::string fileName;
+		fileName = title + ".plt";
+
+		std::ofstream grid_tecplot;
+		grid_tecplot.open(fileName.c_str(), std::ios::app);
+
+
+		// 2. Write solution data
+
+		grid_tecplot << std::scientific << std::setprecision(16) << EK << " " <<
+			EP << " " << sqrt(EK * EK) + sqrt(EP * EP) << " " << t << std::scientific <<
+			std::endl;
 
 		grid_tecplot.close();
 	}

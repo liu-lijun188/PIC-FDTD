@@ -1,12 +1,15 @@
 //! \file
 //! \brief Definition of FDTD class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated March 2018
 
 #pragma once
 
+#include "Parameters.h"
+#include "Mesh.h"
+
 //! \class FDTD
-//! \brief TODO: Resolves an external EM field using the FDTD method
+//! \brief Resolves an external EM field using the FDTD method
 class FDTD
 {
 public:
@@ -14,8 +17,9 @@ public:
 
 
 	// Constructor/destructor
-	FDTD();		//!< Default constructor
-	~FDTD();	//!< Destructor
+	FDTD();											//!< Default constructor
+	FDTD(Parameters *parametersList, Mesh *mesh);	//!< Constructor
+	~FDTD();										//!< Destructor
 
 
 	// Methods

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorNode class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #include "VectorNode.h"
 
@@ -53,6 +53,6 @@ void VectorNode::clearFields()
 {
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		nodes[i].fields = { 0.0,0.0,0.0,0.0 };
+		nodes[i].fields = { 0.0,0.0,0.0 };
 	}
 }

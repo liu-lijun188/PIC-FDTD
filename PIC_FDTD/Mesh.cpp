@@ -33,6 +33,7 @@ Mesh::Mesh(Parameters *localParametersList)
 	double hAverage = 0;
 
 	// Scale mesh
+	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numNodes; i++)
 	{
 		nodesVector.nodes[i].geometry.X *= localParametersList->meshScalingParameter;
@@ -40,6 +41,7 @@ Mesh::Mesh(Parameters *localParametersList)
 
 	// Find boundaries of each cell and identify adjacent/neighbouring cells,
 	// also identify connected nodes
+	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
 	{
 		// Only need to check two opposite nodes to find cell boundaries, and 
@@ -432,6 +434,7 @@ Mesh::Mesh(Parameters *localParametersList)
 	}
 
 	// Find connected cells based on periodic BCs
+	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
 	{
 		// Periodic cells in x direction
@@ -471,6 +474,7 @@ Mesh::Mesh(Parameters *localParametersList)
 
 
 	// Find connected nodes based on periodic BCs
+	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numNodes; i++)
 	{
 		// Periodic nodes in x direction

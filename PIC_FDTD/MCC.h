@@ -1,12 +1,15 @@
 //! \file
 //! \brief Definition of MCC class 
 //! \author Rahul Kalampattel
-//! \date Last updated November 2017
+//! \date Last updated March 2018
 
 #pragma once
 
+#include "Parameters.h"
+#include "VectorParticle.h"
+
 //! \class MCC
-//! \brief TODO: Handles collisions between particles
+//! \brief Handles collisions between particles
 class MCC
 {
 public:
@@ -14,8 +17,10 @@ public:
 
 
 	// Constructor/destructor
-	MCC();	//!< Default constructor
-	~MCC();	//!< Destructor
+	MCC();									//!< Default constructor
+	MCC(Parameters *parametersList, 
+		VectorParticle *particlesVector);	//!< Constructor
+	~MCC();									//!< Destructor
 
 
 	// Methods

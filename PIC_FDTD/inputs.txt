@@ -9,13 +9,21 @@
 
 
 %------------------------------------------------------------------------------
-% Simulation parameters 
-% TODO: Separate time step for FDTD solver or other species (e.g. ions vs electrons)
+% Constants
 %------------------------------------------------------------------------------
-timeStep: 0.00002
-maximumNumberOfIterations: 7 
+epsilon0: 8.85e-12
+
+
+%------------------------------------------------------------------------------
+% Simulation parameters 
+%------------------------------------------------------------------------------
+timeStep: 0.00003
+maximumNumberOfIterations: 20 
 numberOfPatches: 1
 particlesPerCell: 1
+numCellsWithParticles: 1
+axisymmetric: 0
+twoStream: 0
 
 
 %------------------------------------------------------------------------------
@@ -23,53 +31,62 @@ particlesPerCell: 1
 % TODO: Add parameter for charge to mass ratio, use if charge==mass==0.0
 % TODO: Parameters for multi-species simulation
 % TODO: Add parameters for Maxwellian particle velocity distribution (seeding)
-% TODO: Add section for field parameters (external EM fields, location, time, etc.)
 %------------------------------------------------------------------------------
 charge: -1.602e-19
 mass: 9.11e-31
+xInitial: 0.5
+yInitial: 0.5
+uInitial: 20.0
+vInitial: 20.0
+xPerturbation: 0.0
+yPerturbation: 0.0
+
+
+%------------------------------------------------------------------------------
+% Field parameters
+%------------------------------------------------------------------------------
+xEfield: 0.0
+yEfield: 0.0
+zBfield: -1.0e-7
+FDTDtimeStep: 0.0
+
+
+%------------------------------------------------------------------------------
+% Mesh parameters
+%------------------------------------------------------------------------------
+meshFilePath: mediumMesh.su2
+meshScalingParameter: 1.0
 
 
 %------------------------------------------------------------------------------
 % Solver parameters
 %------------------------------------------------------------------------------
+solverType: GS
 maxSolverIterations: 50
 residualTolerance: 1e-20
 SORparameter: 1.1
-
-
-%------------------------------------------------------------------------------
-% Constants
-%------------------------------------------------------------------------------
-epsilon0: 8.85e-12
-
-
-%------------------------------------------------------------------------------
-% Paths
-%------------------------------------------------------------------------------
-meshFilePath: coarseMesh.su2
-
-
-%------------------------------------------------------------------------------
-% Test parameters 
-% TODO: Remove or incorporate parameters into other sections 
-% TODO: Change two-stream parameter to proper Boolean
-%------------------------------------------------------------------------------
-xTest: 0.5
-yTest: 0.5
-uTest: 10
-vTest: 0
-xPerturbation: 0.0015
-yPerturbation: 0.0015
-numCellsWithParticles: 1
-plotFrequency: 2
-meshScalingParameter: 1.0
-solverType: GS
 xBCType: periodic
 xBCValue: 0.0
 yBCType: dirichlet
 yBCValue: 0.0
-twoStream: 1
-axisymmetric: 0
+
+
+%------------------------------------------------------------------------------
+% Parallelisation parameters
+%------------------------------------------------------------------------------
+numThreads: 1
+
+
+%------------------------------------------------------------------------------
+% Output parameters
+%------------------------------------------------------------------------------
+plotFrequency: 1
+
+
+%------------------------------------------------------------------------------
+% Test parameters 
+%------------------------------------------------------------------------------
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------------------------------------------------------

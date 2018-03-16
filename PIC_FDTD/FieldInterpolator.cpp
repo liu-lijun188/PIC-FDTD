@@ -19,6 +19,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 {
 	particlesVector->clearFields();
 
+	# pragma omp parallel for num_threads(parametersList->numThreads)
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
 		// TODO: Can change all of the below to references to avoid copying large 
@@ -45,7 +46,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 
 		if (firstNodePosition == "BL")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (top - y) / hSquared +
@@ -56,7 +57,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		}
 		else if (firstNodePosition == "BR")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (top - y) / hSquared +
@@ -67,7 +68,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		}
 		else if (firstNodePosition == "TR")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (y - bottom) / hSquared +
@@ -78,7 +79,7 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		}
 		else if (firstNodePosition == "TL")
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				particlesVector->particleVector[i].fields[j] =
 					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (y - bottom) / hSquared +
@@ -86,18 +87,6 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (top - y) / hSquared +
 					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (y - bottom) / hSquared;
 			}
-		}
-
-		// Calculate Lorentz force
-		// TODO: Change to vector notation rather than components, then use 
-		// proper cross product for magnetic field component
-		// TODO: Consider moving this into ParticlePusher to save on repetition
-		// (no need to calculate the force in two steps...)
-		for (int j = 0; j < 2; j++)
-		{
-		particlesVector->particleVector[i].lorentz[j] = charge *
-			(particlesVector->particleVector[i].fields[j] + particlesVector->particleVector[i].velocity[j] *
-				particlesVector->particleVector[i].fields[j+2]);
 		}
 	}
 	parametersList->logBrief("Field interpolator exited", 1);

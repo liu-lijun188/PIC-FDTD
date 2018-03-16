@@ -91,7 +91,6 @@ void VectorParticle::clearFields()
 {
 	for (int i = 0; i < numParticles; i++)
 	{
-		particleVector[i].fields = { 0.0,0.0,0.0,0.0 };
-		particleVector[i].lorentz = { 0.0, 0.0 };
+		particleVector[i].fields = { 0.0,0.0,0.0 };
 	}
 }
