@@ -1733,7 +1733,7 @@ void writeSolution_T_Tecplot(const std::string& title, double EK, double EP, int
 
 		grid_tecplot << "ZONE DATAPACKING = POINT, I = " << N + 1 << std::endl;
 		grid_tecplot << std::scientific << std::setprecision(16) << EK << " " <<
-			EP << " " << sqrt(EK * EK) + sqrt(EP * EP) << " " << t << std::scientific <<
+			EP << " " << EK + abs(EP) << " " << t << std::scientific <<
 			std::endl;
 
 		grid_tecplot.close();
@@ -1751,7 +1751,7 @@ void writeSolution_T_Tecplot(const std::string& title, double EK, double EP, int
 		// 2. Write solution data
 
 		grid_tecplot << std::scientific << std::setprecision(16) << EK << " " <<
-			EP << " " << sqrt(EK * EK) + sqrt(EP * EP) << " " << t << std::scientific <<
+			EP << " " << EK + abs(EP) << " " << t << std::scientific <<
 			std::endl;
 
 		grid_tecplot.close();

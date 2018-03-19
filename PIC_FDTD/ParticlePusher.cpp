@@ -16,8 +16,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// TODO: Consider working with normalised equations (e.g. x/h, t/timeStep, etc.)
 	// to reduce number of computations at each stage
 
-	// TODO: Check that time step is fine enough for pusher stability
-	// Leapfrog method - remember to shift v forwards 0.5 time steps when plotting!
+	// Leapfrog method
 	if (time == 0.0)
 	{
 		for (int i = 0; i < particlesVector->numParticles; i++)
@@ -50,12 +49,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 	// Currently available BCs: periodic, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
-	{
-		// TODO: Check that rotation angle is sufficiently small -> for given particle
-		// parameters and magnetic field, the time step must be adjusted. Rotation
-		// for one time step should be less than 90 degrees. Only need to check 
-		// this once (part of Parameters class?)y
-
+	{		
 		// Update velocity using Boris method:
 		// 1. Half acceleration
 		double vXMinus = particlesVector->particleVector[i].velocity[0] + 0.5 *
@@ -66,6 +60,16 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			particlesVector->particleVector[i].fields[1] / particlesVector->particleVector[i].basic.m;
 
 		// 2. Rotation
+		double theta = 2.0 * abs(atan(0.5 * particlesVector->particleVector[i].fields[2] *
+			parametersList->timeStep * particlesVector->particleVector[i].basic.q /
+			particlesVector->particleVector[i].basic.m)) * 180.0 / std::_Pi;
+
+		if (theta > 45.0)
+		{
+			parametersList->logBrief("Rotation angle has exceeded 45 degrees", 3);
+			break;
+		}
+
 		double tVector = particlesVector->particleVector[i].basic.q * 0.5 *
 			parametersList->timeStep * particlesVector->particleVector[i].fields[2] /
 			particlesVector->particleVector[i].basic.m;
@@ -85,6 +89,20 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		particlesVector->particleVector[i].velocity[1] = vYPlus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
 			particlesVector->particleVector[i].fields[1] / particlesVector->particleVector[i].basic.m;
+
+		double courantNumber = (particlesVector->particleVector[i].velocity[0] +
+			particlesVector->particleVector[i].velocity[1]) * parametersList->timeStep /
+			mesh->h;
+
+		if (courantNumber > 1.0)
+		{
+			parametersList->logBrief("CFL condition exceeded, consider adjusting time step", 2);
+			if (courantNumber > 1.5)
+			{
+				parametersList->logBrief("CFL condition exceeded 1.5, stopping pusher", 3);
+				break;
+			}
+		}
 
 		// Update x position
 		particlesVector->particleVector[i].position[0] += parametersList->timeStep * 
@@ -281,9 +299,6 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	}
 
 	// TODO: Shift v forwards half a time step to sync v and x for plotting
-
-	// TODO: Calculate kinetic energy of particle and record (or do this later 
-	// when plotting), similarly for potential energy
 
 	parametersList->logBrief("Particle pusher exited", 1);
 }

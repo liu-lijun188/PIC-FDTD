@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of VectorNode class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -26,4 +26,5 @@ public:
 	void clearCharge();							//!< Set charge to 0 for all elements
 	void clearPhi();							//!< Set phi to 0 for all elements
 	void clearFields();							//!< Clear fields members of nodes
+	double calculateEP();						//!< Calculate potential energy
 };

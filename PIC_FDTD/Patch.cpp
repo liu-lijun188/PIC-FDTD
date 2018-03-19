@@ -95,9 +95,12 @@ void Patch::startPIC()
 			// Generate plots at specified intervals
 			if (static_cast<int>(time / parametersList.timeStep) % parametersList.plotFrequency == 0)
 			{
+				double EK = particlesVector.calculateEK();
+				double EP = mesh.nodesVector.calculateEP();
+
 				generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 				generateNodeOutput(mesh, time);
-				generateGlobalOutput(0.0, 0.0, parametersList.maxSolverIterations / parametersList.plotFrequency, time);
+				generateGlobalOutput(EK, EP, parametersList.maxSolverIterations / parametersList.plotFrequency, time);
 				parametersList.logBrief("Tecplot output generated", 1);
 			}
 		}

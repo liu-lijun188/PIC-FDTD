@@ -56,3 +56,15 @@ void VectorNode::clearFields()
 		nodes[i].fields = { 0.0,0.0,0.0 };
 	}
 }
+
+
+//!< Calculate potential energy
+double VectorNode::calculateEP()
+{
+	double EP = 0.0;
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		EP += 0.5 * nodes[i].charge * nodes[i].phi;
+	}
+	return EP;
+}

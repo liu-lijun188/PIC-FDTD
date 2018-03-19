@@ -94,3 +94,17 @@ void VectorParticle::clearFields()
 		particleVector[i].fields = { 0.0,0.0,0.0 };
 	}
 }
+
+
+//!< Calculate kinetic energy
+double VectorParticle::calculateEK()
+{
+	double EK = 0;
+	for (int i = 0; i < numParticles; i++)
+	{
+		EK += 0.5 * particleVector[i].basic.m *	(particleVector[i].velocity[0] *
+			particleVector[i].velocity[0] + particleVector[i].velocity[1] *
+			particleVector[i].velocity[1]);
+	}
+	return EK;
+}
