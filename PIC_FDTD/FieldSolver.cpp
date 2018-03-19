@@ -370,6 +370,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh, VectorParticle 
 						}
 						else
 						{
+							// TODO: What happens for open BC cases???
 							parametersList->logBrief("Unable to resolve corner BCs", 2);
 							mesh->nodesVector.nodes[j].phi = 0.0;
 						}

@@ -17,10 +17,10 @@ epsilon0: 8.85e-12
 %------------------------------------------------------------------------------
 % Simulation parameters 
 %------------------------------------------------------------------------------
-timeStep: 0.00003
+timeStep: 0.00002
 maximumNumberOfIterations: 20 
 numberOfPatches: 1
-particlesPerCell: 1
+particlesPerCell: 9
 numCellsWithParticles: 1
 axisymmetric: 0
 twoStream: 0
@@ -36,7 +36,7 @@ charge: -1.602e-19
 mass: 9.11e-31
 xInitial: 0.5
 yInitial: 0.5
-uInitial: 20.0
+uInitial: 150.0
 vInitial: 20.0
 xPerturbation: 0.0
 yPerturbation: 0.0
@@ -54,7 +54,7 @@ FDTDtimeStep: 0.0
 %------------------------------------------------------------------------------
 % Mesh parameters
 %------------------------------------------------------------------------------
-meshFilePath: mediumMesh.su2
+meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
 
 
@@ -67,7 +67,7 @@ residualTolerance: 1e-20
 SORparameter: 1.1
 xBCType: periodic
 xBCValue: 0.0
-yBCType: dirichlet
+yBCType: open
 yBCValue: 0.0
 
 

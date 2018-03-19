@@ -182,7 +182,7 @@ void Parameters::assignInputs()
 			}
 			else if (value == 0)
 			{
-				axisymmetric == false;
+				axisymmetric = false;
 			}
 			else
 			{
@@ -209,7 +209,7 @@ void Parameters::assignInputs()
 			}
 			else if (value == 0)
 			{
-				twoStream == false;
+				twoStream = false;
 			}
 			else
 			{
@@ -504,7 +504,7 @@ void Parameters::assignInputs()
 		try
 		{
 			xBCType = valuesVector[26];
-			if (xBCType == "periodic" || xBCType == "dirichlet" || xBCType == "neumann")
+			if (xBCType == "periodic" || xBCType == "open" || xBCType == "dirichlet" || xBCType == "neumann")
 			{
 			}
 			else
@@ -518,7 +518,7 @@ void Parameters::assignInputs()
 		}
 		catch (int error)
 		{
-			logBrief("Boundary condition x type should be periodic, dirichlet or neumann", 3);
+			logBrief("Boundary condition x type should be periodic, open, dirichlet or neumann", 3);
 		}
 		logBrief("Boundary condition x type: " + valuesVector[26], 1);
 
@@ -537,7 +537,7 @@ void Parameters::assignInputs()
 		try
 		{
 			yBCType = valuesVector[28];
-			if (yBCType == "periodic" || yBCType == "dirichlet" || yBCType == "neumann")
+			if (yBCType == "periodic" || yBCType == "open" || yBCType == "dirichlet" || yBCType == "neumann")
 			{
 			}
 			else
@@ -551,7 +551,7 @@ void Parameters::assignInputs()
 		}
 		catch (int error)
 		{
-			logBrief("Boundary condition y type should be periodic, dirichlet or neumann", 3);
+			logBrief("Boundary condition y type should be periodic, open, dirichlet or neumann", 3);
 		}
 		logBrief("Boundary condition y type: " + valuesVector[28], 1);
 

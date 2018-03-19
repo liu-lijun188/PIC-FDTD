@@ -86,13 +86,56 @@ void VectorParticle::updatePlotVector(Particle *particle)
 }
 
 
-// Clear fields and lorentz members of particleVector
+// Add particle to plotVector
+void VectorParticle::addToPlotVector()
+{
+}
+
+
+// Remove particle from plotVector
+void VectorParticle::removeFromPlotVector(int particleID)
+{
+	for (int i = 0; i < plotVector.size(); i++)
+	{
+		if (plotVector[i][5] == static_cast<double>(particleID))
+		{
+			plotVector.erase(plotVector.begin() + i);
+			break;
+		}
+	}
+}
+
+
+// Clear fields member of particleVector
 void VectorParticle::clearFields()
 {
 	for (int i = 0; i < numParticles; i++)
 	{
 		particleVector[i].fields = { 0.0,0.0,0.0 };
 	}
+}
+
+
+// Remove particle from simulation
+void VectorParticle::removeParticleFromSim(int particleID)
+{
+	for (int i = 0; i < particleVector.size(); i++)
+	{
+		if (particleVector[i].particleID == particleID)
+		{
+			particleVector.erase(particleVector.begin() + i);
+			break;
+		}
+	}
+	removeFromPlotVector(particleID);
+	numParticles -= 1;
+}
+
+
+// Add particle to simulation
+void VectorParticle::addParticleToSim()
+{
+
 }
 
 

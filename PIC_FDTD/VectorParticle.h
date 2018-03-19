@@ -27,6 +27,10 @@ public:
 
 	// Methods
 	void updatePlotVector(Particle *particle);		//!< Update state of plotVector
+	void addToPlotVector();							//!< Add particle to plotVector
+	void removeFromPlotVector(int particleID);		//!< Remove particle from plotVector
 	void clearFields();								//!< Clear fields and lorentz members of particleVector
+	void addParticleToSim();						//!< Add particle to simulation
+	void removeParticleFromSim(int particleID);		//!< Remove particle from simulation
 	double calculateEK();							//!< Calculate kinetic energy
 };

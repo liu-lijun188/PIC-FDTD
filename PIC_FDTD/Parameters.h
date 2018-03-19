@@ -74,8 +74,8 @@ public:
 	int maxSolverIterations;				//!< Maximum number of iterations for solver
 	double residualTolerance;				//!< Tolerance for solver residuals
 	double SORparameter;					//!< Successive over-relaxation parameter
-	std::string xBCType;					//!< Boundary condition in x direction (periodic, dirichlet, neumann)
-	std::string yBCType;					//!< Boundary condition in y direction (periodic, dirichlet, neumann)
+	std::string xBCType;					//!< Boundary condition in x direction (periodic, open, dirichlet, neumann)
+	std::string yBCType;					//!< Boundary condition in y direction (periodic, open, dirichlet, neumann)
 	double xBCValue;						//!< Value of x boundary condition
 	double yBCValue;						//!< Value of y boundary condition
 

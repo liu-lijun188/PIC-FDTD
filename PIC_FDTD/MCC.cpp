@@ -29,7 +29,10 @@ MCC::MCC(Parameters *parametersList, VectorParticle *particlesVector)
 		// TODO: Process specific collision handler, e.g. for CEX collisions, replace
 		// velocities of the collided particle with values from a Maxwellian distribution.
 		// Specific method depends on the types of collisions being modelled, e.g.
-		// charge exchange, momentum exchange, ionisation, etc. 
+		// ionisation:		  Xe   + e-	   -> Xe+   + 2e-
+		// recombination:	  Xe+  + e-	   -> Xe
+		// charge exchange:	  Xe_f + Xe+_s -> Xe+_f + Xe_s
+		// momentum exchange: Xe_f + Xe_s  -> Xe_s  + Xe_f
 	}
 }
 
