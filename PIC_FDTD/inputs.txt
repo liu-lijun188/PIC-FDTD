@@ -20,7 +20,7 @@ epsilon0: 8.85e-12
 timeStep: 0.00002
 maximumNumberOfIterations: 20 
 numberOfPatches: 1
-particlesPerCell: 9
+particlesPerCell: 1
 numCellsWithParticles: 1
 axisymmetric: 0
 twoStream: 0
@@ -67,7 +67,7 @@ residualTolerance: 1e-20
 SORparameter: 1.1
 xBCType: periodic
 xBCValue: 0.0
-yBCType: open
+yBCType: dirichlet
 yBCValue: 0.0
 
 

@@ -82,7 +82,7 @@ void Patch::startPIC()
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
-			MCC collisions(&parametersList, &particlesVector);
+			MCC collisions(&parametersList, &mesh, &particlesVector);
 
 			numErrors = parametersList.numErrors;
 			if (numErrors != 0)

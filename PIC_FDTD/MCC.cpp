@@ -12,13 +12,18 @@ MCC::MCC()
 
 
 // Constructor
-MCC::MCC(Parameters *parametersList, VectorParticle *particlesVector)
+MCC::MCC(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector)
 {
 	// TODO: Check that it is appropriate to use MCC (compare particle densities,
 	// collision frequencies, etc.)
 
+	particlesVector->addParticleToSim(parametersList, mesh, 1);
+
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{
+		// particlesVector->removeParticleFromSim(particlesVector->particleVector[i].particleID);
+		// break;
+
 		// TODO: Calculate collision probability, P = 1 - exp(-n_n*sigma*g*dt),
 		// where n_n is the density of the target gas at the particle location,
 		// sigma is the collision cross section (determined from tabulated data),

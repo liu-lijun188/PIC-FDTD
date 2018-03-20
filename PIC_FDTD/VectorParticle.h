@@ -15,6 +15,8 @@ public:
 	// Data members
 	std::vector<Particle> particleVector;			//!< Vector of Particle objects
 	int numParticles = 0;							//!< Size of particleVector								
+	int maxParticleID;								//!< Largest particle ID
+	int patchID;									//!< Patch ID
 	vector2D plotVector;							//!< Store particle position, velocity, cell ID and particle ID for plotting
 
 
@@ -26,11 +28,12 @@ public:
 
 
 	// Methods
+	void addToPlotVector(Particle *particle);		//!< Add particle to plotVector
 	void updatePlotVector(Particle *particle);		//!< Update state of plotVector
-	void addToPlotVector();							//!< Add particle to plotVector
 	void removeFromPlotVector(int particleID);		//!< Remove particle from plotVector
 	void clearFields();								//!< Clear fields and lorentz members of particleVector
-	void addParticleToSim();						//!< Add particle to simulation
+	void addParticleToSim(Parameters * parametersList, 
+		Mesh * mesh, int cellID);					//!< Add particle to simulation
 	void removeParticleFromSim(int particleID);		//!< Remove particle from simulation
 	double calculateEK();							//!< Calculate kinetic energy
 };

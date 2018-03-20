@@ -14,6 +14,7 @@ VectorParticle::VectorParticle()
 // Constructor
 VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
+	this->patchID = patchID;
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
 	
 	// If 0 < numCellsWithParticles <= numCells, seed particles in a few cells, 
@@ -41,17 +42,14 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 			Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
 			particleVector.push_back(particle);
 
-			plotVector.push_back(particle.position);
-			plotVector.back().push_back(particle.velocity[0]);
-			plotVector.back().push_back(particle.velocity[1]);
-			plotVector.back().push_back(particle.cellID);
-			plotVector.back().push_back(particle.particleID);
-			plotVector.back().push_back(particle.basic.type);
+			addToPlotVector(&particle);
 
 			mesh->addParticlesToCell(particle.cellID, particle.particleID);
 		}
-		
 	}
+
+	maxParticleID = numParticles;
+
 	parametersList->logMessages("Generated " + std::to_string(numParticles) +
 		" particles in " + std::to_string(parametersList->numCellsWithParticles) + 
 		" cells", __FILE__, __LINE__, 1);
@@ -61,6 +59,18 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 // Destructor
 VectorParticle::~VectorParticle()
 {
+}
+
+
+// Add particle to plotVector
+void VectorParticle::addToPlotVector(Particle *particle)
+{
+	plotVector.push_back(particle->position);
+	plotVector.back().push_back(particle->velocity[0]);
+	plotVector.back().push_back(particle->velocity[1]);
+	plotVector.back().push_back(particle->cellID);
+	plotVector.back().push_back(particle->particleID);
+	plotVector.back().push_back(particle->basic.type);
 }
 
 
@@ -83,12 +93,6 @@ void VectorParticle::updatePlotVector(Particle *particle)
 			plotVector.erase(plotVector.begin() + i + 1);
 		}
 	}
-}
-
-
-// Add particle to plotVector
-void VectorParticle::addToPlotVector()
-{
 }
 
 
@@ -116,10 +120,24 @@ void VectorParticle::clearFields()
 }
 
 
+// Add particle to simulation
+void VectorParticle::addParticleToSim(Parameters *parametersList, Mesh *mesh, int cellID)
+{
+	numParticles++;
+	maxParticleID++;
+
+	Particle particle(parametersList, mesh, patchID, cellID, maxParticleID);
+	particleVector.push_back(particle);
+	addToPlotVector(&particle);
+
+	mesh->addParticlesToCell(particle.cellID, particle.particleID);
+}
+
+
 // Remove particle from simulation
 void VectorParticle::removeParticleFromSim(int particleID)
 {
-	for (int i = 0; i < particleVector.size(); i++)
+	for (int i = 0; i < numParticles; i++)
 	{
 		if (particleVector[i].particleID == particleID)
 		{
@@ -128,14 +146,7 @@ void VectorParticle::removeParticleFromSim(int particleID)
 		}
 	}
 	removeFromPlotVector(particleID);
-	numParticles -= 1;
-}
-
-
-// Add particle to simulation
-void VectorParticle::addParticleToSim()
-{
-
+	numParticles--;
 }
 
 

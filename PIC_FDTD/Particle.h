@@ -27,7 +27,9 @@ public:
 	// Constructor/destructor
 	Particle();								//!< Default constructor
 	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, 
-		int particleID, int index);			//!< Constructor
+		int particleID, int index);			//!< Initial constructor
+	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID,
+		int particleID);					// Single particle constructor
 	~Particle();							//!< Destructor
 
 
