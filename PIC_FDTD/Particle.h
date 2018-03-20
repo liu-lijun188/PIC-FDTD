@@ -29,7 +29,7 @@ public:
 	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, 
 		int particleID, int index);			//!< Initial constructor
 	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID,
-		int particleID);					// Single particle constructor
+		int particleID, std::string type);	// Single particle constructor
 	~Particle();							//!< Destructor
 
 

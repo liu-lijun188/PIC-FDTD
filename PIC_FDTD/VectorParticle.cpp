@@ -121,12 +121,12 @@ void VectorParticle::clearFields()
 
 
 // Add particle to simulation
-void VectorParticle::addParticleToSim(Parameters *parametersList, Mesh *mesh, int cellID)
+void VectorParticle::addParticleToSim(Parameters *parametersList, Mesh *mesh, int cellID, std::string type)
 {
 	numParticles++;
 	maxParticleID++;
 
-	Particle particle(parametersList, mesh, patchID, cellID, maxParticleID);
+	Particle particle(parametersList, mesh, patchID, cellID, maxParticleID, type);
 	particleVector.push_back(particle);
 	addToPlotVector(&particle);
 

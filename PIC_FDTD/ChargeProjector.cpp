@@ -81,7 +81,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		// Assuming a cold plasma of mobile electrons and fixed ions with equal 
 		// and opposite charge, we must account for this neutralising background 
 		// charge density
-		mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * parametersList->charge) / 
+		mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * ELECTRON_CHARGE) / 
 			(mesh->numCells * hSquared * mesh->numNodes));
 	}
 

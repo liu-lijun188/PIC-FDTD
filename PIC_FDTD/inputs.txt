@@ -22,6 +22,8 @@ maximumNumberOfIterations: 20
 numberOfPatches: 1
 particlesPerCell: 1
 numCellsWithParticles: 1
+simulationType: electron
+propellant: xenon
 axisymmetric: 0
 twoStream: 0
 
@@ -32,8 +34,6 @@ twoStream: 0
 % TODO: Parameters for multi-species simulation
 % TODO: Add parameters for Maxwellian particle velocity distribution (seeding)
 %------------------------------------------------------------------------------
-charge: -1.602e-19
-mass: 9.11e-31
 xInitial: 0.5
 yInitial: 0.5
 uInitial: 150.0
@@ -81,6 +81,10 @@ numThreads: 1
 % Output parameters
 %------------------------------------------------------------------------------
 plotFrequency: 1
+tecplotMesh: cMesh
+tecplotParticleSolution: cSolution_P
+tecplotNodeSolution: cSolution_N
+tecplotGlobalSolution: cSolution_G
 
 
 %------------------------------------------------------------------------------

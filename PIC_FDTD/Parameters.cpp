@@ -175,7 +175,48 @@ void Parameters::assignInputs()
 
 		try
 		{
-			int value = stoi(valuesVector[6]);
+			simulationType = valuesVector[6];
+			if (simulationType == "full" || simulationType == "partial" || simulationType == "electron")
+			{
+			}
+			else
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for simulation type", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Simulation type should be full, partial, or electron", 3);
+		}
+		logBrief("Simulation type: " + valuesVector[6], 1);
+
+
+		try
+		{
+			propellant = valuesVector[7];
+			if (propellant != "xenon")
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for propellant", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Invalid propellant selected", 3);
+		}
+		logBrief("Propellant: " + valuesVector[7], 1);
+
+
+		try
+		{
+			int value = stoi(valuesVector[8]);
 			if (value == 1)
 			{
 				axisymmetric = true;
@@ -197,12 +238,12 @@ void Parameters::assignInputs()
 		{
 			logBrief("Axisymmetric flag should be true (1) or false (0)", 3);
 		}
-		logBrief("Axisymmetric flag: " + valuesVector[6], 1);
+		logBrief("Axisymmetric flag: " + valuesVector[8], 1);
 
 
 		try
 		{
-			int value = stoi(valuesVector[7]);
+			int value = stoi(valuesVector[9]);
 			if (value == 1)
 			{
 				twoStream = true;
@@ -224,40 +265,10 @@ void Parameters::assignInputs()
 		{
 			logBrief("Two-stream flag should be true (1) or false (0)", 3);
 		}
-		logBrief("Two-stream flag: " + valuesVector[7], 1);
+		logBrief("Two-stream flag: " + valuesVector[9], 1);
 
 
 		// Particle parameters
-		try
-		{
-			charge = stod(valuesVector[8]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for charge", 3);
-		}
-		logBrief("Particle charge: " + valuesVector[8], 1);
-
-
-		try
-		{
-			mass = stod(valuesVector[9]);
-			if (mass < 0.0)
-			{
-				throw 1;
-			}
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for mass", 3);
-		}
-		catch (int error)
-		{
-			logBrief("Mass should be positive", 3);
-		}
-		logBrief("Particle mass: " + valuesVector[9], 1);
-	
-
 		try
 		{
 			xInitial = stod(valuesVector[10]);
@@ -605,6 +616,50 @@ void Parameters::assignInputs()
 			logBrief("Plotting frequency should be positive", 3);
 		}
 		logBrief("Plotting frequency: " + valuesVector[31], 1);
+
+
+		try
+		{
+			tecplotMesh = valuesVector[32];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for output mesh file name", 3);
+		}
+		logBrief("Output mesh file name: " + valuesVector[32], 1);
+
+
+		try
+		{
+			tecplotParticleSolution = valuesVector[33];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for particle solution file name", 3);
+		}
+		logBrief("Particle solution file name: " + valuesVector[33], 1);
+
+
+		try
+		{
+			tecplotNodeSolution = valuesVector[34];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for node solution file name", 3);
+		}
+		logBrief("Node solution file name: " + valuesVector[34], 1);
+
+
+		try
+		{
+			tecplotGlobalSolution = valuesVector[35];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for global solution file name", 3);
+		}
+		logBrief("Global solution file name: " + valuesVector[35], 1);
 	}
 }
 

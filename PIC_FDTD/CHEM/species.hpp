@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 24/11/2016.
+//  Last edited by Rahul Kalampattel, March 2018
+// 
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -48,7 +50,7 @@ public:
     double I;       // Ionisation energy [j/kg]
     double q;       // Species charge
     double R;       // Gas constant
-    int    type;    // Type of species [0: atom, -1: electron, 1: molecule]
+    int    type;    // Type of species [0: atom/neutral, +1: ion, -1: electron]
     double Cv[2];   // Cv[0]: Cv_tra, Cv[1] = Cv_rot;
     
     LeRc lerc;      // Normalized enthalpy and entrophy data

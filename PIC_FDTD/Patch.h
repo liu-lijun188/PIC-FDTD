@@ -27,10 +27,7 @@ private:
 	Parameters parametersList;							//!< Copy of parameters list
 	Mesh mesh;											//!< Details of mesh
 	VectorParticle particlesVector;						//!< Vector of resident particles
-	std::string tecplotMesh = "cMesh";					//!< Tecplot output mesh file
-	std::string tecplotParticleSolution = "cSolution_P";//!< Tecplot particle solution file
-	std::string tecplotNodeSolution = "cSolution_N";	//!< Tecplot node solution file
-	std::string tecplotGlobalSolution = "cSolution_G";	//!< Tecplot global solution file
+
 
 	// Methods
 	void generateParticleOutput(vector2D data, 

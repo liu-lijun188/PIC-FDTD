@@ -46,12 +46,12 @@ public:
 	int numberOfPatches;					//!< Number of patches
 	int particlesPerCell;					//!< Particles per cell
 	int numCellsWithParticles;				//!< Number of cells in which particles are seeded	
+	std::string simulationType;				//!< Simulation type (full, partial or electron)
+	std::string propellant;					//!< Propellant used in simulation (xenon)
 	bool axisymmetric;						//!< True if axisymmetric simulation is required
 	bool twoStream;							//!< True is two-stream problem is bring modelled
 
 	// Particle parameters
-	double charge;							//!< Particle charge
-	double mass;							//!< Particle mass
 	double xInitial;						//!< Initial particle x position
 	double yInitial;						//!< Initial particle y position
 	double uInitial;						//!< Initial particle x velocity
@@ -84,6 +84,10 @@ public:
 	
 	// Output parameters
 	int plotFrequency;						//!< Iterations between plots
+	std::string tecplotMesh;				//!< Tecplot output mesh file
+	std::string tecplotParticleSolution;	//!< Tecplot particle solution file
+	std::string tecplotNodeSolution;		//!< Tecplot node solution file
+	std::string tecplotGlobalSolution;		//!< Tecplot global solution file
 
 
 	// Constructor/destructor
