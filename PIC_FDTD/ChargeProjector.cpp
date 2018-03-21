@@ -76,13 +76,18 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	// Calculate charge density (charge / cell area)
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
+		// TODO: For axisymmetric, need to account for changing cell volume
 		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
 		
-		// Assuming a cold plasma of mobile electrons and fixed ions with equal 
-		// and opposite charge, we must account for this neutralising background 
-		// charge density
-		mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * ELECTRON_CHARGE) / 
-			(mesh->numCells * hSquared * mesh->numNodes));
+		if (parametersList->simulationType == "electron")
+		{
+			// Assuming a cold plasma of mobile electrons and fixed ions with equal 
+			// and opposite charge, we must account for this neutralising background 
+			// charge density
+			mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * ELECTRON_CHARGE) /
+				(mesh->numCells * hSquared * mesh->numNodes));
+		}
+		// TODO: Background charge for other simulationType == "partial"?
 	}
 
 	// Account for periodic BCs 
@@ -112,7 +117,6 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 					mesh->nodesVector.nodes[i].rho;
 			}
 		}
-
 	}
 	parametersList->logBrief("Charge projector exited", 1);
 }

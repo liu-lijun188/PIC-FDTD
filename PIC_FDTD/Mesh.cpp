@@ -11,7 +11,7 @@ Mesh::Mesh()
 {
 }
 
-
+// TODO: Pre-compute node/cell volumes, V=A for Cartesian, else depends on position
 // Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {

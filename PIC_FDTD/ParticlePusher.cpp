@@ -10,6 +10,11 @@ ParticlePusher::ParticlePusher()
 {
 }
 
+// TODO: Modify to work with cylindrical simulation - model 2D r-z velocity, as 
+// well as movement in the theta direction, then rotate position and velocities 
+// back to the r-z plane -> allows B fields in any direction to be resolved, not
+// just those perpendicular to r-x plane. 
+
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {

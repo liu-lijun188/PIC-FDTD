@@ -25,6 +25,7 @@ public:
 	double rho = -1;			//!< Charge density at the grid node
 	double phi = -1;			//!< Potential at the grid node
 
+	// TODO: 3D fields 
 	std::vector<double> fields
 	{ 0.0, 0.0, 0.0 };	//!< Electromagnetic fields (Ex, Ey, Bz)
 	

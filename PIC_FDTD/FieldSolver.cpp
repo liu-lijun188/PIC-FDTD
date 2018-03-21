@@ -615,6 +615,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 		}
 	}
 
+	// TODO: Changes for 3D fields
 	// Magnetic field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{

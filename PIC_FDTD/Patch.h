@@ -33,8 +33,8 @@ private:
 	void generateParticleOutput(vector2D data, 
 		int numParticles, double time);					//!< Generate Tecplot output for particles
 	void generateNodeOutput(Mesh mesh, double time);	//!< Generate Tecplot output for nodes
-	void Patch::generateGlobalOutput(double EK,
-		double EP, int N, double time);					//!< Generate Tecplot output for global parameters
+	void generateGlobalOutput(double EK, double EP, 
+		double time);									//!< Generate Tecplot output for global parameters
 
 public:
 	// Data members

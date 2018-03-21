@@ -28,7 +28,7 @@ Patch::Patch(Parameters *parametersList, int patchID)
 
 	generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 	generateNodeOutput(mesh, time);
-	generateGlobalOutput(0.0, 0.0, parametersList->maximumNumberOfIterations / parametersList->plotFrequency, time);
+	generateGlobalOutput(0.0, 0.0, time);
 }
 
 
@@ -51,9 +51,10 @@ void Patch::generateNodeOutput(Mesh mesh, double time)
 	writeSolutionNodeTecplot(parametersList.tecplotNodeSolution, mesh, time);
 }
 
-void Patch::generateGlobalOutput(double EK, double EP, int N, double time)
+void Patch::generateGlobalOutput(double EK, double EP, double time)
 {
-	writeSolution_T_Tecplot(parametersList.tecplotGlobalSolution, EK, EP, N, time);
+	writeSolution_T_Tecplot(parametersList.tecplotGlobalSolution, EK, EP, 
+		parametersList.maximumNumberOfIterations / parametersList.plotFrequency, time);
 }
 
 // Start the PIC loop within a Patch object
@@ -100,7 +101,7 @@ void Patch::startPIC()
 
 				generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 				generateNodeOutput(mesh, time);
-				generateGlobalOutput(EK, EP, parametersList.maxSolverIterations / parametersList.plotFrequency, time);
+				generateGlobalOutput(EK, EP, time);
 				parametersList.logBrief("Tecplot output generated", 1);
 			}
 		}

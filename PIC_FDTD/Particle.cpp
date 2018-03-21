@@ -33,6 +33,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 
 	if (parametersList->particlesPerCell == 1)
 	{
+		// TODO: Add third component of position, set to zero
 		// Place particle in cell at location (xInitial, yInitial)
 		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->xInitial) +
 			mesh->cellsVector.cells[cellID - 1].right * parametersList->xInitial);			// x
@@ -54,7 +55,9 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 			mesh->cellsVector.cells[cellID - 1].bottom * (1 - yratio));		// y
 
 		// TODO: Method for distributing particles when simulation is axisymmetric,
-		// need to have more particles as distance from axis increases (?)
+		// need to ensure same number of particles per unit cell volume, i.e.
+		// cells closer to the axis will have different numbers of particles
+		// compared to cells at a distance
 	}
 
 	// Initialise random number generator, distribution in range [0, 1000000]
@@ -80,6 +83,8 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
 	}
 
+	// TODO: Select velocities from a Maxwellian distribution, add third component 
+	// of velocity as well for 2D3V simulation
 	// Initial particle velocity (uInitial, vInitial)
 	velocity.push_back(parametersList->uInitial);	// u
 	velocity.push_back(parametersList->vInitial);	// v
@@ -128,6 +133,7 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 		this->basic.type = 0;
 	}
 
+	// TODO: Add third component of position, set to zero
 	// Place particle in cell at location (xInitial, yInitial)
 	position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->xInitial) +
 		mesh->cellsVector.cells[cellID - 1].right * parametersList->xInitial);			// x
@@ -157,6 +163,8 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
 	}
 
+	// TODO: Select velocities from a Maxwellian distribution, add third component 
+	// of velocity as well for 2D3V simulation
 	// Initial particle velocity (uInitial, vInitial)
 	velocity.push_back(parametersList->uInitial);	// u
 	velocity.push_back(parametersList->vInitial);	// v

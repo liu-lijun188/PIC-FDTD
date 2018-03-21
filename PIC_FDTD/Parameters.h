@@ -51,6 +51,9 @@ public:
 	bool axisymmetric;						//!< True if axisymmetric simulation is required
 	bool twoStream;							//!< True is two-stream problem is bring modelled
 
+	// TODO: Change names of parameters to x1, x2 and v1, v2 rather than x/y and 
+	// u/v to maintain generality, makes it easier to use the same variables for
+	// Cartesian and axisymmetric simulations
 	// Particle parameters
 	double xInitial;						//!< Initial particle x position
 	double yInitial;						//!< Initial particle y position
