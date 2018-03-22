@@ -38,54 +38,79 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 
 		double hSquared = mesh->h * mesh->h;
 
-		double x = particlesVector->particleVector[i].position[0];
-		double y = particlesVector->particleVector[i].position[1];
+		double x1 = particlesVector->particleVector[i].position[0];
+		double x2 = particlesVector->particleVector[i].position[1];
 
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
 		double charge = particlesVector->particleVector[i].basic.q;
 
+		// TODO: Replace Efield and Bfield with single variable, EMfield[6]
 		if (firstNodePosition == "BL")
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (top - y) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (x - left) * (top - y) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (y - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (right - x) * (y - bottom) / hSquared;
+				particlesVector->particleVector[i].Efield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (right - x1) * (x2 - bottom) / hSquared;
+
+				particlesVector->particleVector[i].Bfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "BR")
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (top - y) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (x - left) * (y - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (right - x) * (y - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (right - x) * (top - y) / hSquared;
+				particlesVector->particleVector[i].Efield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (right - x1) * (top - x2) / hSquared;
+
+				particlesVector->particleVector[i].Bfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (right - x1) * (top - x2) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TR")
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (x - left) * (y - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (right - x) * (y - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (right - x) * (top - y) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (top - y) / hSquared;
+				particlesVector->particleVector[i].Efield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (x1 - left) * (top - x2) / hSquared;
+
+				particlesVector->particleVector[i].Bfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (x1 - left) * (top - x2) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TL")
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				particlesVector->particleVector[i].fields[j] =
-					mesh->nodesVector.nodes[nodeID_0].fields[j] * (right - x) * (y - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].fields[j] * (right - x) * (top - y) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].fields[j] * (x - left) * (top - y) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].fields[j] * (x - left) * (y - bottom) / hSquared;
+				particlesVector->particleVector[i].Efield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+
+				particlesVector->particleVector[i].Bfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
 			}
 		}
 	}

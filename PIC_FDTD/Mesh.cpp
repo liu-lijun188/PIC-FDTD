@@ -430,14 +430,16 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
 		}
+		// TODO: Check if required to move the below out one level
 		h = hAverage / static_cast<double>((2 * numCells));
 	}
 
+	// TODO: Change variable from x/y to x1/x2
 	// Find connected cells based on periodic BCs
 	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
 	{
-		// Periodic cells in x direction
+		// Periodic cells in Cartesian x/cylindrical z direction
 		if (cellsVector.cells[i].boundaryType == "TL" || 
 			cellsVector.cells[i].boundaryType == "L" || 
 			cellsVector.cells[i].boundaryType == "BL")
@@ -454,7 +456,9 @@ Mesh::Mesh(Parameters *localParametersList)
 			cellsVector.cells[j].periodicXCellID = i + 1;
 		}
 
-		// Periodic cells in y direction
+		// TODO: Does it make physical sense to have periodic BCs in the y/r 
+		// direction? Definitely not for cylindrical, not really for Cartesian...
+		// Periodic cells in Cartesian y/cylindrical r direction
 		if (cellsVector.cells[i].boundaryType == "TL" || 
 			cellsVector.cells[i].boundaryType == "T" || 
 			cellsVector.cells[i].boundaryType == "TR")

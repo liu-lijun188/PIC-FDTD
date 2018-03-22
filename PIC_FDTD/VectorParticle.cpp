@@ -28,11 +28,14 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 
 	for (int i = 0; i < parametersList->numCellsWithParticles; i++)
 	{
-		// Check if particlesPerCell is a square number
-		if (sqrt(parametersList->particlesPerCell) != round(sqrt(parametersList->particlesPerCell)))
+		if (parametersList->particleDistribution == "uniform")
 		{
-			parametersList->logBrief("Value of particlesPerCell has been changed to 1", 2);
-			parametersList->particlesPerCell = 1;
+			// Check if particlesPerCell is a square number
+			if (sqrt(parametersList->particlesPerCell) != round(sqrt(parametersList->particlesPerCell)))
+			{
+				parametersList->logBrief("Value of particlesPerCell has been changed to 1", 2);
+				parametersList->particlesPerCell = 1;
+			}
 		}
 		
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
@@ -115,7 +118,8 @@ void VectorParticle::clearFields()
 {
 	for (int i = 0; i < numParticles; i++)
 	{
-		particleVector[i].fields = { 0.0,0.0,0.0 };
+		particleVector[i].Efield = { 0.0,0.0,0.0 };
+		particleVector[i].Bfield = { 0.0,0.0,0.0 };
 	}
 }
 
@@ -158,7 +162,8 @@ double VectorParticle::calculateEK()
 	{
 		EK += 0.5 * particleVector[i].basic.m *	(particleVector[i].velocity[0] *
 			particleVector[i].velocity[0] + particleVector[i].velocity[1] *
-			particleVector[i].velocity[1]);
+			particleVector[i].velocity[1] + particleVector[i].velocity[2] *
+			particleVector[i].velocity[2]);
 	}
 	return EK;
 }

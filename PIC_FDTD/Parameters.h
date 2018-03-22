@@ -53,7 +53,7 @@ public:
 
 	// TODO: Change names of parameters to x1, x2 and v1, v2 rather than x/y and 
 	// u/v to maintain generality, makes it easier to use the same variables for
-	// Cartesian and axisymmetric simulations
+	// Cartesian and axisymmetric simulations, or consider an array of variables?
 	// Particle parameters
 	double xInitial;						//!< Initial particle x position
 	double yInitial;						//!< Initial particle y position
@@ -61,7 +61,9 @@ public:
 	double vInitial;						//!< Initial particle y velocity
 	double xPerturbation;					//!< Maximum random deviation from initial position
 	double yPerturbation;					//!< Maximum random deviation from initial position
+	// TODO: Delete the two above parameters, no longer used
 
+	// TODO: specify full 3D E and B fields (as arrays?)
 	// Field parameters
 	double xEfield;							//!< External x electric field
 	double yEfield;							//!< External y electric field
@@ -72,6 +74,7 @@ public:
 	std::string meshFilePath;				//!< Path of mesh file
 	double meshScalingParameter;			//!< Mesh scaling parameter
 
+	// TODO: Separate BCs for each side (L/R/T/B), consider using arrays?
 	// Solver parameters
 	std::string solverType;					//!< Solver type (GS, FFT)
 	int maxSolverIterations;				//!< Maximum number of iterations for solver
@@ -91,6 +94,9 @@ public:
 	std::string tecplotParticleSolution;	//!< Tecplot particle solution file
 	std::string tecplotNodeSolution;		//!< Tecplot node solution file
 	std::string tecplotGlobalSolution;		//!< Tecplot global solution file
+
+	// Test parameters
+	std::string particleDistribution;		//!< Particle distribution
 
 
 	// Constructor/destructor

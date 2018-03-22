@@ -53,8 +53,8 @@ void VectorNode::clearFields()
 {
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		// TODO: Update to 3D field
-		nodes[i].fields = { 0.0,0.0,0.0 };
+		nodes[i].Efield = { 0.0,0.0,0.0 };
+		nodes[i].Bfield = { 0.0,0.0,0.0 };
 	}
 }
 

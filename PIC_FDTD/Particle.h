@@ -20,9 +20,10 @@ public:
 	std::vector<double> position;			//!< Particle position vector
 	std::vector<double> velocity;			//!< Particle velocity vector
 
-	// TODO: Update to full 3D fields
-	std::vector<double> fields
-		{ -1.0, -1.0, -1.0 };		 		//!< Electromagnetic fields (Ex, Ey, Bz)
+	std::vector<double> Efield
+		{ -1.0, -1.0, -1.0 };		 		//!< Electric field
+	std::vector<double> Bfield
+		{ -1.0, -1.0, -1.0 };	 			//!< Magnetic field
 
 
 	// Constructor/destructor

@@ -660,6 +660,28 @@ void Parameters::assignInputs()
 			logBrief("Invalid argument detected for global solution file name", 3);
 		}
 		logBrief("Global solution file name: " + valuesVector[35], 1);
+
+
+		try
+		{
+			particleDistribution = valuesVector[36];
+			if (particleDistribution == "uniform" || particleDistribution == "random" || particleDistribution == "precise")
+			{
+			}
+			else
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for particle distribution", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Particle distribution should be uniform, random or precise", 3);
+		}
+		logBrief("Particle distribution: " + valuesVector[36], 1);
 	}
 }
 

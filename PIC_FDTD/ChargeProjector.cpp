@@ -36,48 +36,69 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
 		
-		double x = particlesVector->particleVector[i].position[0];
-		double y = particlesVector->particleVector[i].position[1];
+		double x1 = particlesVector->particleVector[i].position[0];
+		double x2 = particlesVector->particleVector[i].position[1];
 
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
 		double charge = particlesVector->particleVector[i].basic.q;
 
 		if (firstNodePosition == "BL")
 		{
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x) * (top - y) / hSquared;
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x - left) * (top - y) / hSquared;
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (y - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x1) * (x2 - bottom) / hSquared;
 
 		}
 		else if (firstNodePosition == "BR")
 		{
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x - left) * (top - y) / hSquared;
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x - left) * (y - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x) * (y - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (right - x1) * (top - x2) / hSquared;
 		}
 		else if (firstNodePosition == "TR")
 		{
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x - left) * (y - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x) * (y - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x) * (top - y) / hSquared;
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (top - y) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x1 - left) * (top - x2) / hSquared;
 		}
 		else if (firstNodePosition == "TL")
 		{	
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x) * (y - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x) * (top - y) / hSquared;
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x - left) * (top - y) / hSquared;
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x - left) * (y - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x1 - left) * (x2 - bottom) / hSquared;
 		}
 	}
 
 	// Calculate charge density (charge / cell area)
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
-		// TODO: For axisymmetric, need to account for changing cell volume
-		mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
+		// For cylindrical case, need to account for changing cell volume
+		if (parametersList->axisymmetric == true)
+		{
+			int bottomNodeID = mesh->nodesVector.nodes[i].bottomNodeID;
+			if (bottomNodeID > 0)
+			{
+				mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge /
+					std::_Pi * mesh->h * (mesh->nodesVector.nodes[i].geometry.X.element(1, 0) *
+						mesh->nodesVector.nodes[i].geometry.X.element(1, 0) -
+						mesh->nodesVector.nodes[bottomNodeID].geometry.X.element(1, 0) *
+						mesh->nodesVector.nodes[bottomNodeID].geometry.X.element(1, 0));
+			}
+			else
+			{
+				// Zero cell volume at axis
+				mesh->nodesVector.nodes[i].rho = 0.0;
+			}
+		}
+		else
+		{
+			// Cartesian case
+			mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
+		}
 		
 		if (parametersList->simulationType == "electron")
 		{
@@ -90,6 +111,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		// TODO: Background charge for other simulationType == "partial"?
 	}
 
+	// TODO: Change variable names below
 	// Account for periodic BCs 
 	for (int i = 0; i < mesh->numNodes; i++)
 	{

@@ -10,10 +10,10 @@ ParticlePusher::ParticlePusher()
 {
 }
 
-// TODO: Modify to work with cylindrical simulation - model 2D r-z velocity, as 
+// TODO: Modify to work with axisymmetric simulation - model 2D z-r velocity, as 
 // well as movement in the theta direction, then rotate position and velocities 
-// back to the r-z plane -> allows B fields in any direction to be resolved, not
-// just those perpendicular to r-x plane. 
+// back to the z-r plane -> allows B fields in any direction to be resolved, not
+// just those perpendicular to z-r plane. 
 
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
@@ -26,21 +26,32 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	{
 		for (int i = 0; i < particlesVector->numParticles; i++)
 		{
-			double vXInitial = particlesVector->particleVector[i].velocity[0];
+			double v1Initial = particlesVector->particleVector[i].velocity[0];
+			double v2Initial = particlesVector->particleVector[i].velocity[1];
 
 			particlesVector->particleVector[i].velocity[0] -=
 				particlesVector->particleVector[i].basic.q * 
-				(particlesVector->particleVector[i].fields[0] +
-					particlesVector->particleVector[i].fields[2] * 
-					particlesVector->particleVector[i].velocity[1]) * 0.5 *
+				(particlesVector->particleVector[i].Efield[0] +
+					particlesVector->particleVector[i].Bfield[2] * 
+					particlesVector->particleVector[i].velocity[1] - 
+					particlesVector->particleVector[i].Bfield[1] *
+					particlesVector->particleVector[i].velocity[2]) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		
 			particlesVector->particleVector[i].velocity[1] -=
 				particlesVector->particleVector[i].basic.q *
-				(particlesVector->particleVector[i].fields[1] -
-					particlesVector->particleVector[i].fields[2] *
-					vXInitial) * 0.5 * parametersList->timeStep / 
-				particlesVector->particleVector[i].basic.m;
+				(particlesVector->particleVector[i].Efield[1] +
+					particlesVector->particleVector[i].Bfield[0] *
+					particlesVector->particleVector[i].velocity[2] -
+					particlesVector->particleVector[i].Bfield[2] * v1Initial) * 0.5 *
+				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
+
+			particlesVector->particleVector[i].velocity[2] -=
+				particlesVector->particleVector[i].basic.q *
+				(particlesVector->particleVector[i].Efield[2] +
+					particlesVector->particleVector[i].Bfield[1] * v1Initial -
+					particlesVector->particleVector[i].Bfield[0] * v2Initial) * 0.5 *
+				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		}
 	}
 
@@ -54,47 +65,58 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{		
 		// Update velocity using Boris method:
-		// 1. Half acceleration
-		double vXMinus = particlesVector->particleVector[i].velocity[0] + 0.5 *
-			particlesVector->particleVector[i].basic.q * parametersList->timeStep * 
-			particlesVector->particleVector[i].fields[0] / particlesVector->particleVector[i].basic.m;
-		double vYMinus = particlesVector->particleVector[i].velocity[1] + 0.5 *
-			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].fields[1] / particlesVector->particleVector[i].basic.m;
-
-		// 2. Rotation
-		double theta = 2.0 * abs(atan(0.5 * particlesVector->particleVector[i].fields[2] *
-			parametersList->timeStep * particlesVector->particleVector[i].basic.q /
-			particlesVector->particleVector[i].basic.m)) * 180.0 / std::_Pi;
-
-		if (theta > 45.0)
+		double vMinus[3];
+		double tVector[3], sVector[3];
+		for (int j = 0; j < 3; j++)
 		{
-			parametersList->logBrief("Rotation angle has exceeded 45 degrees", 3);
-			break;
+			// 1. Half acceleration
+			vMinus[j] = particlesVector->particleVector[i].velocity[j] + 0.5 *
+				particlesVector->particleVector[i].basic.q * parametersList->timeStep *
+				particlesVector->particleVector[i].Efield[j] / particlesVector->particleVector[i].basic.m;
+
+			// 2. Rotation
+			double theta = 2.0 * abs(atan(0.5 * particlesVector->particleVector[i].Bfield[j] *
+				parametersList->timeStep * particlesVector->particleVector[i].basic.q /
+				particlesVector->particleVector[i].basic.m)) * 180.0 / std::_Pi;
+
+			if (theta > 45.0)
+			{
+				parametersList->logBrief("Rotation angle has exceeded 45 degrees", 3);
+				break;
+			}
+
+			tVector[j] = particlesVector->particleVector[i].basic.q * 0.5 *
+				parametersList->timeStep * particlesVector->particleVector[i].Bfield[j] /
+				particlesVector->particleVector[i].basic.m;
+			sVector[j] = 2 * tVector[j] / (1 + tVector[j] * tVector[j]);
 		}
 
-		double tVector = particlesVector->particleVector[i].basic.q * 0.5 *
-			parametersList->timeStep * particlesVector->particleVector[i].fields[2] /
-			particlesVector->particleVector[i].basic.m;
-		double sVector = 2 * tVector / (1 + tVector * tVector);
+		double v1Dashed = vMinus[0] + vMinus[1] * tVector[2] - vMinus[2] * tVector[1];
+		double v2Dashed = vMinus[1] - vMinus[0] * tVector[2] + vMinus[2] * tVector[0];
+		double v3Dashed = vMinus[2] + vMinus[0] * tVector[1] - vMinus[1] * tVector[0];
 
-		double vXDashed = vXMinus + vYMinus * tVector;
-		double vYDashed = vYMinus - vXMinus * tVector;
-
-		double vXPlus = vXMinus + vYDashed * sVector;
-		double vYPlus = vYMinus - vXDashed * sVector;
+		double v1Plus = vMinus[0] + v2Dashed * sVector[2] - v3Dashed * sVector[1];
+		double v2Plus = vMinus[1] - v1Dashed * sVector[2] + v3Dashed * sVector[0];
+		double v3Plus = vMinus[2] + v1Dashed * sVector[1] - v2Dashed * sVector[0];
 
 		// 3. Half acceleration
-		particlesVector->particleVector[i].velocity[0] = vXPlus + 0.5 *
+		particlesVector->particleVector[i].velocity[0] = v1Plus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].fields[0] / particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].Efield[0] / particlesVector->particleVector[i].basic.m;
 
-		particlesVector->particleVector[i].velocity[1] = vYPlus + 0.5 *
+		particlesVector->particleVector[i].velocity[1] = v2Plus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].fields[1] / particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].Efield[1] / particlesVector->particleVector[i].basic.m;
 
+		particlesVector->particleVector[i].velocity[2] = v3Plus + 0.5 *
+			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
+			particlesVector->particleVector[i].Efield[2] / particlesVector->particleVector[i].basic.m;
+
+		// TODO: Does third velocity component need to be included in Courant 
+		// number calculation since only 2 spatial dimensions are being modelled?
 		double courantNumber = (particlesVector->particleVector[i].velocity[0] +
-			particlesVector->particleVector[i].velocity[1]) * parametersList->timeStep /
+			particlesVector->particleVector[i].velocity[1] + 
+			particlesVector->particleVector[i].velocity[2]) * parametersList->timeStep /
 			mesh->h;
 
 		if (courantNumber > 1.0)
@@ -107,7 +129,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			}
 		}
 
-		// Update x position
+		// Update Cartesian x/cylindrical z position
 		particlesVector->particleVector[i].position[0] += parametersList->timeStep * 
 			particlesVector->particleVector[i].velocity[0]; 
 
@@ -122,7 +144,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			break;
 		}
 
-		// Update cell ID in x direction, exiting left
+		// Update cell ID in Cartesian x/cylindrical z direction, exiting left
 		if (displacementL < 0.0)
 		{
 			mesh->removeParticlesFromCell(particlesVector->particleVector[i].cellID,
@@ -137,12 +159,15 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses left boundary of domain
 			else
 			{
+				// ========================================================= //
+				// TODO: Implement separate BCs for all four sides (L,R,T,B) //
+				// ========================================================= //
 				if (parametersList->xBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
 
-					// Shift x position
+					// Shift Cartesian x/ cylindrical z position
 					particlesVector->particleVector[i].position[0] = displacementL +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
 				}
@@ -169,7 +194,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].particleID);
 		}
 
-		// Update cell ID in x direction, exiting right
+		// Update cell ID in Cartesian x/ cylindrical z direction, exiting right
 		else if (displacementR > 0.0)
 		{
 			mesh->removeParticlesFromCell(particlesVector->particleVector[i].cellID,
@@ -189,7 +214,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].cellID =
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
 
-					// Shift x position
+					// Shift Cartesian x/ cylindrical z position
 					particlesVector->particleVector[i].position[0] = displacementR +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
 				}
@@ -206,7 +231,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[0] = -displacementR +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
 
-					// Reverse x velocity
+					// Reverse Cartesian x/ cylindrical z velocity
 					particlesVector->particleVector[i].velocity[0] *= -1.0;
 				}
 			}
@@ -215,7 +240,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].particleID);
 		}
 
-		// Update y position
+		// Update Cartesian y/ cylindrical r position
 		particlesVector->particleVector[i].position[1] += parametersList->timeStep * 
 			particlesVector->particleVector[i].velocity[1];
 
@@ -230,7 +255,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			break;
 		}
 
-		// Update cell ID in y direction, exiting bottom
+		// Update cell ID in Cartesian y/ cylindrical r direction, exiting bottom
 		if (displacementB < 0.0)
 		{
 			mesh->removeParticlesFromCell(particlesVector->particleVector[i].cellID,
@@ -250,7 +275,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].cellID =
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
 
-					// Shift y position
+					// Shift Cartesian y/ cylindrical r position
 					particlesVector->particleVector[i].position[0] = displacementB +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 				}
@@ -267,7 +292,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[1] = -displacementB +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 
-					// Reverse y velocity
+					// Reverse Cartesian y/ cylindrical r velocity
 					particlesVector->particleVector[i].velocity[1] *= -1.0;
 				}
 			}
@@ -276,7 +301,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].particleID);
 		}
 
-		// Update cell ID in y direction, exiting top
+		// Update cell ID in Cartesian y/ cylindrical r direction, exiting top
 		else if (displacementT > 0.0)
 		{
 			mesh->removeParticlesFromCell(particlesVector->particleVector[i].cellID,
@@ -296,7 +321,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].cellID =
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
 
-					// Shift y position
+					// Shift Cartesian y/ cylindrical r position
 					particlesVector->particleVector[i].position[0] = displacementT +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 				}
@@ -313,7 +338,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 					particlesVector->particleVector[i].position[1] = -displacementT +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 
-					// Reverse y velocity
+					// Reverse Cartesian y/ cylindrical r velocity
 					particlesVector->particleVector[i].velocity[1] *= -1.0;
 				}
 			}
@@ -323,6 +348,9 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		}
 
 		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
+		
+		// TODO: Find new position in Cartesian z/ cylindrical theta direction,
+		// then project/rotate back to x-y/z-r plane
 	}
 
 	// TODO: Shift v forwards half a time step to sync v and x for plotting
