@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "Mesh.h"
 #include "Parameters.h"
 #include "VectorParticle.h"
 
@@ -18,7 +19,7 @@ public:
 
 	// Constructor/destructor
 	MCC();									//!< Default constructor
-	MCC(Parameters *parametersList, 
+	MCC(Parameters *parametersList, Mesh *mesh,
 		VectorParticle *particlesVector);	//!< Constructor
 	~MCC();									//!< Destructor
 

@@ -65,22 +65,13 @@ void Parameters::assignInputs()
 	logMessages("Printing input parameters", __FILE__, __LINE__, 1);
 	if (!fileNotOpened)
 	{
-		// Constants
-		try
-		{
-			epsilon0 = stod(valuesVector[0]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for permittivity", 3);
-		}
-		logBrief("Permittivity: " + valuesVector[0], 1);
+		int index = 0;
 
 
 		// Simulation parameters
 		try
 		{
-			timeStep = stod(valuesVector[1]);
+			timeStep = stod(valuesVector[index]);
 			if (timeStep < 0.0)
 			{
 				throw 1;
@@ -94,12 +85,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Time step should be positive", 3);
 		}
-		logBrief("Time step: " + valuesVector[1], 1);
+		logBrief("Time step: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			maximumNumberOfIterations = stoi(valuesVector[2]);
+			maximumNumberOfIterations = stoi(valuesVector[index]);
 			if (maximumNumberOfIterations < 0)
 			{
 				throw 1;
@@ -113,12 +105,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Maximum number of iterations should be positive", 3);
 		}
-		logBrief("Maximum number of iterations: " + valuesVector[2], 1);
+		logBrief("Maximum number of iterations: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			numberOfPatches = stoi(valuesVector[3]);
+			numberOfPatches = stoi(valuesVector[index]);
 			if (numberOfPatches < 0)
 			{
 				throw 1;
@@ -132,12 +125,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Number of patches should be positive", 3);
 		}
-		logBrief("Number of patches: " + valuesVector[3], 1);
+		logBrief("Number of patches: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			particlesPerCell = stoi(valuesVector[4]);
+			particlesPerCell = stoi(valuesVector[index]);
 			if (particlesPerCell < 1)
 			{
 				throw 1;
@@ -151,12 +145,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Particles per cell should be positive", 3);
 		}
-		logBrief("Particles per cell: " + valuesVector[4], 1);
+		logBrief("Particles per cell: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			numCellsWithParticles = stoi(valuesVector[5]);
+			numCellsWithParticles = stoi(valuesVector[index]);
 			if (numCellsWithParticles < 0)
 			{
 				throw 1;
@@ -170,19 +165,43 @@ void Parameters::assignInputs()
 		{
 			logBrief("Number of cells with particles should be positive", 3);
 		}
-		logBrief("Number of cells with particles: " + valuesVector[5], 1);
+		logBrief("Number of cells with particles: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			int value = stoi(valuesVector[6]);
+			simulationType = valuesVector[index];
+			if (simulationType == "full" || simulationType == "partial" || simulationType == "electron")
+			{
+			}
+			else
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for simulation type", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Simulation type should be full, partial, or electron", 3);
+		}
+		logBrief("Simulation type: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			int value = stoi(valuesVector[index]);
 			if (value == 1)
 			{
 				axisymmetric = true;
 			}
 			else if (value == 0)
 			{
-				axisymmetric == false;
+				axisymmetric = false;
 			}
 			else
 			{
@@ -197,19 +216,20 @@ void Parameters::assignInputs()
 		{
 			logBrief("Axisymmetric flag should be true (1) or false (0)", 3);
 		}
-		logBrief("Axisymmetric flag: " + valuesVector[6], 1);
+		logBrief("Axisymmetric flag: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			int value = stoi(valuesVector[7]);
+			int value = stoi(valuesVector[index]);
 			if (value == 1)
 			{
 				twoStream = true;
 			}
 			else if (value == 0)
 			{
-				twoStream == false;
+				twoStream = false;
 			}
 			else
 			{
@@ -224,156 +244,166 @@ void Parameters::assignInputs()
 		{
 			logBrief("Two-stream flag should be true (1) or false (0)", 3);
 		}
-		logBrief("Two-stream flag: " + valuesVector[7], 1);
+		logBrief("Two-stream flag: " + valuesVector[index], 1);
+		index++;
 
 
 		// Particle parameters
 		try
 		{
-			charge = stod(valuesVector[8]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for charge", 3);
-		}
-		logBrief("Particle charge: " + valuesVector[8], 1);
-
-
-		try
-		{
-			mass = stod(valuesVector[9]);
-			if (mass < 0.0)
+			particleDistribution = valuesVector[index];
+			if (particleDistribution == "uniform" || particleDistribution == "random" || particleDistribution == "precise")
+			{
+			}
+			else
 			{
 				throw 1;
 			}
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for mass", 3);
+			logBrief("Invalid argument detected for particle distribution", 3);
 		}
 		catch (int error)
 		{
-			logBrief("Mass should be positive", 3);
+			logBrief("Particle distribution should be uniform, random or precise", 3);
 		}
-		logBrief("Particle mass: " + valuesVector[9], 1);
-	
+		logBrief("Particle distribution: " + valuesVector[index], 1);
+		index++;
+
 
 		try
 		{
-			xInitial = stod(valuesVector[10]);
-			if (xInitial < 0.0 || xInitial > 1.0)
+			std::stringstream inputs(valuesVector[index]);
+			std::vector<std::string> outputs;
+
+			while (inputs.good())
+			{
+				std::string value;
+				std::getline(inputs, value, ',');
+				outputs.push_back(value);
+			}
+
+			for (int i = 0; i < outputs.size(); i++)
+			{
+				initialPosition.push_back(stod(outputs[i]));
+				if (initialPosition[i] < 0.0 || initialPosition[i] > 1.0)
+				{
+					throw 1;
+				}
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for initial position", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Initial position should be between 0 and 1", 3);
+		}
+		logBrief("Initial position: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			std::stringstream inputs(valuesVector[index]);
+			std::vector<std::string> outputs;
+
+			while (inputs.good())
+			{
+				std::string value;
+				std::getline(inputs, value, ',');
+				outputs.push_back(value);
+			}
+
+			for (int i = 0; i < outputs.size(); i++)
+			{
+				initialVelocity.push_back(stod(outputs[i]));
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for initial velocity", 3);
+		}
+		logBrief("Initial velocity: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			propellant = valuesVector[index];
+			if (propellant != "xenon")
 			{
 				throw 1;
 			}
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for initial x position", 3);
+			logBrief("Invalid argument detected for propellant", 3);
 		}
 		catch (int error)
 		{
-			logBrief("Initial x position should be between 0 and 1", 3);
+			logBrief("Invalid propellant selected", 3);
 		}
-		logBrief("Initial x position: " + valuesVector[10], 1);
-
-
-		try
-		{
-			yInitial = stod(valuesVector[11]);
-			if (yInitial < 0.0 || xInitial > 1.0)
-			{
-				throw 1;
-			}
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for initial y position", 3);
-		}
-		catch (int error)
-		{
-			logBrief("Initial y position should be between 0 and 1", 3);
-		}
-		logBrief("Initial y position: " + valuesVector[11], 1);
-
-
-		try
-		{
-			uInitial = stod(valuesVector[12]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for initial x velocity", 3);
-		}
-		logBrief("Initial x velocity: " + valuesVector[12], 1);
-
-
-		try
-		{
-			vInitial = stod(valuesVector[13]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for initial y velocity", 3);
-		}
-		logBrief("Initial y velocity: " + valuesVector[13], 1);
-
-
-		try
-		{
-			xPerturbation = stod(valuesVector[14]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for initial x perturbation", 3);
-		}
-		logBrief("Initial x perturbation: " + valuesVector[14], 1);
-
-
-		try
-		{
-			yPerturbation = stod(valuesVector[15]);
-		}
-		catch (std::invalid_argument&)
-		{
-			logBrief("Invalid argument detected for initial y perturbation", 3);
-		}
-		logBrief("Initial y perturbation: " + valuesVector[15], 1);
+		logBrief("Propellant: " + valuesVector[index], 1);
+		index++;
 
 
 		// Field parameters
 		try
 		{
-			xEfield = stod(valuesVector[16]);
+			std::stringstream inputs(valuesVector[index]);
+			std::vector<std::string> outputs;
+
+			while (inputs.good())
+			{
+				std::string value;
+				std::getline(inputs, value, ',');
+				outputs.push_back(value);
+			}
+
+			for (int i = 0; i < outputs.size(); i++)
+			{
+				Efield.push_back(stod(outputs[i]));
+			}
 		}
-		catch (const std::exception&)
+		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for x electric field", 3);
+			logBrief("Invalid argument detected for electric field", 3);
 		}
-		logBrief("Electric field in x direction: " + valuesVector[16], 1);
+		logBrief("Electric field: " + valuesVector[index], 1);
+		index++;
+
 
 		try
 		{
-			yEfield = stod(valuesVector[17]);
+			std::stringstream inputs(valuesVector[index]);
+			std::vector<std::string> outputs;
+
+			while (inputs.good())
+			{
+				std::string value;
+				std::getline(inputs, value, ',');
+				outputs.push_back(value);
+			}
+
+			for (int i = 0; i < outputs.size(); i++)
+			{
+				Bfield.push_back(stod(outputs[i]));
+			}
 		}
-		catch (const std::exception&)
+		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for y electric field", 3);
+			logBrief("Invalid argument detected for magnetic field", 3);
 		}
-		logBrief("Electric field in y direction: " + valuesVector[17], 1);
+		logBrief("Magnetic field: " + valuesVector[index], 1);
+		index++;
+
 
 		try
 		{
-			zBfield = stod(valuesVector[18]);
-		}
-		catch (const std::exception&)
-		{
-			logBrief("Invalid argument detected for z magnetic field", 3);
-		}
-		logBrief("Magnetic field in z direction: " + valuesVector[18], 1);
-
-		try
-		{
-			FDTDtimeStep = stod(valuesVector[19]);
+			FDTDtimeStep = stod(valuesVector[index]);
 			if (FDTDtimeStep < 0.0)
 			{
 				throw 1;
@@ -387,44 +417,39 @@ void Parameters::assignInputs()
 		{
 			logBrief("FDTD time step should be positive", 3);
 		}
-		logBrief("FDTD time step in y direction: " + valuesVector[19], 1);
+		logBrief("FDTD time step: " + valuesVector[index], 1);
+		index++;
 
 
 		// Mesh parameters
 		try
 		{
-			meshFilePath = valuesVector[20];
+			meshFilePath = valuesVector[index];
 		}
 		catch (std::invalid_argument&)
 		{
 			logBrief("Invalid argument detected for mesh file path", 3);
 		}
-		logBrief("Mesh file path: " + valuesVector[20], 1);
+		logBrief("Mesh file path: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			meshScalingParameter = stod(valuesVector[21]);
-			if (meshScalingParameter < 0.0)
-			{
-				throw 1;
-			}
+			meshScalingParameter = stod(valuesVector[index]);
 		}
 		catch (const std::exception&)
 		{
 			logBrief("Invalid argument detected for mesh scaling parameter", 3);
 		}
-		catch (int error)
-		{
-			logBrief("Mesh scaling parameter should be positive", 3);
-		}
-		logBrief("Mesh scaling parameter: " + valuesVector[21], 1);
+		logBrief("Mesh scaling parameter: " + valuesVector[index], 1);
+		index++;
 
 
 		// Solver parameters
 		try
 		{
-			solverType = valuesVector[22];
+			solverType = valuesVector[index];
 			if (solverType == "GS" || solverType == "FFT")
 			{
 			}
@@ -441,12 +466,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Solver type should be GS or FFT", 3);
 		}
-		logBrief("Solver type: " + valuesVector[22], 1);
+		logBrief("Solver type: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			maxSolverIterations = stoi(valuesVector[23]);
+			maxSolverIterations = stoi(valuesVector[index]);
 			if (maxSolverIterations < 0)
 			{
 				throw 1;
@@ -460,12 +486,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Maximum solver iterations should be positive", 3);
 		}
-		logBrief("Maximum solver iterations: " + valuesVector[23], 1);
+		logBrief("Maximum solver iterations: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			residualTolerance = stod(valuesVector[24]);
+			residualTolerance = stod(valuesVector[index]);
 			if (residualTolerance < 0.0)
 			{
 				throw 1;
@@ -479,12 +506,13 @@ void Parameters::assignInputs()
 		{
 			logBrief("Residual tolerance should be positive", 3);
 		}
-		logBrief("Residual tolerance: " + valuesVector[24], 1);
+		logBrief("Residual tolerance: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			SORparameter = stod(valuesVector[25]);
+			SORparameter = stod(valuesVector[index]);
 			if (SORparameter < 1.0)
 			{
 				throw 1;
@@ -498,13 +526,14 @@ void Parameters::assignInputs()
 		{
 			logBrief("Successive over-relaxation parameter should be positive", 3);
 		}
-		logBrief("Successive over-relaxation parameter: " + valuesVector[25], 1);
+		logBrief("Successive over-relaxation parameter: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			xBCType = valuesVector[26];
-			if (xBCType == "periodic" || xBCType == "dirichlet" || xBCType == "neumann")
+			leftBCType = valuesVector[index];
+			if (leftBCType == "periodic" || leftBCType == "open" || leftBCType == "dirichlet" || leftBCType == "neumann")
 			{
 			}
 			else
@@ -514,30 +543,32 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for x boundary condition type", 3);
+			logBrief("Invalid argument detected for left boundary condition type", 3);
 		}
 		catch (int error)
 		{
-			logBrief("Boundary condition x type should be periodic, dirichlet or neumann", 3);
+			logBrief("Left boundary condition type should be periodic, open, dirichlet or neumann", 3);
 		}
-		logBrief("Boundary condition x type: " + valuesVector[26], 1);
+		logBrief("Left boundary condition type: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			xBCValue = stod(valuesVector[27]);
+			leftBCValue = stod(valuesVector[index]);
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for x boundary condition value", 3);
+			logBrief("Invalid argument detected for left boundary condition value", 3);
 		}
-		logBrief("Boundary condition x value: " + valuesVector[27], 1);
+		logBrief("Left boundary condition value: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			yBCType = valuesVector[28];
-			if (yBCType == "periodic" || yBCType == "dirichlet" || yBCType == "neumann")
+			rightBCType = valuesVector[index];
+			if (rightBCType == "periodic" || rightBCType == "open" || rightBCType == "dirichlet" || rightBCType == "neumann")
 			{
 			}
 			else
@@ -547,30 +578,110 @@ void Parameters::assignInputs()
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for y boundary condition type", 3);
+			logBrief("Invalid argument detected for right boundary condition type", 3);
 		}
 		catch (int error)
 		{
-			logBrief("Boundary condition y type should be periodic, dirichlet or neumann", 3);
+			logBrief("Right boundary condition type should be periodic, open, dirichlet or neumann", 3);
 		}
-		logBrief("Boundary condition y type: " + valuesVector[28], 1);
+		if ((rightBCType == "periodic" && leftBCType != "periodic") || (rightBCType != "periodic" && leftBCType == "periodic"))
+		{
+			logBrief("Periodic boundary conditions must be used on left and right", 3);
+		}
+		logBrief("Right boundary condition type: " + valuesVector[index], 1);
+		index++;
 
 
 		try
 		{
-			yBCValue = stod(valuesVector[29]);
+			rightBCValue = stod(valuesVector[index]);
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for y boundary condition value", 3);
+			logBrief("Invalid argument detected for right boundary condition value", 3);
 		}
-		logBrief("Boundary condition y value: " + valuesVector[29], 1);
+		logBrief("Right boundary condition value: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			topBCType = valuesVector[index];
+			if (topBCType == "periodic" || topBCType == "open" || topBCType == "dirichlet" || topBCType == "neumann")
+			{
+			}
+			else
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for top boundary condition type", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Top boundary condition type should be periodic, open, dirichlet or neumann", 3);
+		}
+		logBrief("Top boundary condition type: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			topBCValue = stod(valuesVector[index]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for top boundary condition value", 3);
+		}
+		logBrief("Top boundary condition value: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			bottomBCType = valuesVector[index];
+			if (bottomBCType == "periodic" || bottomBCType == "open" || bottomBCType == "dirichlet" || bottomBCType == "neumann")
+			{
+			}
+			else
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for bottom boundary condition type", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Bottom boundary condition type should be periodic, open, dirichlet or neumann", 3);
+		}
+		if ((bottomBCType == "periodic" && topBCType != "periodic") || (bottomBCType != "periodic" && topBCType == "periodic"))
+		{
+			logBrief("Periodic boundary conditions must be used on top and bottom", 3);
+		}
+		logBrief("Bottom boundary condition type: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			bottomBCValue = stod(valuesVector[index]);
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for bottom boundary condition value", 3);
+		}
+		logBrief("Bottom boundary condition value: " + valuesVector[index], 1);
+		index++;
 
 
 		// Parallelisation parameters
 		try
 		{
-			numThreads = stoi(valuesVector[30]);
+			numThreads = stoi(valuesVector[index]);
 			if (numThreads < 1)
 			{
 				throw 1;
@@ -584,13 +695,14 @@ void Parameters::assignInputs()
 		{
 			logBrief("Number of threads should be greater than 0", 3);
 		}
-		logBrief("Number of OpenMP threads: " + valuesVector[30], 1);
+		logBrief("Number of OpenMP threads: " + valuesVector[index], 1);
+		index++;
 
 
 		// Output parameters
 		try
 		{
-			plotFrequency = stoi(valuesVector[31]);
+			plotFrequency = stoi(valuesVector[index]);
 			if (plotFrequency < 0)
 			{
 				throw 1;
@@ -604,7 +716,56 @@ void Parameters::assignInputs()
 		{
 			logBrief("Plotting frequency should be positive", 3);
 		}
-		logBrief("Plotting frequency: " + valuesVector[31], 1);
+		logBrief("Plotting frequency: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			tecplotMesh = valuesVector[index];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for output mesh file name", 3);
+		}
+		logBrief("Output mesh file name: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			tecplotParticleSolution = valuesVector[index];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for particle solution file name", 3);
+		}
+		logBrief("Particle solution file name: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			tecplotNodeSolution = valuesVector[index];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for node solution file name", 3);
+		}
+		logBrief("Node solution file name: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			tecplotGlobalSolution = valuesVector[index];
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for global solution file name", 3);
+		}
+		logBrief("Global solution file name: " + valuesVector[index], 1);
+		index++;
 	}
 }
 

@@ -9,52 +9,41 @@
 
 
 %------------------------------------------------------------------------------
-% Constants
-%------------------------------------------------------------------------------
-epsilon0: 8.85e-12
-
-
-%------------------------------------------------------------------------------
 % Simulation parameters 
 %------------------------------------------------------------------------------
-timeStep: 0.00003
+timeStep: 0.00002
 maximumNumberOfIterations: 20 
 numberOfPatches: 1
 particlesPerCell: 1
 numCellsWithParticles: 1
-axisymmetric: 0
+simulationType: electron
+axisymmetric: 1
 twoStream: 0
 
 
 %------------------------------------------------------------------------------
 % Particle parameters
 % TODO: Add parameter for charge to mass ratio, use if charge==mass==0.0
-% TODO: Parameters for multi-species simulation
 % TODO: Add parameters for Maxwellian particle velocity distribution (seeding)
 %------------------------------------------------------------------------------
-charge: -1.602e-19
-mass: 9.11e-31
-xInitial: 0.5
-yInitial: 0.5
-uInitial: 20.0
-vInitial: 20.0
-xPerturbation: 0.0
-yPerturbation: 0.0
+particleDistribution: uniform
+initialPosition: 0.5,0.5
+initialVelocity: 150.0,20.0
+propellant: xenon
 
 
 %------------------------------------------------------------------------------
 % Field parameters
 %------------------------------------------------------------------------------
-xEfield: 0.0
-yEfield: 0.0
-zBfield: -1.0e-7
+Efield: 0.0,0.0,0.0
+Bfield: 0.0,0.0,-1.0e-7
 FDTDtimeStep: 0.0
 
 
 %------------------------------------------------------------------------------
 % Mesh parameters
 %------------------------------------------------------------------------------
-meshFilePath: mediumMesh.su2
+meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
 
 
@@ -65,10 +54,14 @@ solverType: GS
 maxSolverIterations: 50
 residualTolerance: 1e-20
 SORparameter: 1.1
-xBCType: periodic
-xBCValue: 0.0
-yBCType: dirichlet
-yBCValue: 0.0
+leftBCType: periodic
+leftBCValue: 0.0
+rightBCType: periodic
+rightBCValue: 0.0
+topBCType: dirichlet
+topBCValue: 0.0
+bottomBCType: dirichlet
+bottomBCValue: 0.0
 
 
 %------------------------------------------------------------------------------
@@ -81,6 +74,10 @@ numThreads: 1
 % Output parameters
 %------------------------------------------------------------------------------
 plotFrequency: 1
+tecplotMesh: cMesh
+tecplotParticleSolution: cSolution_P
+tecplotNodeSolution: cSolution_N
+tecplotGlobalSolution: cSolution_G
 
 
 %------------------------------------------------------------------------------

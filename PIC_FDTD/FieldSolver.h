@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of FieldSolver class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -18,10 +18,9 @@ public:
 
 
 	// Constructor/destructor
-	FieldSolver();	//!< Default constructor
-	FieldSolver(Parameters *parametersList,
-		Mesh *mesh, VectorParticle *particlesVector);	//!< Constructor
-	~FieldSolver();	//!< Destructor
+	FieldSolver();										//!< Default constructor
+	FieldSolver(Parameters *parametersList, Mesh *mesh);//!< Constructor
+	~FieldSolver();										//!< Destructor
 
 	
 	// Methods

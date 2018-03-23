@@ -12,6 +12,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <sstream>
 #include <vector>
 
 #include "GRID/grid.hpp"
@@ -37,8 +38,6 @@ public:
 	GridBasicInfo gridinfo;					//!< Basic grid properties
 	GridGeo gridgeo;						//!< Detailed grid info
 
-	// Constants
-	double epsilon0;						//!< Permittivity of free space (assumes vacuum?)
 
 	// Simulation parameters
 	double timeStep;						//!< Time step
@@ -46,23 +45,19 @@ public:
 	int numberOfPatches;					//!< Number of patches
 	int particlesPerCell;					//!< Particles per cell
 	int numCellsWithParticles;				//!< Number of cells in which particles are seeded	
+	std::string simulationType;				//!< Simulation type (full, partial or electron)
 	bool axisymmetric;						//!< True if axisymmetric simulation is required
 	bool twoStream;							//!< True is two-stream problem is bring modelled
 
 	// Particle parameters
-	double charge;							//!< Particle charge
-	double mass;							//!< Particle mass
-	double xInitial;						//!< Initial particle x position
-	double yInitial;						//!< Initial particle y position
-	double uInitial;						//!< Initial particle x velocity
-	double vInitial;						//!< Initial particle y velocity
-	double xPerturbation;					//!< Maximum random deviation from initial position
-	double yPerturbation;					//!< Maximum random deviation from initial position
+	std::string particleDistribution;		//!< Particle distribution (random, uniform, precise)
+	std::vector<double> initialPosition;	//!< Initial particle position (if precise==true)
+	std::vector<double> initialVelocity;	//!< Initial particle velocity (if precise==true)
+	std::string propellant;					//!< Propellant used in simulation (xenon)
 
 	// Field parameters
-	double xEfield;							//!< External x electric field
-	double yEfield;							//!< External y electric field
-	double zBfield;							//!< External z magnetic field
+	std::vector<double> Efield;				//!< External electric field
+	std::vector<double> Bfield;				//!< External magnetic field
 	double FDTDtimeStep;					//!< Time step for FDTD solver
 
 	// Mesh parameters
@@ -74,16 +69,24 @@ public:
 	int maxSolverIterations;				//!< Maximum number of iterations for solver
 	double residualTolerance;				//!< Tolerance for solver residuals
 	double SORparameter;					//!< Successive over-relaxation parameter
-	std::string xBCType;					//!< Boundary condition in x direction (periodic, dirichlet, neumann)
-	std::string yBCType;					//!< Boundary condition in y direction (periodic, dirichlet, neumann)
-	double xBCValue;						//!< Value of x boundary condition
-	double yBCValue;						//!< Value of y boundary condition
+	std::string leftBCType;					//!< Boundary condition on left edge (periodic, open, dirichlet, neumann)
+	double leftBCValue;						//!< Value of left edge boundary condition
+	std::string rightBCType;				//!< Boundary condition on right edge (periodic, open, dirichlet, neumann)
+	double rightBCValue;					//!< Value of right edge boundary condition
+	std::string topBCType;					//!< Boundary condition on top edge (periodic, open, dirichlet, neumann)
+	double topBCValue;						//!< Value of top edge boundary condition
+	std::string bottomBCType;				//!< Boundary condition on bottom edge (periodic, open, dirichlet, neumann)
+	double bottomBCValue;					//!< Value of bottom edge boundary condition
 
 	// Parallelisation parameters
 	int numThreads;							//!< Number of OpenMP threads for parallelisation
 	
 	// Output parameters
 	int plotFrequency;						//!< Iterations between plots
+	std::string tecplotMesh;				//!< Tecplot output mesh file
+	std::string tecplotParticleSolution;	//!< Tecplot particle solution file
+	std::string tecplotNodeSolution;		//!< Tecplot node solution file
+	std::string tecplotGlobalSolution;		//!< Tecplot global solution file
 
 
 	// Constructor/destructor

@@ -11,7 +11,7 @@ Mesh::Mesh()
 {
 }
 
-
+// TODO: Pre-compute node/cell volumes, V=A for Cartesian, else depends on position
 // Constructor
 Mesh::Mesh(Parameters *localParametersList)
 {
@@ -430,6 +430,7 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
 		}
+		// TODO: Check if required to move the below out one level
 		h = hAverage / static_cast<double>((2 * numCells));
 	}
 
@@ -437,7 +438,7 @@ Mesh::Mesh(Parameters *localParametersList)
 	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
 	{
-		// Periodic cells in x direction
+		// Periodic cells in Cartesian x/cylindrical z direction
 		if (cellsVector.cells[i].boundaryType == "TL" || 
 			cellsVector.cells[i].boundaryType == "L" || 
 			cellsVector.cells[i].boundaryType == "BL")
@@ -448,13 +449,14 @@ Mesh::Mesh(Parameters *localParametersList)
 				cellsVector.cells[j].boundaryType != "BR")
 			{
 				j = cellsVector.cells[j].rightCellID - 1; 
-
 			}
-			cellsVector.cells[i].periodicXCellID = j + 1;
-			cellsVector.cells[j].periodicXCellID = i + 1;
+			cellsVector.cells[i].periodicX1CellID = j + 1;
+			cellsVector.cells[j].periodicX1CellID = i + 1;
 		}
 
-		// Periodic cells in y direction
+		// TODO: Does it make physical sense to have periodic BCs in the y/r 
+		// direction? Definitely not for cylindrical, not really for Cartesian...
+		// Periodic cells in Cartesian y/cylindrical r direction
 		if (cellsVector.cells[i].boundaryType == "TL" || 
 			cellsVector.cells[i].boundaryType == "T" || 
 			cellsVector.cells[i].boundaryType == "TR")
@@ -465,10 +467,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				cellsVector.cells[j].boundaryType != "BR")
 			{
 				j = cellsVector.cells[j].bottomCellID - 1;
-
 			}
-			cellsVector.cells[i].periodicYCellID = j + 1;
-			cellsVector.cells[j].periodicYCellID = i + 1;
+			cellsVector.cells[i].periodicX2CellID = j + 1;
+			cellsVector.cells[j].periodicX2CellID = i + 1;
 		}
 	}
 
@@ -488,10 +489,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[j].boundaryType != "BR")
 			{
 				j = nodesVector.nodes[j].rightNodeID - 1;
-
 			}
-			nodesVector.nodes[i].periodicXNodeID = j + 1;
-			nodesVector.nodes[j].periodicXNodeID = i + 1;
+			nodesVector.nodes[i].periodicX1NodeID = j + 1;
+			nodesVector.nodes[j].periodicX1NodeID = i + 1;
 		}
 
 		// Periodic nodes in y direction
@@ -505,10 +505,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[j].boundaryType != "BR")
 			{
 				j = nodesVector.nodes[j].bottomNodeID - 1;
-
 			}
-			nodesVector.nodes[i].periodicYNodeID = j + 1;
-			nodesVector.nodes[j].periodicYNodeID = i + 1;
+			nodesVector.nodes[i].periodicX2NodeID = j + 1;
+			nodesVector.nodes[j].periodicX2NodeID = i + 1;
 		}
 	}
 	localParametersList->logBrief("Additional mesh pre-processing complete", 1);

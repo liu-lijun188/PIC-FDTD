@@ -14,6 +14,7 @@ VectorParticle::VectorParticle()
 // Constructor
 VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
+	this->patchID = patchID;
 	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
 	
 	// If 0 < numCellsWithParticles <= numCells, seed particles in a few cells, 
@@ -27,11 +28,14 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 
 	for (int i = 0; i < parametersList->numCellsWithParticles; i++)
 	{
-		// Check if particlesPerCell is a square number
-		if (sqrt(parametersList->particlesPerCell) != round(sqrt(parametersList->particlesPerCell)))
+		if (parametersList->particleDistribution == "uniform")
 		{
-			parametersList->logBrief("Value of particlesPerCell has been changed to 1", 2);
-			parametersList->particlesPerCell = 1;
+			// Check if particlesPerCell is a square number
+			if (sqrt(parametersList->particlesPerCell) != round(sqrt(parametersList->particlesPerCell)))
+			{
+				parametersList->logBrief("Value of particlesPerCell has been changed to 1", 2);
+				parametersList->particlesPerCell = 1;
+			}
 		}
 		
 		for (int j = 0; j < parametersList->particlesPerCell; j++)
@@ -41,17 +45,14 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 			Particle particle(parametersList, mesh, patchID, i + 1, numParticles, j);
 			particleVector.push_back(particle);
 
-			plotVector.push_back(particle.position);
-			plotVector.back().push_back(particle.velocity[0]);
-			plotVector.back().push_back(particle.velocity[1]);
-			plotVector.back().push_back(particle.cellID);
-			plotVector.back().push_back(particle.particleID);
-			plotVector.back().push_back(particle.basic.type);
+			addToPlotVector(&particle);
 
 			mesh->addParticlesToCell(particle.cellID, particle.particleID);
 		}
-		
 	}
+
+	maxParticleID = numParticles;
+
 	parametersList->logMessages("Generated " + std::to_string(numParticles) +
 		" particles in " + std::to_string(parametersList->numCellsWithParticles) + 
 		" cells", __FILE__, __LINE__, 1);
@@ -61,6 +62,18 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 // Destructor
 VectorParticle::~VectorParticle()
 {
+}
+
+
+// Add particle to plotVector
+void VectorParticle::addToPlotVector(Particle *particle)
+{
+	plotVector.push_back(particle->position);
+	plotVector.back().push_back(particle->velocity[0]);
+	plotVector.back().push_back(particle->velocity[1]);
+	plotVector.back().push_back(particle->cellID);
+	plotVector.back().push_back(particle->particleID);
+	plotVector.back().push_back(particle->basic.type);
 }
 
 
@@ -86,11 +99,70 @@ void VectorParticle::updatePlotVector(Particle *particle)
 }
 
 
-// Clear fields and lorentz members of particleVector
+// Remove particle from plotVector
+void VectorParticle::removeFromPlotVector(int particleID)
+{
+	for (int i = 0; i < plotVector.size(); i++)
+	{
+		if (plotVector[i][5] == static_cast<double>(particleID))
+		{
+			plotVector.erase(plotVector.begin() + i);
+			break;
+		}
+	}
+}
+
+
+// Clear fields member of particleVector
 void VectorParticle::clearFields()
 {
 	for (int i = 0; i < numParticles; i++)
 	{
-		particleVector[i].fields = { 0.0,0.0,0.0 };
+		particleVector[i].EMfield = { 0.0,0.0,0.0,0.0,0.0,0.0 };
 	}
+}
+
+
+// Add particle to simulation
+void VectorParticle::addParticleToSim(Parameters *parametersList, Mesh *mesh, int cellID, std::string type)
+{
+	numParticles++;
+	maxParticleID++;
+
+	Particle particle(parametersList, mesh, patchID, cellID, maxParticleID, type);
+	particleVector.push_back(particle);
+	addToPlotVector(&particle);
+
+	mesh->addParticlesToCell(particle.cellID, particle.particleID);
+}
+
+
+// Remove particle from simulation
+void VectorParticle::removeParticleFromSim(int particleID)
+{
+	for (int i = 0; i < numParticles; i++)
+	{
+		if (particleVector[i].particleID == particleID)
+		{
+			particleVector.erase(particleVector.begin() + i);
+			break;
+		}
+	}
+	removeFromPlotVector(particleID);
+	numParticles--;
+}
+
+
+//!< Calculate kinetic energy
+double VectorParticle::calculateEK()
+{
+	double EK = 0;
+	for (int i = 0; i < numParticles; i++)
+	{
+		EK += 0.5 * particleVector[i].basic.m *	(particleVector[i].velocity[0] *
+			particleVector[i].velocity[0] + particleVector[i].velocity[1] *
+			particleVector[i].velocity[1] + particleVector[i].velocity[2] *
+			particleVector[i].velocity[2]);
+	}
+	return EK;
 }

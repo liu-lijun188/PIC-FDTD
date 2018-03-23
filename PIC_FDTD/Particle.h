@@ -19,15 +19,16 @@ public:
 	int cellID;								//!< Current cell ID
 	std::vector<double> position;			//!< Particle position vector
 	std::vector<double> velocity;			//!< Particle velocity vector
-
-	std::vector<double> fields
-		{ -1.0, -1.0, -1.0 };		 		//!< Electromagnetic fields (Ex, Ey, Bz)
+	std::vector<double> EMfield
+	{ -1.0, -1.0, -1.0, -1.0, -1.0, -1.0 };	//!< Electromagnetic field
 
 
 	// Constructor/destructor
 	Particle();								//!< Default constructor
 	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID, 
-		int particleID, int index);			//!< Constructor
+		int particleID, int index);			//!< Initial constructor
+	Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cellID,
+		int particleID, std::string type);	// Single particle constructor
 	~Particle();							//!< Destructor
 
 

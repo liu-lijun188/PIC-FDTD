@@ -24,11 +24,11 @@ Patch::Patch(Parameters *parametersList, int patchID)
 	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
 
 	parametersList->logBrief("Initialising Tecplot output files", 1);
-	writeMeshTecplot(tecplotMesh, mesh);
+	writeMeshTecplot(parametersList->tecplotMesh, mesh);
 
 	generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 	generateNodeOutput(mesh, time);
-	generateGlobalOutput(0.0, 0.0, parametersList->maximumNumberOfIterations / parametersList->plotFrequency, time);
+	generateGlobalOutput(0.0, 0.0, time);
 }
 
 
@@ -43,17 +43,18 @@ void Patch::generateParticleOutput(vector2D data, int numParticles, double time)
 {
 	// Plot style can be T (plot all particles at each time step), TA (animated),
 	// NT (plot each particle over all time steps) and NTA (animated)  
-	writeSolutionXY_NTA_Tecplot(tecplotParticleSolution, data, numParticles, time);
+	writeSolutionXY_NTA_Tecplot(parametersList.tecplotParticleSolution, data, numParticles, time);
 }
 
 void Patch::generateNodeOutput(Mesh mesh, double time)
 {
-	writeSolutionNodeTecplot(tecplotNodeSolution, mesh, time);
+	writeSolutionNodeTecplot(parametersList.tecplotNodeSolution, mesh, time);
 }
 
-void Patch::generateGlobalOutput(double EK, double EP, int N, double time)
+void Patch::generateGlobalOutput(double EK, double EP, double time)
 {
-	writeSolution_T_Tecplot(tecplotGlobalSolution, EK, EP, N, time);
+	writeSolution_T_Tecplot(parametersList.tecplotGlobalSolution, EK, EP, 
+		parametersList.maximumNumberOfIterations / parametersList.plotFrequency, time);
 }
 
 // Start the PIC loop within a Patch object
@@ -76,13 +77,13 @@ void Patch::startPIC()
 
 			FDTD fdtd(&parametersList, &mesh);
 
-			FieldSolver solver(&parametersList, &mesh, &particlesVector);
+			FieldSolver solver(&parametersList, &mesh);
 
 			FieldInterpolator interpolator(&parametersList, &mesh, &particlesVector);
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
-			MCC collisions(&parametersList, &particlesVector);
+			MCC collisions(&parametersList, &mesh, &particlesVector);
 
 			numErrors = parametersList.numErrors;
 			if (numErrors != 0)
@@ -95,9 +96,12 @@ void Patch::startPIC()
 			// Generate plots at specified intervals
 			if (static_cast<int>(time / parametersList.timeStep) % parametersList.plotFrequency == 0)
 			{
+				double EK = particlesVector.calculateEK();
+				double EP = mesh.nodesVector.calculateEP();
+
 				generateParticleOutput(particlesVector.plotVector, particlesVector.numParticles, time);
 				generateNodeOutput(mesh, time);
-				generateGlobalOutput(0.0, 0.0, parametersList.maxSolverIterations / parametersList.plotFrequency, time);
+				generateGlobalOutput(EK, EP, time);
 				parametersList.logBrief("Tecplot output generated", 1);
 			}
 		}
