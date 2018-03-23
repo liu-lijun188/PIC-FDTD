@@ -69,6 +69,7 @@ VectorParticle::~VectorParticle()
 void VectorParticle::addToPlotVector(Particle *particle)
 {
 	plotVector.push_back(particle->position);
+	plotVector.back().pop_back();	// Remove third position component
 	plotVector.back().push_back(particle->velocity[0]);
 	plotVector.back().push_back(particle->velocity[1]);
 	plotVector.back().push_back(particle->cellID);
@@ -88,6 +89,7 @@ void VectorParticle::updatePlotVector(Particle *particle)
 		if (plotVector[i][5] == static_cast<double>(particle->particleID))
 		{
 			plotVector.insert(plotVector.begin() + i, particle->position);
+			plotVector[i].pop_back();
 			plotVector[i].push_back(particle->velocity[0]);
 			plotVector[i].push_back(particle->velocity[1]);
 			plotVector[i].push_back(particle->cellID);

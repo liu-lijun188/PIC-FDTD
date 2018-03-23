@@ -430,9 +430,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
 		}
-		// TODO: Check if required to move the below out one level
-		h = hAverage / static_cast<double>((2 * numCells));
 	}
+
+	h = hAverage / static_cast<double>((2 * numCells));
 
 	// Find connected cells based on periodic BCs
 	# pragma omp parallel for num_threads(localParametersList->numThreads)

@@ -17,7 +17,7 @@ MCC::MCC(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector
 	// TODO: Check that it is appropriate to use MCC (compare particle densities,
 	// collision frequencies, etc.)
 
-	particlesVector->addParticleToSim(parametersList, mesh, 1, "electron");
+	// particlesVector->addParticleToSim(parametersList, mesh, 1, "electron");
 
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{

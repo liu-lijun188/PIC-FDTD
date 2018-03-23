@@ -14,10 +14,10 @@
 timeStep: 0.00002
 maximumNumberOfIterations: 20 
 numberOfPatches: 1
-particlesPerCell: 1
+particlesPerCell: 16
 numCellsWithParticles: 1
 simulationType: electron
-axisymmetric: 1
+axisymmetric: 0
 twoStream: 0
 
 
@@ -26,9 +26,9 @@ twoStream: 0
 % TODO: Add parameter for charge to mass ratio, use if charge==mass==0.0
 % TODO: Add parameters for Maxwellian particle velocity distribution (seeding)
 %------------------------------------------------------------------------------
-particleDistribution: uniform
+particleDistribution: random
 initialPosition: 0.5,0.5
-initialVelocity: 150.0,20.0
+initialVelocity: 100.0,-10.0
 propellant: xenon
 
 
@@ -54,9 +54,9 @@ solverType: GS
 maxSolverIterations: 50
 residualTolerance: 1e-20
 SORparameter: 1.1
-leftBCType: periodic
+leftBCType: dirichlet
 leftBCValue: 0.0
-rightBCType: periodic
+rightBCType: dirichlet
 rightBCValue: 0.0
 topBCType: dirichlet
 topBCValue: 0.0

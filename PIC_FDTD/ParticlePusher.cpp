@@ -267,7 +267,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// TODO: Doesn't make sense to have periodic bottom BC for cylinrical case
+				// TODO: Doesn't make sense to have periodic bottom BC for cylindrical case
 				if (parametersList->bottomBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
