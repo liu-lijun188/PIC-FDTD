@@ -38,22 +38,23 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 
 	if (parametersList->particleDistribution == "precise")
 	{
-		// TODO: Change xInitial and yInitial to x1Initial and x2Initial
 		// Place particle in cell at location (xInitial, yInitial)
-		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->xInitial) +
-			mesh->cellsVector.cells[cellID - 1].right * parametersList->xInitial);			// Cartesian x/cylindrical z
-		position.push_back(mesh->cellsVector.cells[cellID - 1].top * parametersList->yInitial +
-			mesh->cellsVector.cells[cellID - 1].bottom * (1 - parametersList->yInitial));	// Cartesian y/cylindrical r
-		position.push_back(0.0);															// Cartesian z/cylindrical theta
+		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - parametersList->initialPosition[0]) +
+			mesh->cellsVector.cells[cellID - 1].right * parametersList->initialPosition[0]);		// Cartesian x/cylindrical z
+		position.push_back(mesh->cellsVector.cells[cellID - 1].top * parametersList->initialPosition[1] +
+			mesh->cellsVector.cells[cellID - 1].bottom * (1 - parametersList->initialPosition[1]));	// Cartesian y/cylindrical r
+		position.push_back(0.0);																	// Cartesian z/cylindrical theta
 	}
 	else if (parametersList->particleDistribution == "random")
 	{
 		// Place particle at a random location in the cell
-		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - dist(rng) / (double)1000000) +
-			mesh->cellsVector.cells[cellID - 1].right * dist(rng) / (double)1000000);			// Cartesian x/cylindrical z
-		position.push_back(mesh->cellsVector.cells[cellID - 1].top * dist(rng) / (double)1000000 +
-			mesh->cellsVector.cells[cellID - 1].bottom * (1 - dist(rng) / (double)1000000));	// Cartesian y/cylindrical r
-		position.push_back(0.0);																// Cartesian z/cylindrical theta
+		double random1 = dist(rng) / (double)1000000;
+		double random2 = dist(rng) / (double)1000000;
+		position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - random1) +
+			mesh->cellsVector.cells[cellID - 1].right * random1);			// Cartesian x/cylindrical z
+		position.push_back(mesh->cellsVector.cells[cellID - 1].top * random2 +
+			mesh->cellsVector.cells[cellID - 1].bottom * (1 - random2));	// Cartesian y/cylindrical r
+		position.push_back(0.0);											// Cartesian z/cylindrical theta
 	}
 	else if (parametersList->particleDistribution == "uniform")
 	{
@@ -87,9 +88,9 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 
 	// TODO: Select velocities from a Maxwellian distribution
 	// Initial particle velocity
-	velocity.push_back(parametersList->uInitial);	// u
-	velocity.push_back(parametersList->vInitial);	// v
-	velocity.push_back(0.0);						// w
+	velocity.push_back(parametersList->initialVelocity[0]);	// u
+	velocity.push_back(parametersList->initialVelocity[1]);	// v
+	velocity.push_back(0.0);								// w
 
 	// Extra setup for the two-stream instability problem
 	if (parametersList->twoStream)
@@ -142,11 +143,13 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	std::uniform_int_distribution<std::mt19937::result_type> dist(0, 1000000);
 
 	// Place particle at a random location in the cell
-	position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - dist(rng) / (double)1000000) +
-		mesh->cellsVector.cells[cellID - 1].right * dist(rng) / (double)1000000);			// Cartesian x/cylindrical z
-	position.push_back(mesh->cellsVector.cells[cellID - 1].top * dist(rng) / (double)1000000 +
-		mesh->cellsVector.cells[cellID - 1].bottom * (1 - dist(rng) / (double)1000000));	// Cartesian y/cylindrical r
-	position.push_back(0.0);																// Cartesian z/cylindrical theta
+	double random1 = dist(rng) / (double)1000000;
+	double random2 = dist(rng) / (double)1000000;
+	position.push_back(mesh->cellsVector.cells[cellID - 1].left * (1 - random1) +
+		mesh->cellsVector.cells[cellID - 1].right * random1);			// Cartesian x/cylindrical z
+	position.push_back(mesh->cellsVector.cells[cellID - 1].top * random2 +
+		mesh->cellsVector.cells[cellID - 1].bottom * (1 - random2));	// Cartesian y/cylindrical r
+	position.push_back(0.0);											// Cartesian z/cylindrical theta
 
 	// Check that particle remains inside cell
 	// TODO: Delete this or comment out, not needed apart from testing
@@ -160,9 +163,9 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 
 	// TODO: Select velocities from a Maxwellian distribution
 	// Initial particle velocity
-	velocity.push_back(parametersList->uInitial);	// u
-	velocity.push_back(parametersList->vInitial);	// v
-	velocity.push_back(0.0);						// w
+	velocity.push_back(parametersList->initialVelocity[0]);	// u
+	velocity.push_back(parametersList->initialVelocity[1]);	// v
+	velocity.push_back(0.0);								// w
 
 	// Extra setup for the two-stream instability problem
 	if (parametersList->twoStream)

@@ -25,4 +25,6 @@
 
 #define XENON_MASS_kg	2.1801714e-25
 
+#define EPSILON_0	8.85418782e-12
+
 #endif /* chemConstants_h */

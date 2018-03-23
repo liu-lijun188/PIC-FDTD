@@ -10,8 +10,8 @@ FieldInterpolator::FieldInterpolator()
 {
 }
 
-// TODO: Large parts of the code below are similar to what is in ChargeProjector
-// Potentially look at making both functions of Patch, enabling code re-use?
+// TODO: Large parts of the code below are similar to what is in ChargeProjector.
+// potentially look at making both functions of Patch, enabling code re-use?
 
 // Constructor
 FieldInterpolator::FieldInterpolator(Parameters *parametersList,
@@ -44,73 +44,48 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
 		double charge = particlesVector->particleVector[i].basic.q;
 
-		// TODO: Replace Efield and Bfield with single variable, EMfield[6]
 		if (firstNodePosition == "BL")
 		{
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < 6; j++)
 			{
-				particlesVector->particleVector[i].Efield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (right - x1) * (x2 - bottom) / hSquared;
-
-				particlesVector->particleVector[i].Bfield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared;
+				particlesVector->particleVector[i].EMfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].EMfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "BR")
 		{
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < 6; j++)
 			{
-				particlesVector->particleVector[i].Efield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (right - x1) * (top - x2) / hSquared;
-
-				particlesVector->particleVector[i].Bfield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (right - x1) * (top - x2) / hSquared;
+				particlesVector->particleVector[i].EMfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].EMfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (right - x1) * (top - x2) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TR")
 		{
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < 6; j++)
 			{
-				particlesVector->particleVector[i].Efield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (x1 - left) * (top - x2) / hSquared;
-
-				particlesVector->particleVector[i].Bfield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (x1 - left) * (top - x2) / hSquared;
+				particlesVector->particleVector[i].EMfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TL")
 		{
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < 6; j++)
 			{
-				particlesVector->particleVector[i].Efield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Efield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Efield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Efield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Efield[j] * (x1 - left) * (x2 - bottom) / hSquared;
-
-				particlesVector->particleVector[i].Bfield[j] =
-					mesh->nodesVector.nodes[nodeID_0].Bfield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].Bfield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].Bfield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].Bfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+				particlesVector->particleVector[i].EMfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
 			}
 		}
 	}

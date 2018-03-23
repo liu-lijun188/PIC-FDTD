@@ -434,7 +434,6 @@ Mesh::Mesh(Parameters *localParametersList)
 		h = hAverage / static_cast<double>((2 * numCells));
 	}
 
-	// TODO: Change variable from x/y to x1/x2
 	// Find connected cells based on periodic BCs
 	# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
@@ -450,10 +449,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				cellsVector.cells[j].boundaryType != "BR")
 			{
 				j = cellsVector.cells[j].rightCellID - 1; 
-
 			}
-			cellsVector.cells[i].periodicXCellID = j + 1;
-			cellsVector.cells[j].periodicXCellID = i + 1;
+			cellsVector.cells[i].periodicX1CellID = j + 1;
+			cellsVector.cells[j].periodicX1CellID = i + 1;
 		}
 
 		// TODO: Does it make physical sense to have periodic BCs in the y/r 
@@ -469,10 +467,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				cellsVector.cells[j].boundaryType != "BR")
 			{
 				j = cellsVector.cells[j].bottomCellID - 1;
-
 			}
-			cellsVector.cells[i].periodicYCellID = j + 1;
-			cellsVector.cells[j].periodicYCellID = i + 1;
+			cellsVector.cells[i].periodicX2CellID = j + 1;
+			cellsVector.cells[j].periodicX2CellID = i + 1;
 		}
 	}
 
@@ -492,10 +489,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[j].boundaryType != "BR")
 			{
 				j = nodesVector.nodes[j].rightNodeID - 1;
-
 			}
-			nodesVector.nodes[i].periodicXNodeID = j + 1;
-			nodesVector.nodes[j].periodicXNodeID = i + 1;
+			nodesVector.nodes[i].periodicX1NodeID = j + 1;
+			nodesVector.nodes[j].periodicX1NodeID = i + 1;
 		}
 
 		// Periodic nodes in y direction
@@ -509,10 +505,9 @@ Mesh::Mesh(Parameters *localParametersList)
 				nodesVector.nodes[j].boundaryType != "BR")
 			{
 				j = nodesVector.nodes[j].bottomNodeID - 1;
-
 			}
-			nodesVector.nodes[i].periodicYNodeID = j + 1;
-			nodesVector.nodes[j].periodicYNodeID = i + 1;
+			nodesVector.nodes[i].periodicX2NodeID = j + 1;
+			nodesVector.nodes[j].periodicX2NodeID = i + 1;
 		}
 	}
 	localParametersList->logBrief("Additional mesh pre-processing complete", 1);

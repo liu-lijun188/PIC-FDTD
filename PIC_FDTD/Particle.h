@@ -19,11 +19,8 @@ public:
 	int cellID;								//!< Current cell ID
 	std::vector<double> position;			//!< Particle position vector
 	std::vector<double> velocity;			//!< Particle velocity vector
-
-	std::vector<double> Efield
-		{ -1.0, -1.0, -1.0 };		 		//!< Electric field
-	std::vector<double> Bfield
-		{ -1.0, -1.0, -1.0 };	 			//!< Magnetic field
+	std::vector<double> EMfield
+	{ -1.0, -1.0, -1.0, -1.0, -1.0, -1.0 };	//!< Electromagnetic field
 
 
 	// Constructor/destructor

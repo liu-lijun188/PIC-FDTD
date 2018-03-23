@@ -1410,9 +1410,12 @@ void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 				mesh.nodesVector.nodes[c].geometry.X(1) << " " <<
 				mesh.nodesVector.nodes[c].rho << " " <<
 				mesh.nodesVector.nodes[c].phi << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
-					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].EMfield[0] * mesh.nodesVector.nodes[c].EMfield[0] +
+					mesh.nodesVector.nodes[c].EMfield[1] * mesh.nodesVector.nodes[c].EMfield[1] +
+					mesh.nodesVector.nodes[c].EMfield[2] * mesh.nodesVector.nodes[c].EMfield[2]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].EMfield[3] * mesh.nodesVector.nodes[c].EMfield[3] +
+					mesh.nodesVector.nodes[c].EMfield[4] * mesh.nodesVector.nodes[c].EMfield[4] +
+					mesh.nodesVector.nodes[c].EMfield[5] * mesh.nodesVector.nodes[c].EMfield[5]) << " " <<
 				c + 1 << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;
@@ -1452,9 +1455,12 @@ void writeSolutionNodeTecplot(const std::string& title, Mesh& mesh, double t)
 			grid_tecplot << std::scientific << std::setprecision(16) <<
 				mesh.nodesVector.nodes[c].rho << " " <<
 				mesh.nodesVector.nodes[c].phi << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[0] * mesh.nodesVector.nodes[c].fields[0] +
-					mesh.nodesVector.nodes[c].fields[1] * mesh.nodesVector.nodes[c].fields[1]) << " " <<
-				sqrt(mesh.nodesVector.nodes[c].fields[2] * mesh.nodesVector.nodes[c].fields[2]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].EMfield[0] * mesh.nodesVector.nodes[c].EMfield[0] +
+					mesh.nodesVector.nodes[c].EMfield[1] * mesh.nodesVector.nodes[c].EMfield[1] +
+					mesh.nodesVector.nodes[c].EMfield[2] * mesh.nodesVector.nodes[c].EMfield[2]) << " " <<
+				sqrt(mesh.nodesVector.nodes[c].EMfield[3] * mesh.nodesVector.nodes[c].EMfield[3] +
+					mesh.nodesVector.nodes[c].EMfield[4] * mesh.nodesVector.nodes[c].EMfield[4] +
+					mesh.nodesVector.nodes[c].EMfield[5] * mesh.nodesVector.nodes[c].EMfield[5]) << " " <<
 				c + 1 << " " << t << std::scientific << std::endl;
 		}
 		grid_tecplot << std::endl;

@@ -79,8 +79,8 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		// For cylindrical case, need to account for changing cell volume
 		if (parametersList->axisymmetric == true)
 		{
-			int bottomNodeID = mesh->nodesVector.nodes[i].bottomNodeID;
-			if (bottomNodeID > 0)
+			int bottomNodeID = mesh->nodesVector.nodes[i].bottomNodeID - 1;
+			if (bottomNodeID >= 0)
 			{
 				mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge /
 					std::_Pi * mesh->h * (mesh->nodesVector.nodes[i].geometry.X.element(1, 0) *
@@ -111,31 +111,30 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		// TODO: Background charge for other simulationType == "partial"?
 	}
 
-	// TODO: Change variable names below
 	// Account for periodic BCs 
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
-		if (parametersList->xBCType == "periodic")
+		if (parametersList->leftBCType == "periodic")	// Periodic left implies periodic right
 		{
 			if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
 				mesh->nodesVector.nodes[i].boundaryType == "L" ||
 				mesh->nodesVector.nodes[i].boundaryType == "BL")
 			{
 				mesh->nodesVector.nodes[i].rho = 0.5 * (mesh->nodesVector.nodes[i].rho +
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho);
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicXNodeID - 1].rho =
+					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].rho);
+				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].rho =
 					mesh->nodesVector.nodes[i].rho;
 			}
 		}
-		if (parametersList->yBCType == "periodic")
+		if (parametersList->topBCType == "periodic")	// Periodic top implies periodic bottom
 		{
 			if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
 				mesh->nodesVector.nodes[i].boundaryType == "T" ||
 				mesh->nodesVector.nodes[i].boundaryType == "TR")
 			{
 				mesh->nodesVector.nodes[i].rho = 0.5 * (mesh->nodesVector.nodes[i].rho +
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicYNodeID - 1].rho);
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicYNodeID - 1].rho =
+					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].rho);
+				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].rho =
 					mesh->nodesVector.nodes[i].rho;
 			}
 		}

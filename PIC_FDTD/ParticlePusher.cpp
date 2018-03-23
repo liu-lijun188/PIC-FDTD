@@ -31,26 +31,26 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 			particlesVector->particleVector[i].velocity[0] -=
 				particlesVector->particleVector[i].basic.q * 
-				(particlesVector->particleVector[i].Efield[0] +
-					particlesVector->particleVector[i].Bfield[2] * 
+				(particlesVector->particleVector[i].EMfield[0] +
+					particlesVector->particleVector[i].EMfield[5] * 
 					particlesVector->particleVector[i].velocity[1] - 
-					particlesVector->particleVector[i].Bfield[1] *
+					particlesVector->particleVector[i].EMfield[4] *
 					particlesVector->particleVector[i].velocity[2]) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		
 			particlesVector->particleVector[i].velocity[1] -=
 				particlesVector->particleVector[i].basic.q *
-				(particlesVector->particleVector[i].Efield[1] +
-					particlesVector->particleVector[i].Bfield[0] *
+				(particlesVector->particleVector[i].EMfield[1] +
+					particlesVector->particleVector[i].EMfield[3] *
 					particlesVector->particleVector[i].velocity[2] -
-					particlesVector->particleVector[i].Bfield[2] * v1Initial) * 0.5 *
+					particlesVector->particleVector[i].EMfield[5] * v1Initial) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 
 			particlesVector->particleVector[i].velocity[2] -=
 				particlesVector->particleVector[i].basic.q *
-				(particlesVector->particleVector[i].Efield[2] +
-					particlesVector->particleVector[i].Bfield[1] * v1Initial -
-					particlesVector->particleVector[i].Bfield[0] * v2Initial) * 0.5 *
+				(particlesVector->particleVector[i].EMfield[2] +
+					particlesVector->particleVector[i].EMfield[4] * v1Initial -
+					particlesVector->particleVector[i].EMfield[3] * v2Initial) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		}
 	}
@@ -72,10 +72,10 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// 1. Half acceleration
 			vMinus[j] = particlesVector->particleVector[i].velocity[j] + 0.5 *
 				particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-				particlesVector->particleVector[i].Efield[j] / particlesVector->particleVector[i].basic.m;
+				particlesVector->particleVector[i].EMfield[j] / particlesVector->particleVector[i].basic.m;
 
 			// 2. Rotation
-			double theta = 2.0 * abs(atan(0.5 * particlesVector->particleVector[i].Bfield[j] *
+			double theta = 2.0 * abs(atan(0.5 * particlesVector->particleVector[i].EMfield[j+3] *
 				parametersList->timeStep * particlesVector->particleVector[i].basic.q /
 				particlesVector->particleVector[i].basic.m)) * 180.0 / std::_Pi;
 
@@ -86,7 +86,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			}
 
 			tVector[j] = particlesVector->particleVector[i].basic.q * 0.5 *
-				parametersList->timeStep * particlesVector->particleVector[i].Bfield[j] /
+				parametersList->timeStep * particlesVector->particleVector[i].EMfield[j+3] /
 				particlesVector->particleVector[i].basic.m;
 			sVector[j] = 2 * tVector[j] / (1 + tVector[j] * tVector[j]);
 		}
@@ -102,15 +102,15 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 		// 3. Half acceleration
 		particlesVector->particleVector[i].velocity[0] = v1Plus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].Efield[0] / particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].EMfield[0] / particlesVector->particleVector[i].basic.m;
 
 		particlesVector->particleVector[i].velocity[1] = v2Plus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].Efield[1] / particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].EMfield[1] / particlesVector->particleVector[i].basic.m;
 
 		particlesVector->particleVector[i].velocity[2] = v3Plus + 0.5 *
 			particlesVector->particleVector[i].basic.q * parametersList->timeStep *
-			particlesVector->particleVector[i].Efield[2] / particlesVector->particleVector[i].basic.m;
+			particlesVector->particleVector[i].EMfield[2] / particlesVector->particleVector[i].basic.m;
 
 		// TODO: Does third velocity component need to be included in Courant 
 		// number calculation since only 2 spatial dimensions are being modelled?
@@ -159,26 +159,23 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses left boundary of domain
 			else
 			{
-				// ========================================================= //
-				// TODO: Implement separate BCs for all four sides (L,R,T,B) //
-				// ========================================================= //
-				if (parametersList->xBCType == "periodic")
+				if (parametersList->leftBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
-						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX1CellID;
 
 					// Shift Cartesian x/ cylindrical z position
 					particlesVector->particleVector[i].position[0] = displacementL +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].right;
 				}
-				else if (parametersList->xBCType == "open")
+				else if (parametersList->leftBCType == "open")
 				{
 					particlesVector->removeParticleFromSim(particlesVector->particleVector[i].particleID);
 					i -= 1;
 					continue;
 				}
-				else if (parametersList->xBCType == "dirichlet" || 
-						 parametersList->xBCType == "neumann")
+				else if (parametersList->leftBCType == "dirichlet" ||
+						 parametersList->leftBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[0] = -displacementL +
@@ -209,23 +206,23 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses right boundary
 			else
 			{
-				if (parametersList->xBCType == "periodic")
+				if (parametersList->rightBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
-						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicXCellID;
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX1CellID;
 
 					// Shift Cartesian x/ cylindrical z position
 					particlesVector->particleVector[i].position[0] = displacementR +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].left;
 				}
-				else if (parametersList->xBCType == "open")
+				else if (parametersList->rightBCType == "open")
 				{
 					particlesVector->removeParticleFromSim(particlesVector->particleVector[i].particleID);
 					i -= 1;
 					continue;
 				}
-				else if (parametersList->xBCType == "dirichlet" || 
-						 parametersList->xBCType == "neumann")
+				else if (parametersList->rightBCType == "dirichlet" ||
+						 parametersList->rightBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[0] = -displacementR +
@@ -270,23 +267,24 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				if (parametersList->yBCType == "periodic")
+				// TODO: Doesn't make sense to have periodic bottom BC for cylinrical case
+				if (parametersList->bottomBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
-						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX2CellID;
 
 					// Shift Cartesian y/ cylindrical r position
 					particlesVector->particleVector[i].position[0] = displacementB +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 				}
-				else if (parametersList->yBCType == "open")
+				else if (parametersList->bottomBCType == "open")
 				{
 					particlesVector->removeParticleFromSim(particlesVector->particleVector[i].particleID);
 					i -= 1;
 					continue;
 				}
-				else if (parametersList->yBCType == "dirichlet" || 
-						 parametersList->yBCType == "neumann")
+				else if (parametersList->bottomBCType == "dirichlet" ||
+						 parametersList->bottomBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[1] = -displacementB +
@@ -316,23 +314,24 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				if (parametersList->yBCType == "periodic")
+				// TODO: Doesn't make sense to have periodic top BC for cylindrical case
+				if (parametersList->topBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
-						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicYCellID;
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX2CellID;
 
 					// Shift Cartesian y/ cylindrical r position
 					particlesVector->particleVector[i].position[0] = displacementT +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 				}
-				else if (parametersList->yBCType == "open")
+				else if (parametersList->topBCType == "open")
 				{
 					particlesVector->removeParticleFromSim(particlesVector->particleVector[i].particleID);
 					i -= 1;
 					continue;
 				}
-				else if (parametersList->yBCType == "dirichlet" ||
-						 parametersList->yBCType == "neumann")
+				else if (parametersList->topBCType == "dirichlet" ||
+						 parametersList->topBCType == "neumann")
 				{
 					// Reflect particle from boundary
 					particlesVector->particleVector[i].position[1] = -displacementT +

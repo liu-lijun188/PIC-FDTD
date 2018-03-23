@@ -118,8 +118,7 @@ void VectorParticle::clearFields()
 {
 	for (int i = 0; i < numParticles; i++)
 	{
-		particleVector[i].Efield = { 0.0,0.0,0.0 };
-		particleVector[i].Bfield = { 0.0,0.0,0.0 };
+		particleVector[i].EMfield = { 0.0,0.0,0.0,0.0,0.0,0.0 };
 	}
 }
 

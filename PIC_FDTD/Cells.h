@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Cells class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -21,8 +21,8 @@ public:
 	int rightCellID = -1;				//!< ID of adjacent right cell
 	int topCellID = -1;					//!< ID of adjacent top (up) cell
 	int bottomCellID = -1;				//!< ID of adjacent bottom (down) cell
-	int periodicXCellID = -1;			//!< ID of periodic cell, x direction (not valid for internal cells)
-	int	periodicYCellID = -1;			//!< ID of periodic cell, y direction (not valid for internal cells)
+	int periodicX1CellID = -1;			//!< ID of periodic cell, x/z direction (not valid for internal cells)
+	int	periodicX2CellID = -1;			//!< ID of periodic cell, y/r direction (not valid for internal cells and axisymmetric cases)
 	std::string boundaryType;			//!< Position on boundary (internal if FALSE)
 	std::string firstNodePosition;		//!< Position of first node
 	std::vector<int> listOfParticles;	//!< List of particles in the cell

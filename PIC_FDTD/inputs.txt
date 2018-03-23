@@ -9,12 +9,6 @@
 
 
 %------------------------------------------------------------------------------
-% Constants
-%------------------------------------------------------------------------------
-epsilon0: 8.85e-12
-
-
-%------------------------------------------------------------------------------
 % Simulation parameters 
 %------------------------------------------------------------------------------
 timeStep: 0.00002
@@ -23,31 +17,26 @@ numberOfPatches: 1
 particlesPerCell: 1
 numCellsWithParticles: 1
 simulationType: electron
-propellant: xenon
-axisymmetric: 0
+axisymmetric: 1
 twoStream: 0
 
 
 %------------------------------------------------------------------------------
 % Particle parameters
 % TODO: Add parameter for charge to mass ratio, use if charge==mass==0.0
-% TODO: Parameters for multi-species simulation
 % TODO: Add parameters for Maxwellian particle velocity distribution (seeding)
 %------------------------------------------------------------------------------
-xInitial: 0.5
-yInitial: 0.5
-uInitial: 150.0
-vInitial: 20.0
-xPerturbation: 0.0
-yPerturbation: 0.0
+particleDistribution: uniform
+initialPosition: 0.5,0.5
+initialVelocity: 150.0,20.0
+propellant: xenon
 
 
 %------------------------------------------------------------------------------
 % Field parameters
 %------------------------------------------------------------------------------
-xEfield: 0.0
-yEfield: 0.0
-zBfield: -1.0e-7
+Efield: 0.0,0.0,0.0
+Bfield: 0.0,0.0,-1.0e-7
 FDTDtimeStep: 0.0
 
 
@@ -65,10 +54,14 @@ solverType: GS
 maxSolverIterations: 50
 residualTolerance: 1e-20
 SORparameter: 1.1
-xBCType: periodic
-xBCValue: 0.0
-yBCType: dirichlet
-yBCValue: 0.0
+leftBCType: periodic
+leftBCValue: 0.0
+rightBCType: periodic
+rightBCValue: 0.0
+topBCType: dirichlet
+topBCValue: 0.0
+bottomBCType: dirichlet
+bottomBCValue: 0.0
 
 
 %------------------------------------------------------------------------------
@@ -90,7 +83,6 @@ tecplotGlobalSolution: cSolution_G
 %------------------------------------------------------------------------------
 % Test parameters 
 %------------------------------------------------------------------------------
-particleDistribution: uniform
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

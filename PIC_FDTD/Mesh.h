@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated February 2018
+//! \date Last updated March 2018
 
 #pragma once
 
@@ -23,12 +23,12 @@ public:
 	int numGhost;							//!< Number of ghost cells
 	int numNodes;							//!< Number of nodes
 	int dimension;							//!< Dimension of mesh (2D)
+	double h;								//!< Cell width/length (assume uniform)
 	VectorCell cellsVector;					//!< Vector of cells
 	VectorFace facesVector;					//!< Vector of faces
 	VectorGhost ghostVector;				//!< Vector of ghost cells
 	VectorNode nodesVector;					//!< Vector of nodes
 
-	double h;								//!< Cell width/length (assume uniform)
 
 	// Constructor/destructor
 	Mesh();									//!< Default constructor
