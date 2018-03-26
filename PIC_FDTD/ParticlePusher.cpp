@@ -10,11 +10,6 @@ ParticlePusher::ParticlePusher()
 {
 }
 
-// TODO: Modify to work with axisymmetric simulation - model 2D z-r velocity, as 
-// well as movement in the theta direction, then rotate position and velocities 
-// back to the z-r plane -> allows B fields in any direction to be resolved, not
-// just those perpendicular to z-r plane. 
-
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
@@ -60,7 +55,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// TODO: At the moment both Dirichlet and Neumann BCs cause reflection, however
 	// in waves, Dirichlet causes a sign change while Neumann does not (perfect 
 	// reflection) - check whether this is also correct for particle simulation
-
+	
 	// Currently available BCs: periodic, open, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{		
@@ -274,7 +269,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX2CellID;
 
 					// Shift Cartesian y/ cylindrical r position
-					particlesVector->particleVector[i].position[0] = displacementB +
+					particlesVector->particleVector[i].position[1] = displacementB +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
 				}
 				else if (parametersList->bottomBCType == "open")
@@ -321,7 +316,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX2CellID;
 
 					// Shift Cartesian y/ cylindrical r position
-					particlesVector->particleVector[i].position[0] = displacementT +
+					particlesVector->particleVector[i].position[1] = displacementT +
 						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
 				}
 				else if (parametersList->topBCType == "open")
@@ -346,10 +341,89 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].particleID);
 		}
 
+		// Update cylindrical theta position (no need to update Cartesian z)
+		if (parametersList->axisymmetric)
+		{
+			particlesVector->particleVector[i].position[2] += parametersList->timeStep *
+				particlesVector->particleVector[i].velocity[2];
+
+			// TODO: Check that new position does not exceed height of simulation domain
+			double newX2 = sqrt(particlesVector->particleVector[i].position[1] *
+				particlesVector->particleVector[i].position[1] +
+				particlesVector->particleVector[i].position[2] *
+				particlesVector->particleVector[i].position[2]);
+
+			// TODO: Check that rotation angle is reasonable
+			double rotation = atan(abs(particlesVector->particleVector[i].position[2]) /
+				particlesVector->particleVector[i].position[1]);
+
+			displacementT += newX2 - particlesVector->particleVector[i].position[1];
+			if (displacementT > 0.0 && abs(displacementT) >= mesh->h)
+			{
+				parametersList->logBrief("Particle " + std::to_string(i + 1) + " has moved more than one cell length", 3);
+				break;
+			}
+
+			// Update r and theta positions
+			particlesVector->particleVector[i].position[1] = newX2;
+			particlesVector->particleVector[i].position[2] = 0.0;
+
+			// Rotate velocities back to z-r plane
+			double velocity2 = particlesVector->particleVector[i].velocity[1];
+			particlesVector->particleVector[i].velocity[1] = cos(rotation) *
+				particlesVector->particleVector[i].velocity[1] - sin(rotation) *
+				particlesVector->particleVector[i].velocity[2];
+			particlesVector->particleVector[i].velocity[2] = sin(rotation) *
+				velocity2 + cos(rotation) *	particlesVector->particleVector[i].velocity[2];
+
+			// Update cell ID in Cartesian y/ cylindrical r direction, exiting top
+			if (displacementT > 0.0)
+			{
+				mesh->removeParticlesFromCell(particlesVector->particleVector[i].cellID,
+					particlesVector->particleVector[i].particleID);
+
+				// Particle remains inside domain
+				if (mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].topCellID > 0)
+				{
+					particlesVector->particleVector[i].cellID =
+						mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].topCellID;
+				}
+				// Particle crosses top boundary
+				else
+				{
+					// TODO: Doesn't make sense to have periodic top BC for cylindrical case
+					if (parametersList->topBCType == "periodic")
+					{
+						particlesVector->particleVector[i].cellID =
+							mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].periodicX2CellID;
+
+						// Shift Cartesian y/ cylindrical r position
+						particlesVector->particleVector[i].position[1] = displacementT +
+							mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].bottom;
+					}
+					else if (parametersList->topBCType == "open")
+					{
+						particlesVector->removeParticleFromSim(particlesVector->particleVector[i].particleID);
+						i -= 1;
+						continue;
+					}
+					else if (parametersList->topBCType == "dirichlet" ||
+						parametersList->topBCType == "neumann")
+					{
+						// Reflect particle from boundary
+						particlesVector->particleVector[i].position[1] = -displacementT +
+							mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].top;
+
+						// Reverse Cartesian y/ cylindrical r velocity
+						particlesVector->particleVector[i].velocity[1] *= -1.0;
+					}
+				}
+
+				mesh->addParticlesToCell(particlesVector->particleVector[i].cellID,
+					particlesVector->particleVector[i].particleID);
+			}
+		}
 		particlesVector->updatePlotVector(&particlesVector->particleVector[i]);
-		
-		// TODO: Find new position in Cartesian z/ cylindrical theta direction,
-		// then project/rotate back to x-y/z-r plane
 	}
 
 	// TODO: Shift v forwards half a time step to sync v and x for plotting

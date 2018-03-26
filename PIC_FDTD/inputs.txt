@@ -17,7 +17,7 @@ numberOfPatches: 1
 particlesPerCell: 16
 numCellsWithParticles: 1
 simulationType: electron
-axisymmetric: 0
+axisymmetric: 1
 twoStream: 0
 
 
