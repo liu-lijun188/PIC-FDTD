@@ -51,6 +51,7 @@ public:
 
 	// Particle parameters
 	std::string particleDistribution;		//!< Particle distribution (random, uniform, precise)
+	double initialTemperature;				//!< Initial temperature of gas/plasma
 	std::vector<double> initialPosition;	//!< Initial particle position (if precise==true)
 	std::vector<double> initialVelocity;	//!< Initial particle velocity (if precise==true)
 	std::string propellant;					//!< Propellant used in simulation (xenon)

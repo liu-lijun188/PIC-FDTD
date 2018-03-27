@@ -27,4 +27,6 @@
 
 #define EPSILON_0	8.85418782e-12
 
+#define K_B 1.38064852e-23
+
 #endif /* chemConstants_h */

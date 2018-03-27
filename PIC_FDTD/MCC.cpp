@@ -31,6 +31,8 @@ MCC::MCC(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector
 		// for calculating collisions (usually larger than simulation time step).
 		// If probability is greater than a random number, then collision occurs.
 
+		// double sigma = (-0.8821 * log(g) + 15.1262)
+
 		// TODO: Process specific collision handler, e.g. for CEX collisions, replace
 		// velocities of the collided particle with values from a Maxwellian distribution.
 		// 
