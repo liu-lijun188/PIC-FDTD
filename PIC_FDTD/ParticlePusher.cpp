@@ -348,10 +348,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				particlesVector->particleVector[i].velocity[2];
 
 			// TODO: Check that new position does not exceed height of simulation domain
-			double newX2 = sqrt(particlesVector->particleVector[i].position[1] *
-				particlesVector->particleVector[i].position[1] +
-				particlesVector->particleVector[i].position[2] *
-				particlesVector->particleVector[i].position[2]);
+			double newX2 = particlesVector->particleVector[i].velocityMagnitude();
 
 			// TODO: Check that rotation angle is reasonable
 			double rotation = atan(abs(particlesVector->particleVector[i].position[2]) /

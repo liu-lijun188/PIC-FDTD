@@ -42,5 +42,4 @@ public:
 		Mesh * mesh, int cellID, std::string type); //!< Add particle to simulation
 	void removeParticleFromSim(int particleID);		//!< Remove particle from simulation
 	double calculateEK();							//!< Calculate kinetic energy
-	// TODO: Add method to calculate magnitude of velocity vector
 };
