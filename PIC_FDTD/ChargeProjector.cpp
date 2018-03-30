@@ -15,7 +15,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	Mesh *mesh, VectorParticle *particlesVector)
 {
 	// Set charge at all nodes to zero at the start of each step
-	mesh->nodesVector.clearCharge();
+	mesh->nodesVector.clearChargeAndCurrent();
 
 	double hSquared = mesh->h * mesh->h;
 
@@ -73,7 +73,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		}
 	}
 
-	// Calculate charge density (charge / cell area)
+	// Calculate charge density (charge / cell volume)
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
 		// For cylindrical case, need to account for changing cell volume
@@ -96,7 +96,7 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		}
 		else
 		{
-			// Cartesian case
+			// Cartesian case, assume unit cell depth
 			mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
 		}
 		
@@ -137,6 +137,123 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].rho =
 					mesh->nodesVector.nodes[i].rho;
 			}
+		}
+	}
+
+	// Project current to nodes
+	for (int i = 0; i < particlesVector->numParticles; i++)
+	{
+		// TODO: Can change all of the below to references to avoid copying large 
+		// amounts of data for each calculation, or make a template to use same
+		// variables as in charge projection?
+
+		int cellID = particlesVector->particleVector[i].cellID - 1;
+		int nodeID_0 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[0] - 1;
+		int nodeID_1 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[1] - 1;
+		int nodeID_2 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[2] - 1;
+		int nodeID_3 = mesh->cellsVector.cells[cellID].connectivity.nodeIDs[3] - 1;
+
+		double left = mesh->cellsVector.cells[cellID].left;
+		double right = mesh->cellsVector.cells[cellID].right;
+		double top = mesh->cellsVector.cells[cellID].top;
+		double bottom = mesh->cellsVector.cells[cellID].bottom;
+
+		double x1 = particlesVector->particleVector[i].position[0];
+		double x2 = particlesVector->particleVector[i].position[1];
+
+		double v1 = particlesVector->particleVector[i].velocity[0];
+		double v2 = particlesVector->particleVector[i].velocity[1];
+
+		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
+		double charge = particlesVector->particleVector[i].basic.q;
+
+		if (firstNodePosition == "BL")
+		{
+			mesh->nodesVector.nodes[nodeID_0].current[0] += mesh->nodesVector.nodes[nodeID_0].rho * 
+				v1 * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].current[1] += mesh->nodesVector.nodes[nodeID_0].rho *
+				v2 * (right - x1) * (top - x2) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_1].current[0] += mesh->nodesVector.nodes[nodeID_1].rho * 
+				v1 * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].current[1] += mesh->nodesVector.nodes[nodeID_1].rho *
+				v2 * (x1 - left) * (top - x2) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_2].current[0] += mesh->nodesVector.nodes[nodeID_2].rho * 
+				v1 * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].current[1] += mesh->nodesVector.nodes[nodeID_2].rho *
+				v2 * (x1 - left) * (x2 - bottom) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_3].current[0] += mesh->nodesVector.nodes[nodeID_3].rho *
+				v1 * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].current[1] += mesh->nodesVector.nodes[nodeID_3].rho *
+				v2 * (right - x1) * (x2 - bottom) / hSquared;
+		}
+		else if (firstNodePosition == "BR")
+		{
+			mesh->nodesVector.nodes[nodeID_0].current[0] += mesh->nodesVector.nodes[nodeID_0].rho * 
+				v1 * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].current[1] += mesh->nodesVector.nodes[nodeID_0].rho *
+				v2 * (x1 - left) * (top - x2) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_1].current[0] += mesh->nodesVector.nodes[nodeID_1].rho * 
+				v1 * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].current[1] += mesh->nodesVector.nodes[nodeID_1].rho *
+				v2 * (x1 - left) * (x2 - bottom) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_2].current[0] += mesh->nodesVector.nodes[nodeID_2].rho * 
+				v1 * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].current[1] += mesh->nodesVector.nodes[nodeID_2].rho *
+				v2 * (right - x1) * (x2 - bottom) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_3].current[0] += mesh->nodesVector.nodes[nodeID_3].rho * 
+				v1 * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].current[1] += mesh->nodesVector.nodes[nodeID_3].rho *
+				v2 * (right - x1) * (top - x2) / hSquared;
+		}
+		else if (firstNodePosition == "TR")
+		{
+			mesh->nodesVector.nodes[nodeID_0].current[0] += mesh->nodesVector.nodes[nodeID_0].rho * 
+				v1 * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].current[1] += mesh->nodesVector.nodes[nodeID_0].rho *
+				v2 * (x1 - left) * (x2 - bottom) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_1].current[0] += mesh->nodesVector.nodes[nodeID_1].rho * 
+				v1 * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].current[1] += mesh->nodesVector.nodes[nodeID_1].rho *
+				v2 * (right - x1) * (x2 - bottom) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_2].current[0] += mesh->nodesVector.nodes[nodeID_2].rho * 
+				v1 * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].current[1] += mesh->nodesVector.nodes[nodeID_2].rho *
+				v2 * (right - x1) * (top - x2) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_3].current[0] += mesh->nodesVector.nodes[nodeID_3].rho * 
+				v1 * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].current[1] += mesh->nodesVector.nodes[nodeID_3].rho *
+				v2 * (x1 - left) * (top - x2) / hSquared;
+		}
+		else if (firstNodePosition == "TL")
+		{
+			mesh->nodesVector.nodes[nodeID_0].current[0] += mesh->nodesVector.nodes[nodeID_0].rho * 
+				v1 * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_0].current[1] += mesh->nodesVector.nodes[nodeID_0].rho *
+				v2 * (right - x1) * (x2 - bottom) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_1].current[0] += mesh->nodesVector.nodes[nodeID_1].rho * 
+				v1 * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].current[1] += mesh->nodesVector.nodes[nodeID_1].rho *
+				v2 * (right - x1) * (top - x2) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_2].current[0] += mesh->nodesVector.nodes[nodeID_2].rho * 
+				v1 * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].current[1] += mesh->nodesVector.nodes[nodeID_2].rho *
+				v2 * (x1 - left) * (top - x2) / hSquared;
+
+			mesh->nodesVector.nodes[nodeID_3].current[0] += mesh->nodesVector.nodes[nodeID_3].rho * 
+				v1 * (x1 - left) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].current[1] += mesh->nodesVector.nodes[nodeID_3].rho *
+				v2 * (x1 - left) * (x2 - bottom) / hSquared;
 		}
 	}
 	parametersList->logBrief("Charge projector exited", 1);

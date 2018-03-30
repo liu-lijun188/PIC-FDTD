@@ -29,11 +29,12 @@ void VectorNode::allocate(std::vector<NodeBase> nodes)
 
 
 // Set charge to 0 for all elements
-void VectorNode::clearCharge()
+void VectorNode::clearChargeAndCurrent()
 {
 	for (int i = 0; i < nodes.size(); i++)
 	{
 		nodes[i].charge = 0;
+		nodes[i].current = { 0.0,0.0 };
 	}
 }
 

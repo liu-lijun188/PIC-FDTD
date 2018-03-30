@@ -33,5 +33,5 @@ public:
 
 
 	// Methods
-
+	double velocityMagnitude();				//!< Calculate magnitude of velocity vector
 };

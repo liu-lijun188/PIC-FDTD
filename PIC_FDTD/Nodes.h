@@ -24,6 +24,8 @@ public:
 	double charge = -1;						//!< Charge at the grid node
 	double rho = -1;						//!< Charge density at the grid node
 	double phi = -1;						//!< Potential at the grid node
+	std::vector<double> current
+	{ -1.0, -1.0 };							//!< Current
 	std::vector<double> EMfield
 	{ -1.0, -1.0, -1.0, -1.0, -1.0, -1.0 };	//!< Electromagnetic field
 	

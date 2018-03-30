@@ -274,6 +274,26 @@ void Parameters::assignInputs()
 
 		try
 		{
+			initialTemperature = stod(valuesVector[index]);
+			if (initialTemperature < 0.0)
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid type detected for initial temperature", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Initial temperature should be positive", 3);
+		}
+		logBrief("Initial temperature: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
 			std::stringstream inputs(valuesVector[index]);
 			std::vector<std::string> outputs;
 

@@ -185,3 +185,11 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 Particle::~Particle()
 {
 }
+
+
+//!< Calculate magnitude of velocity vector
+double Particle::velocityMagnitude()
+{
+	return sqrt(this->position[1] * this->position[1] +
+		this->position[2] * this->position[2]);
+}
