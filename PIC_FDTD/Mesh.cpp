@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "Parameters.h"
 #include "Mesh.h"
@@ -13,22 +13,40 @@ Mesh::Mesh()
 
 // TODO: Pre-compute node/cell volumes, V=A for Cartesian, else depends on position
 // Constructor
-Mesh::Mesh(Parameters *localParametersList)
+Mesh::Mesh(Parameters *localParametersList, std::string type)
 {
 	localParametersList->logMessages("Starting additional mesh pre-processing", __FILE__, __LINE__, 1);
 
-	// Extract data from gridinfo
-	numCells = localParametersList->gridinfo.NCM;
-	numFaces = localParametersList->gridinfo.NFM;
-	numGhost = localParametersList->gridinfo.NGM;
-	numNodes = localParametersList->gridinfo.NNM;
-	dimension = localParametersList->gridinfo.DIM;
+	if (type == "PIC")
+	{
+		// Extract data from gridinfo
+		numCells = localParametersList->gridinfoPIC.NCM;
+		numFaces = localParametersList->gridinfoPIC.NFM;
+		numGhost = localParametersList->gridinfoPIC.NGM;
+		numNodes = localParametersList->gridinfoPIC.NNM;
+		dimension = localParametersList->gridinfoPIC.DIM;
 
-	// Extract (vector) data from gridgeo
-	cellsVector.allocate(localParametersList->gridgeo.cells);
-	facesVector.allocate(localParametersList->gridgeo.faces);
-	ghostVector.allocate(localParametersList->gridgeo.ghost);
-	nodesVector.allocate(localParametersList->gridgeo.nodes);
+		// Extract (vector) data from gridgeo
+		cellsVector.allocate(localParametersList->gridgeoPIC.cells);
+		facesVector.allocate(localParametersList->gridgeoPIC.faces);
+		ghostVector.allocate(localParametersList->gridgeoPIC.ghost);
+		nodesVector.allocate(localParametersList->gridgeoPIC.nodes);
+	}
+	else if (type == "FDTD")
+	{
+		// Extract data from gridinfo
+		numCells = localParametersList->gridinfoFDTD.NCM;
+		numFaces = localParametersList->gridinfoFDTD.NFM;
+		numGhost = localParametersList->gridinfoFDTD.NGM;
+		numNodes = localParametersList->gridinfoFDTD.NNM;
+		dimension = localParametersList->gridinfoFDTD.DIM;
+
+		// Extract (vector) data from gridgeo
+		cellsVector.allocate(localParametersList->gridgeoFDTD.cells);
+		facesVector.allocate(localParametersList->gridgeoFDTD.faces);
+		ghostVector.allocate(localParametersList->gridgeoFDTD.ghost);
+		nodesVector.allocate(localParametersList->gridgeoFDTD.nodes);
+	}
 
 	double hAverage = 0;
 
@@ -41,7 +59,7 @@ Mesh::Mesh(Parameters *localParametersList)
 
 	// Find boundaries of each cell and identify adjacent/neighbouring cells,
 	// also identify connected nodes
-	# pragma omp parallel for num_threads(localParametersList->numThreads)
+	//# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
 	{
 		// Only need to check two opposite nodes to find cell boundaries, and 
@@ -475,7 +493,7 @@ Mesh::Mesh(Parameters *localParametersList)
 
 
 	// Find connected nodes based on periodic BCs
-	# pragma omp parallel for num_threads(localParametersList->numThreads)
+	//# pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numNodes; i++)
 	{
 		// Periodic nodes in x direction

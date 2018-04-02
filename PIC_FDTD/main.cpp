@@ -1,7 +1,7 @@
 //! \file
 //! \brief Entry point into the simulation
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "Simulation.h"
 
@@ -13,7 +13,7 @@ int main()
 
 	if (parametersList.numErrors == 0)
 	{
-		parametersList.processMesh();
+		parametersList.processMesh("PIC");
 
 		// Commence simulation
 		Simulation simulation(&parametersList);

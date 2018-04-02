@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Patch class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "Patch.h"
 
@@ -20,7 +20,7 @@ Patch::Patch(Parameters *parametersList, int patchID)
 	this->patchID = patchID;
 	this->parametersList = *parametersList;
 
-	mesh = Mesh(&this->parametersList);
+	mesh = Mesh(&this->parametersList, "PIC");
 	particlesVector = VectorParticle(&this->parametersList, &mesh, patchID);
 
 	parametersList->logBrief("Initialising Tecplot output files", 1);
