@@ -26,7 +26,8 @@ class Parameters
 private:
 	// Data members
 	std::vector<std::string> valuesVector;	//!< Raw strings from input file	
-	std::string meshFile = "processedMesh";	//!< Name of processed mesh file
+	std::string meshFilePIC = "PICMesh";	//!< Name of PIC mesh file
+	std::string meshFileFDTD = "FDTDMesh";	//!< Name of FDTD mesh file
 
 	bool fileNotOpened = false;				//!< Check if input file was opened 
 	bool firstLog = true;					//!< Check if this is the first log entry

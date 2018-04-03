@@ -20,8 +20,8 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 	// for B field parameters. Alternatively, generate two separate meshes with 
 	// the appropriate coordinates to create a Yee mesh when put together.
 
-	parametersList->generateMesh("FDTD");
 	parametersList->processMesh("FDTD");
+	FDTDmesh = Mesh(parametersList, "FDTD");
 
 	// TODO: Solve Maxwell's equations to find the E field based on B, and the
 	// B field based on E. Both sets of calculations are time-shifted using the 

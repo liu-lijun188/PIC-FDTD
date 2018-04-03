@@ -47,11 +47,15 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 		ghostVector.allocate(localParametersList->gridgeoFDTD.ghost);
 		nodesVector.allocate(localParametersList->gridgeoFDTD.nodes);
 	}
+	else
+	{
+		localParametersList->logBrief("Invalid type", 3);
+	}
 
 	double hAverage = 0;
 
 	// Scale mesh
-	# pragma omp parallel for num_threads(localParametersList->numThreads)
+	// # pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numNodes; i++)
 	{
 		nodesVector.nodes[i].geometry.X *= localParametersList->meshScalingParameter;
@@ -132,7 +136,86 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 		// Identify position of adjacent cells based on location of first node,
 		// identify connected nodes, and positions of cells and nodes w.r.t.
 		// boundary of simulation domain
-		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)			// Bottom left node
+		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
+		{
+			cellsVector.cells[i].firstNodePosition = "TL";
+			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i + 1;
+			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i + 1;
+			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i + 1;
+			cellsVector.cells[i].topCellID = leftCell_4 + rightCell_4 - i + 1;
+
+			nodesVector.nodes[nodeID1].bottomNodeID = nodeID2 + 1;
+			nodesVector.nodes[nodeID1].rightNodeID = nodeID4 + 1;
+			nodesVector.nodes[nodeID2].rightNodeID = nodeID3 + 1;
+			nodesVector.nodes[nodeID2].topNodeID = nodeID1 + 1;
+			nodesVector.nodes[nodeID3].topNodeID = nodeID4 + 1;
+			nodesVector.nodes[nodeID3].leftNodeID = nodeID2 + 1;
+			nodesVector.nodes[nodeID4].leftNodeID = nodeID1 + 1;
+			nodesVector.nodes[nodeID4].bottomNodeID = nodeID3 + 1;
+
+			if (cellsVector.cells[i].leftCellID > 0 && cellsVector.cells[i].rightCellID > 0 &&
+				cellsVector.cells[i].topCellID > 0 && cellsVector.cells[i].bottomCellID > 0)
+			{
+				cellsVector.cells[i].boundaryType = "internal";
+				nodesVector.nodes[nodeID1].boundaryType = "internal";
+				nodesVector.nodes[nodeID2].boundaryType = "internal";
+				nodesVector.nodes[nodeID3].boundaryType = "internal";
+				nodesVector.nodes[nodeID4].boundaryType = "internal";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "BL";
+				nodesVector.nodes[nodeID1].boundaryType = "L";
+				nodesVector.nodes[nodeID2].boundaryType = "BL";
+				nodesVector.nodes[nodeID3].boundaryType = "B";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].topCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "TL";
+				nodesVector.nodes[nodeID1].boundaryType = "TL";
+				nodesVector.nodes[nodeID2].boundaryType = "L";
+				nodesVector.nodes[nodeID4].boundaryType = "T";
+			}
+			else if (cellsVector.cells[i].rightCellID < 1 && cellsVector.cells[i].topCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "TR";
+				nodesVector.nodes[nodeID1].boundaryType = "T";
+				nodesVector.nodes[nodeID3].boundaryType = "R";
+				nodesVector.nodes[nodeID4].boundaryType = "TR";
+			}
+			else if (cellsVector.cells[i].rightCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "BR";
+				nodesVector.nodes[nodeID2].boundaryType = "B";
+				nodesVector.nodes[nodeID3].boundaryType = "BR";
+				nodesVector.nodes[nodeID4].boundaryType = "R";
+			}
+			else if (cellsVector.cells[i].leftCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "L";
+				nodesVector.nodes[nodeID1].boundaryType = "L";
+				nodesVector.nodes[nodeID2].boundaryType = "L";
+			}
+			else if (cellsVector.cells[i].rightCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "R";
+				nodesVector.nodes[nodeID3].boundaryType = "R";
+				nodesVector.nodes[nodeID4].boundaryType = "R";
+			}
+			else if (cellsVector.cells[i].bottomCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "B";
+				nodesVector.nodes[nodeID2].boundaryType = "B";
+				nodesVector.nodes[nodeID3].boundaryType = "B";
+			}
+			else if (cellsVector.cells[i].topCellID < 1)
+			{
+				cellsVector.cells[i].boundaryType = "T";
+				nodesVector.nodes[nodeID1].boundaryType = "T";
+				nodesVector.nodes[nodeID4].boundaryType = "T";
+			}
+		}
+		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)			// Bottom left node
 		{
 			cellsVector.cells[i].firstNodePosition = "BL";
 			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i + 1;
@@ -369,91 +452,21 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 				nodesVector.nodes[nodeID2].boundaryType = "T";
 			}
 		}
-		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
-		{
-			cellsVector.cells[i].firstNodePosition = "TL";
-			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i + 1;
-			cellsVector.cells[i].bottomCellID = leftCell_2 + rightCell_2 - i + 1;
-			cellsVector.cells[i].rightCellID = leftCell_3 + rightCell_3 - i + 1;
-			cellsVector.cells[i].topCellID = leftCell_4 + rightCell_4 - i + 1;
-
-			nodesVector.nodes[nodeID1].bottomNodeID = nodeID2 + 1;
-			nodesVector.nodes[nodeID1].rightNodeID = nodeID4 + 1;
-			nodesVector.nodes[nodeID2].rightNodeID = nodeID3 + 1;
-			nodesVector.nodes[nodeID2].topNodeID = nodeID1 + 1;
-			nodesVector.nodes[nodeID3].topNodeID = nodeID4 + 1;
-			nodesVector.nodes[nodeID3].leftNodeID = nodeID2 + 1;
-			nodesVector.nodes[nodeID4].leftNodeID = nodeID1 + 1;
-			nodesVector.nodes[nodeID4].bottomNodeID = nodeID3 + 1;
-
-			if (cellsVector.cells[i].leftCellID > 0 && cellsVector.cells[i].rightCellID > 0 &&
-				cellsVector.cells[i].topCellID > 0 && cellsVector.cells[i].bottomCellID > 0)
-			{
-				cellsVector.cells[i].boundaryType = "internal";
-				nodesVector.nodes[nodeID1].boundaryType = "internal";
-				nodesVector.nodes[nodeID2].boundaryType = "internal";
-				nodesVector.nodes[nodeID3].boundaryType = "internal";
-				nodesVector.nodes[nodeID4].boundaryType = "internal";
-			}
-			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "BL";
-				nodesVector.nodes[nodeID1].boundaryType = "L";
-				nodesVector.nodes[nodeID2].boundaryType = "BL";
-				nodesVector.nodes[nodeID3].boundaryType = "B";
-			}
-			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].topCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "TL";
-				nodesVector.nodes[nodeID1].boundaryType = "TL";
-				nodesVector.nodes[nodeID2].boundaryType = "L";
-				nodesVector.nodes[nodeID4].boundaryType = "T";
-			}
-			else if (cellsVector.cells[i].rightCellID < 1 && cellsVector.cells[i].topCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "TR";
-				nodesVector.nodes[nodeID1].boundaryType = "T";
-				nodesVector.nodes[nodeID3].boundaryType = "R";
-				nodesVector.nodes[nodeID4].boundaryType = "TR";
-			}
-			else if (cellsVector.cells[i].rightCellID < 1 && cellsVector.cells[i].bottomCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "BR";
-				nodesVector.nodes[nodeID2].boundaryType = "B";
-				nodesVector.nodes[nodeID3].boundaryType = "BR";
-				nodesVector.nodes[nodeID4].boundaryType = "R";
-			}
-			else if (cellsVector.cells[i].leftCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "L";
-				nodesVector.nodes[nodeID1].boundaryType = "L";
-				nodesVector.nodes[nodeID2].boundaryType = "L";
-			}
-			else if (cellsVector.cells[i].rightCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "R";
-				nodesVector.nodes[nodeID3].boundaryType = "R";
-				nodesVector.nodes[nodeID4].boundaryType = "R";
-			}
-			else if (cellsVector.cells[i].bottomCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "B";
-				nodesVector.nodes[nodeID2].boundaryType = "B";
-				nodesVector.nodes[nodeID3].boundaryType = "B";
-			}
-			else if (cellsVector.cells[i].topCellID < 1)
-			{
-				cellsVector.cells[i].boundaryType = "T";
-				nodesVector.nodes[nodeID1].boundaryType = "T";
-				nodesVector.nodes[nodeID4].boundaryType = "T";
-			}
-		}
 	}
 
 	h = hAverage / static_cast<double>((2 * numCells));
+	if (type == "PIC" && (h - localParametersList->PICspacing) > 1e-10)
+	{
+		localParametersList->logBrief("Grid spacing not calculated correctly", 3);
+	}
+	else if (type == "FDTD" && (h - localParametersList->FDTDspacing) > 1e-10)
+	{
+		localParametersList->logBrief("Grid spacing not calculated correctly", 3);
+	}
+
 
 	// Find connected cells based on periodic BCs
-	# pragma omp parallel for num_threads(localParametersList->numThreads)
+	// # pragma omp parallel for num_threads(localParametersList->numThreads)
 	for (int i = 0; i < numCells; i++)
 	{
 		// Periodic cells in Cartesian x/cylindrical z direction

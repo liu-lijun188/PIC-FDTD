@@ -898,18 +898,20 @@ void Parameters::assignInputs()
 }
 
 
-// TODO: Fix how connectivity is calculated
 // Process mesh file
 void Parameters::generateMesh(std::string type)
 {
 	double h;
+	std::string meshFile;
 	if (type == "PIC")
 	{
 		h = PICspacing;
+		meshFile = meshFilePIC;
 	}
 	else if (type == "FDTD")
 	{
 		h = FDTDspacing;
+		meshFile = meshFileFDTD;
 	}
 
 	if (abs((domainLength / h) - round(domainLength / h)) <= 1e-10 &&
@@ -922,7 +924,7 @@ void Parameters::generateMesh(std::string type)
 		// Number of cells, nodes and faces
 		int NCM = NL * NH;
 		int NNM = (NL + 1) * (NH + 1);
-		int NFM = 2 * NCM + (NL - 2) * (NH - 2) + 5;
+		int NFM = (NL + 1) * NH + (NH + 1) * NL;
 
 		std::vector<std::vector<double>> nodesVector;
 		std::vector<std::vector<int>> cellsVector;
@@ -962,7 +964,7 @@ void Parameters::generateMesh(std::string type)
 			if (row == 0)
 			{
 				column--;
-				row = 3;
+				row = NH;
 			}
 
 			int node1 = (NH + 1)*column + row;
@@ -983,16 +985,6 @@ void Parameters::generateMesh(std::string type)
 			int node3 = cellsVector[cellID - 1][2];
 			int node4 = cellsVector[cellID - 1][3];
 
-			// Top face
-			if (nodesVector[node4 - 1][2] == 1.0 &&
-				nodesVector[node1 - 1][2] == 1.0)
-			{
-				faceID++;
-				std::vector<int> face = { -1,node4,node1,cellID,0 };
-				facesVector.push_back(face);
-				cellsVector[cellID - 1][4] = faceID;
-			}
-
 			// Left face
 			if (nodesVector[node1 - 1][2] == 1.0 &&
 				nodesVector[node2 - 1][2] == 1.0)
@@ -1000,15 +992,15 @@ void Parameters::generateMesh(std::string type)
 				faceID++;
 				std::vector<int> face = { -1,node1,node2,cellID,0 };
 				facesVector.push_back(face);
-				cellsVector[cellID - 1][5] = faceID;
+				cellsVector[cellID - 1][4] = faceID;
 			}
 			else if (node1 < node2)
 			{
 				faceID++;
 				std::vector<int> face = { 0,node2,node1,cellID - NH,cellID };
 				facesVector.push_back(face);
-				cellsVector[cellID - 1][5] = faceID;
-				cellsVector[cellID - NH - 1][7] = faceID;
+				cellsVector[cellID - 1][4] = faceID;
+				cellsVector[cellID - NH - 1][6] = faceID;
 			}
 
 			// Bottom face
@@ -1018,15 +1010,15 @@ void Parameters::generateMesh(std::string type)
 				faceID++;
 				std::vector<int> face = { -1,node2,node3,cellID,0 };
 				facesVector.push_back(face);
-				cellsVector[cellID - 1][6] = faceID;
+				cellsVector[cellID - 1][5] = faceID;
 			}
 			else if (node2 < node3)
 			{
 				faceID++;
 				std::vector<int> face = { 0,node2,node3,cellID,cellID + 1 };
 				facesVector.push_back(face);
-				cellsVector[cellID - 1][6] = faceID;
-				cellsVector[cellID][4] = faceID;
+				cellsVector[cellID - 1][5] = faceID;
+				cellsVector[cellID][7] = faceID;
 			}
 
 			// Right face
@@ -1035,6 +1027,16 @@ void Parameters::generateMesh(std::string type)
 			{
 				faceID++;
 				std::vector<int> face = { -1,node3,node4,cellID,0 };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][6] = faceID;
+			}
+
+			// Top face
+			if (nodesVector[node4 - 1][2] == 1.0 &&
+				nodesVector[node1 - 1][2] == 1.0)
+			{
+				faceID++;
+				std::vector<int> face = { -1,node4,node1,cellID,0 };
 				facesVector.push_back(face);
 				cellsVector[cellID - 1][7] = faceID;
 			}
@@ -1147,15 +1149,15 @@ void Parameters::processMesh(std::string type)
 		}
 		else
 		{
-			precessingGridSU2(meshFilePath, meshFile);
+			precessingGridSU2(meshFilePath, meshFilePIC);
 		}
-		readGridFromFile(meshFile + ".op2", gridinfoPIC, gridgeoPIC);
+		readGridFromFile(meshFilePIC + ".op2", gridinfoPIC, gridgeoPIC);
 		processingGrid(gridinfoPIC, gridgeoPIC);
 	}
 	else if (type == "FDTD")
 	{
 		generateMesh("FDTD");
-		readGridFromFile(meshFile + ".op2", gridinfoFDTD, gridgeoFDTD);
+		readGridFromFile(meshFileFDTD + ".op2", gridinfoFDTD, gridgeoFDTD);
 		processingGrid(gridinfoFDTD, gridgeoFDTD);
 	}
 }
