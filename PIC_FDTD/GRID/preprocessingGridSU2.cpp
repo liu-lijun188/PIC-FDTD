@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 09/11/2016.
+//  Last edited by Rahul Kalampattel, April 2018
+//
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -111,12 +113,12 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
             {
                 
                 getline(mesh_file_SU2, line);
-                sscanf(line.c_str(), "%d", &temp_cellType);
+                sscanf_s(line.c_str(), "%d", &temp_cellType);
                 
                 switch(temp_cellType)
                 {
                     case TRI3:
-                        sscanf(line.c_str(), "%d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -129,7 +131,7 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                         break;
                         
                     case QUAD4:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -144,7 +146,7 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                         break;
                         
                     case TETRA4:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -159,7 +161,7 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                         break;
                         
                     case HEXA8:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -182,7 +184,7 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                         break;
                         
                     case PRISM6:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -217,7 +219,7 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                 for (int n=0; n <= nnm-1; n++)
                 {
                     getline(mesh_file_SU2, line);
-                    sscanf(line.c_str(), "%lf %lf %d", &tempX[0], &tempX[1], &temp_nodeID);
+                    sscanf_s(line.c_str(), "%lf %lf %d", &tempX[0], &tempX[1], &temp_nodeID);
                     
                     node_XY[temp_nodeID][0] = tempX[0];
                     node_XY[temp_nodeID][1] = tempX[1];
@@ -229,7 +231,7 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                 for (int n=0; n <= nnm-1; n++)
                 {
                     getline(mesh_file_SU2, line);
-                    sscanf(line.c_str(), "%lf %lf %lf %d", &tempX[0], &tempX[1], &tempX[2], &temp_nodeID);
+                    sscanf_s(line.c_str(), "%lf %lf %lf %d", &tempX[0], &tempX[1], &tempX[2], &temp_nodeID);
                     
                     node_XY[temp_nodeID][0] = tempX[0];
                     node_XY[temp_nodeID][1] = tempX[1];
@@ -637,23 +639,23 @@ void precessingGridSU2(const  std::string& mesh_file_name_SU2)
                     std::vector<int> temp_BC_EleNodeList(MAX_FACE_PER_NODE);
                     
                     getline(mesh_file_SU2, line);
-                    sscanf(line.c_str(), "%d", &temp_BC_EleType);
+                    sscanf_s(line.c_str(), "%d", &temp_BC_EleType);
                     
                     switch(temp_BC_EleType)
                     {
                         case LINE:
-                            sscanf(line.c_str(), "%d %d %d", &temp_dummy, &temp_BC_EleNodeList[0],  &temp_BC_EleNodeList[1]);
+                            sscanf_s(line.c_str(), "%d %d %d", &temp_dummy, &temp_BC_EleNodeList[0],  &temp_BC_EleNodeList[1]);
                             break;
                             
                         case TRI3:
-                            sscanf(line.c_str(), "%d %d %d %d", &temp_dummy,
+                            sscanf_s(line.c_str(), "%d %d %d %d", &temp_dummy,
                                    &temp_BC_EleNodeList[0],
                                    &temp_BC_EleNodeList[1],
                                    &temp_BC_EleNodeList[2]);
                             break;
                             
                         case QUAD4:
-                            sscanf(line.c_str(), "%d %d %d %d %d", &temp_dummy,
+                            sscanf_s(line.c_str(), "%d %d %d %d %d", &temp_dummy,
                                    &temp_BC_EleNodeList[0],
                                    &temp_BC_EleNodeList[1],
                                    &temp_BC_EleNodeList[2],
@@ -1018,12 +1020,12 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
             {
                 
                 getline(mesh_file_SU2, line);
-                sscanf(line.c_str(), "%d", &temp_cellType);
+                sscanf_s(line.c_str(), "%d", &temp_cellType);
                 
                 switch(temp_cellType)
                 {
                     case TRI3:
-                        sscanf(line.c_str(), "%d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -1036,7 +1038,7 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                         break;
                         
                     case QUAD4:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -1051,7 +1053,7 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                         break;
                         
                     case TETRA4:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -1066,7 +1068,7 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                         break;
                         
                     case HEXA8:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -1089,7 +1091,7 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                         break;
                         
                     case PRISM6:
-                        sscanf(line.c_str(), "%d %d %d %d %d %d %d %d", &temp_dummy,
+                        sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d", &temp_dummy,
                                &temp_cellNode[0],
                                &temp_cellNode[1],
                                &temp_cellNode[2],
@@ -1124,7 +1126,7 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                 for (int n=0; n <= nnm-1; n++)
                 {
                     getline(mesh_file_SU2, line);
-                    sscanf(line.c_str(), "%lf %lf %d", &tempX[0], &tempX[1], &temp_nodeID);
+                    sscanf_s(line.c_str(), "%lf %lf %d", &tempX[0], &tempX[1], &temp_nodeID);
                     
                     node_XY[temp_nodeID][0] = tempX[0];
                     node_XY[temp_nodeID][1] = tempX[1];
@@ -1136,7 +1138,7 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                 for (int n=0; n <= nnm-1; n++)
                 {
                     getline(mesh_file_SU2, line);
-                    sscanf(line.c_str(), "%lf %lf %lf %d", &tempX[0], &tempX[1], &tempX[2], &temp_nodeID);
+                    sscanf_s(line.c_str(), "%lf %lf %lf %d", &tempX[0], &tempX[1], &tempX[2], &temp_nodeID);
                     
                     node_XY[temp_nodeID][0] = tempX[0];
                     node_XY[temp_nodeID][1] = tempX[1];
@@ -1544,23 +1546,23 @@ void precessingGridSU2(const std::string& mesh_file_name_SU2, std::string& out_f
                     std::vector<int> temp_BC_EleNodeList(MAX_FACE_PER_NODE);
                     
                     getline(mesh_file_SU2, line);
-                    sscanf(line.c_str(), "%d", &temp_BC_EleType);
+                    sscanf_s(line.c_str(), "%d", &temp_BC_EleType);
                     
                     switch(temp_BC_EleType)
                     {
                         case LINE:
-                            sscanf(line.c_str(), "%d %d %d", &temp_dummy, &temp_BC_EleNodeList[0],  &temp_BC_EleNodeList[1]);
+                            sscanf_s(line.c_str(), "%d %d %d", &temp_dummy, &temp_BC_EleNodeList[0],  &temp_BC_EleNodeList[1]);
                             break;
                             
                         case TRI3:
-                            sscanf(line.c_str(), "%d %d %d %d", &temp_dummy,
+                            sscanf_s(line.c_str(), "%d %d %d %d", &temp_dummy,
                                    &temp_BC_EleNodeList[0],
                                    &temp_BC_EleNodeList[1],
                                    &temp_BC_EleNodeList[2]);
                             break;
                             
                         case QUAD4:
-                            sscanf(line.c_str(), "%d %d %d %d %d", &temp_dummy,
+                            sscanf_s(line.c_str(), "%d %d %d %d %d", &temp_dummy,
                                    &temp_BC_EleNodeList[0],
                                    &temp_BC_EleNodeList[1],
                                    &temp_BC_EleNodeList[2],

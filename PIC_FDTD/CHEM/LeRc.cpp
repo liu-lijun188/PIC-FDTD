@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 24/11/2016.
+//  Last edited by Rahul Kalampattel, April 2018
+//
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -47,7 +49,7 @@ void LeRc::read(const int num, const std::vector<std::string>& line)
     
     for (int i = 1; i <= lvl; i++)
     {
-        sscanf(line[i-1].c_str(), "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+        sscanf_s(line[i-1].c_str(), "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
                &hf[i], &T1[i], &Tu[i], &a1[i], &a2[i], &a3[i], &a4[i], &a5[i], &a6[i], &a7[i], &a8[i], &b1[i], &b2[i]);
     }
     
@@ -115,7 +117,7 @@ void LeRc::read(const std::vector<std::string>& line)
     
     for (int i = 1; i <= lvl; i++)
     {
-        sscanf(line[i-1].c_str(), "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+        sscanf_s(line[i-1].c_str(), "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
                &hf[i], &T1[i], &Tu[i], &a1[i], &a2[i], &a3[i], &a4[i], &a5[i], &a6[i], &a7[i], &a8[i], &b1[i], &b2[i]);
     }
     

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorPatch class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "VectorPatch.h"
 
@@ -14,7 +14,7 @@ VectorPatch::VectorPatch()
 // Constructor
 VectorPatch::VectorPatch(Parameters *parametersList)
 {
-	parametersList->logMessages("Creating patches vector", __FILE__, __LINE__, 1);
+	parametersList->logMessages("Creating patches vector", __FILENAME__, __LINE__, 1);
 	
 	for (int i = 0; i < parametersList->numberOfPatches; i++)
 	{

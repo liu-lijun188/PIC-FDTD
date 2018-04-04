@@ -23,7 +23,7 @@ Parameters::Parameters(std::string filename)
 
 	if (inputFile.is_open())
 	{
-		logMessages("Reading inputs", __FILE__, __LINE__, 1);
+		logMessages("Reading inputs", __FILENAME__, __LINE__, 1);
 
 		while (!inputFile.eof())	// Continue until the end of the file is reached
 		{
@@ -62,7 +62,7 @@ Parameters::~Parameters()
 // Assign values to data members 
 void Parameters::assignInputs()
 {
-	logMessages("Printing input parameters", __FILE__, __LINE__, 1);
+	logMessages("Printing input parameters", __FILENAME__, __LINE__, 1);
 	if (!fileNotOpened)
 	{
 		int index = 0;
@@ -1139,7 +1139,7 @@ void Parameters::generateMesh(std::string type)
 // Process mesh file
 void Parameters::processMesh(std::string type)
 {
-	logMessages("Extracting mesh data", __FILE__, __LINE__, 1);
+	logMessages("Extracting mesh data", __FILENAME__, __LINE__, 1);
 
 	if (type == "PIC")
 	{
@@ -1214,8 +1214,10 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 
 		if (logFile.is_open())
 		{
+			char time[26];
 			std::time_t clockTime = std::chrono::system_clock::to_time_t(currentTime);
-			logFile << "Simulation start time: " << std::ctime(&clockTime) << std::endl;
+			ctime_s(time, sizeof time, &clockTime);
+			logFile << "Simulation start time: " << time << std::endl;
 			
 			logFile << std::left << std::setfill('.') << std::setw(45) << "(" + 
 				filename + ", line " + std::to_string(line) + ")" << message << 

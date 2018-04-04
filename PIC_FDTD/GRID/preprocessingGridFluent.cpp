@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 09/11/2016.
+//  Last edited by Rahul Kalampattel, April 2018
+//
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -84,19 +86,19 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
         index = -1;
         
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         switch(index)
         {
             case 2:
                 dim = 0;
-                sscanf(line.c_str(), "(%d %d)", &temp_dummy, &dim);
+                sscanf_s(line.c_str(), "(%d %d)", &temp_dummy, &dim);
                 break;
                 
             case 10:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 if (zone == 0) // READ GENERAL INFORMATION OF NODES
                 {
                     nnm = index_e - index_s + 1;
@@ -106,7 +108,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
             case 12:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 if (zone == 0) // READ GENERAL INFORMATION OF CELLS
                 {
                     ncm = index_e - index_s + 1;
@@ -116,7 +118,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
             case 13:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 
                 if (zone == 0) // READ GENERAL INFORMATION OF FACES
                 {
@@ -157,18 +159,18 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         switch(index)
         {
             case 13:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 
                 if (zone != 0)
                 {
-                    sscanf(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &temp_zone, &index_s, &index_e, &bc_type); // GETTING INDEX AND ZONE
+                    sscanf_s(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &temp_zone, &index_s, &index_e, &bc_type); // GETTING INDEX AND ZONE
                     nfm_zone 		= index_e - index_s + 1;
                     nfmZone[zone]	= nfm_zone;
                     num_zone++;
@@ -177,7 +179,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                 
                 
             case 45:
-                sscanf(line.c_str(),"(%d (%d %s", &index, &zone, zone_type); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%d %s", &index, &zone, zone_type); // GETTING INDEX AND ZONE
                 
                 // GENERAL TYPE OF BOUNDARY CONDITIONS
                 bool flagFindBCtype = false;
@@ -297,7 +299,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         if (index == 10)
         {
@@ -308,7 +310,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
             type       = -1;
             temp_dim   = -1;
             
-            sscanf(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &type, &temp_dim); // GETTING INDEX AND ZONE
+            sscanf_s(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &type, &temp_dim); // GETTING INDEX AND ZONE
             if (zone > 0)
             {
                 if (temp_dim != dim)
@@ -322,7 +324,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                         y = 0.0;
                         
                         getline(mesh_file_Fluent, line);
-                        sscanf(line.c_str(), "%lf %lf", &x, &y);
+                        sscanf_s(line.c_str(), "%lf %lf", &x, &y);
                         
                         node_ID[n]    = n;
                         node_XY[n][0] = x;
@@ -340,7 +342,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                         z = 0.0;
                         
                         getline(mesh_file_Fluent, line);
-                        sscanf(line.c_str(), "%lf %lf %lf", &x, &y, &z);
+                        sscanf_s(line.c_str(), "%lf %lf %lf", &x, &y, &z);
                         
                         node_ID[n]    = i;
                         node_XY[n][0] = x;
@@ -377,7 +379,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         if (index == 13)
         {
@@ -388,7 +390,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
             bc_type     = -1;
             type 	    = -1;
             
-            sscanf(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &bc_type, &type); // GETTING INDEX AND ZONE
+            sscanf_s(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &bc_type, &type); // GETTING INDEX AND ZONE
             
             if (zone > 0)
             {
@@ -402,7 +404,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                         {
                             int temp_faceType = -1;
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%d", &temp_faceType);
+                            sscanf_s(line.c_str(), "%d", &temp_faceType);
                             
                             std::vector<int> temp_nodeList (MAX_FACE_PER_NODE, -1);
                             int cl = -1;
@@ -411,7 +413,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                             switch (temp_faceType)
                             {
                                 case 2: // LINE
-                                    sscanf(line.c_str(), "%d %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
+                                    sscanf_s(line.c_str(), "%d %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
                                     
                                     face_ID[f]         = i;
                                     face_type[f]       = LINE;
@@ -422,7 +424,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                                     break;
                                     
                                 case 3: // Triangle
-                                    sscanf(line.c_str(), "%d %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
+                                    sscanf_s(line.c_str(), "%d %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
                                     
                                     face_ID[f]         = i;
                                     face_type[f]       = TRI3;
@@ -434,7 +436,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                                     break;
                                     
                                 case 4: // Quadrilateral
-                                    sscanf(line.c_str(), "%d %x %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
+                                    sscanf_s(line.c_str(), "%d %x %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
                                     
                                     face_ID[f]         = i;
                                     face_type[f]       = QUAD4;
@@ -465,7 +467,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                             int cr = -1;
                             
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
+                            sscanf_s(line.c_str(), "%x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
                             
                             face_ID[f]         = i;
                             face_type[f]       = LINE;
@@ -488,7 +490,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                             int cr = -1;
                             
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
+                            sscanf_s(line.c_str(), "%x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
                             
                             face_ID[f]         = i;
                             face_type[f]       = TRI3;
@@ -512,7 +514,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
                             int cr = -1;
                             
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%x %x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
+                            sscanf_s(line.c_str(), "%x %x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
                             
                             face_ID[f]         = i;
                             face_type[f]       = QUAD4;
@@ -558,7 +560,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         if (index == 12)
         {
@@ -569,10 +571,10 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent)
             type 		= -1;
             temp_type	= -1;
             
-            sscanf(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &zone, &index_s, &index_e, &type); // GETTING INDEX AND ZONE
+            sscanf_s(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &zone, &index_s, &index_e, &type); // GETTING INDEX AND ZONE
             if (zone > 0)
             {
-                sscanf(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_e, &index_e, &type, &temp_type); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_e, &index_e, &type, &temp_type); // GETTING INDEX AND ZONE
                 
                 if (type == 1)
                 {
@@ -2390,19 +2392,19 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
         index = -1;
         
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         switch(index)
         {
             case 2:
                 dim = 0;
-                sscanf(line.c_str(), "(%d %d)", &temp_dummy, &dim);
+                sscanf_s(line.c_str(), "(%d %d)", &temp_dummy, &dim);
                 break;
                 
             case 10:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 if (zone == 0) // READ GENERAL INFORMATION OF NODES
                 {
                     nnm = index_e - index_s + 1;
@@ -2412,7 +2414,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
             case 12:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 if (zone == 0) // READ GENERAL INFORMATION OF CELLS
                 {
                     ncm = index_e - index_s + 1;
@@ -2422,7 +2424,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
             case 13:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 
                 if (zone == 0) // READ GENERAL INFORMATION OF FACES
                 {
@@ -2463,18 +2465,18 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         switch(index)
         {
             case 13:
                 index_s = 0;
                 index_e = 0;
-                sscanf(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x", &temp_dummy, &zone, &index_s, &index_e); // GETTING INDEX AND ZONE
                 
                 if (zone != 0)
                 {
-                    sscanf(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &temp_zone, &index_s, &index_e, &bc_type); // GETTING INDEX AND ZONE
+                    sscanf_s(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &temp_zone, &index_s, &index_e, &bc_type); // GETTING INDEX AND ZONE
                     nfm_zone 		= index_e - index_s + 1;
                     nfmZone[zone]	= nfm_zone;
                     num_zone++;
@@ -2483,7 +2485,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                 
                 
             case 45:
-                sscanf(line.c_str(),"(%d (%d %s", &index, &zone, zone_type); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%d %s", &index, &zone, zone_type); // GETTING INDEX AND ZONE
                 
                 // GENERAL TYPE OF BOUNDARY CONDITIONS
                 bool flagFindBCtype = false;
@@ -2603,7 +2605,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         if (index == 10)
         {
@@ -2614,7 +2616,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
             type       = -1;
             temp_dim   = -1;
             
-            sscanf(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &type, &temp_dim); // GETTING INDEX AND ZONE
+            sscanf_s(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &type, &temp_dim); // GETTING INDEX AND ZONE
             if (zone > 0)
             {
                 if (temp_dim != dim)
@@ -2628,7 +2630,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                         y = 0.0;
                         
                         getline(mesh_file_Fluent, line);
-                        sscanf(line.c_str(), "%lf %lf", &x, &y);
+                        sscanf_s(line.c_str(), "%lf %lf", &x, &y);
                         
                         node_ID[n]    = n;
                         node_XY[n][0] = x;
@@ -2646,7 +2648,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                         z = 0.0;
                         
                         getline(mesh_file_Fluent, line);
-                        sscanf(line.c_str(), "%lf %lf %lf", &x, &y, &z);
+                        sscanf_s(line.c_str(), "%lf %lf %lf", &x, &y, &z);
                         
                         node_ID[n]    = i;
                         node_XY[n][0] = x;
@@ -2683,7 +2685,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         if (index == 13)
         {
@@ -2694,7 +2696,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
             bc_type     = -1;
             type 	    = -1;
             
-            sscanf(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &bc_type, &type); // GETTING INDEX AND ZONE
+            sscanf_s(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_s, &index_e, &bc_type, &type); // GETTING INDEX AND ZONE
             
             if (zone > 0)
             {
@@ -2708,7 +2710,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                         {
                             int temp_faceType = -1;
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%d", &temp_faceType);
+                            sscanf_s(line.c_str(), "%d", &temp_faceType);
                             
                             std::vector<int> temp_nodeList (MAX_FACE_PER_NODE, -1);
                             int cl = -1;
@@ -2717,7 +2719,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                             switch (temp_faceType)
                             {
                                 case 2: // LINE
-                                    sscanf(line.c_str(), "%d %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
+                                    sscanf_s(line.c_str(), "%d %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
                                     
                                     face_ID[f]         = i;
                                     face_type[f]       = LINE;
@@ -2728,7 +2730,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                                     break;
                                     
                                 case 3: // Triangle
-                                    sscanf(line.c_str(), "%d %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
+                                    sscanf_s(line.c_str(), "%d %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
                                     
                                     face_ID[f]         = i;
                                     face_type[f]       = TRI3;
@@ -2740,7 +2742,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                                     break;
                                     
                                 case 4: // Quadrilateral
-                                    sscanf(line.c_str(), "%d %x %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
+                                    sscanf_s(line.c_str(), "%d %x %x %x %x %x %x", &type, &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
                                     
                                     face_ID[f]         = i;
                                     face_type[f]       = QUAD4;
@@ -2771,7 +2773,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                             int cr = -1;
                             
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
+                            sscanf_s(line.c_str(), "%x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &cl, &cr);
                             
                             face_ID[f]         = i;
                             face_type[f]       = LINE;
@@ -2794,7 +2796,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                             int cr = -1;
                             
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
+                            sscanf_s(line.c_str(), "%x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &cl, &cr);
                             
                             face_ID[f]         = i;
                             face_type[f]       = TRI3;
@@ -2818,7 +2820,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
                             int cr = -1;
                             
                             getline(mesh_file_Fluent, line);
-                            sscanf(line.c_str(), "%x %x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
+                            sscanf_s(line.c_str(), "%x %x %x %x %x %x", &temp_nodeList[0], &temp_nodeList[1], &temp_nodeList[2], &temp_nodeList[3], &cl, &cr);
                             
                             face_ID[f]         = i;
                             face_type[f]       = QUAD4;
@@ -2864,7 +2866,7 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
     {
         index = -1;
         getline(mesh_file_Fluent, line);
-        sscanf(line.c_str(), "(%d ", &index);
+        sscanf_s(line.c_str(), "(%d ", &index);
         
         if (index == 12)
         {
@@ -2875,10 +2877,10 @@ void precessingGridFLUENT(const  std::string& mesh_file_name_Fluent, std::string
             type 		= -1;
             temp_type	= -1;
             
-            sscanf(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &zone, &index_s, &index_e, &type); // GETTING INDEX AND ZONE
+            sscanf_s(line.c_str(),"(%d (%x %x %x %d", &temp_dummy, &zone, &index_s, &index_e, &type); // GETTING INDEX AND ZONE
             if (zone > 0)
             {
-                sscanf(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_e, &index_e, &type, &temp_type); // GETTING INDEX AND ZONE
+                sscanf_s(line.c_str(),"(%d (%x %x %x %d %d)", &temp_dummy, &zone, &index_e, &index_e, &type, &temp_type); // GETTING INDEX AND ZONE
                 
                 if (type == 1)
                 {

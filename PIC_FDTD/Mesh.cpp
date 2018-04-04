@@ -15,7 +15,7 @@ Mesh::Mesh()
 // Constructor
 Mesh::Mesh(Parameters *localParametersList, std::string type)
 {
-	localParametersList->logMessages("Starting additional mesh pre-processing", __FILE__, __LINE__, 1);
+	localParametersList->logMessages("Starting additional mesh pre-processing", __FILENAME__, __LINE__, 1);
 
 	if (type == "PIC")
 	{

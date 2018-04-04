@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 24/11/2016.
+//  Last edited by Rahul Kalampattel, April 2018
+//
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -25,7 +27,7 @@ speciesBasic::~speciesBasic()
 
 void speciesBasic::read(const std::string &line)
 {
-    sscanf(line.c_str(), "%lf %lf %lf %lf %lf %d", &M, &h0, &D, &I, &q, &type);
+    sscanf_s(line.c_str(), "%lf %lf %lf %lf %lf %d", &M, &h0, &D, &I, &q, &type);
     
     m = M *AMU_SI;
     R = Ru_SI / M;
@@ -52,7 +54,7 @@ speciesNoneq::~speciesNoneq()
 
 void speciesNoneq::read(const std::string& line)
 {
-    sscanf(line.c_str(), "%lf %lf %lf %lf %lf %lf %lf", &Z_inf, &T_star, &T_ref, &omega, &d_ref, &q_rot_e, &theta_v);
+    sscanf_s(line.c_str(), "%lf %lf %lf %lf %lf %lf %lf", &Z_inf, &T_star, &T_ref, &omega, &d_ref, &q_rot_e, &theta_v);
 }
 
 
@@ -61,7 +63,7 @@ void speciesNoneq::read(const std::vector<std::string>& line, int mode)
     switch (mode)
     {
         case 0:
-            sscanf(line[0].c_str(), "%lf %lf %lf %lf %lf %lf %lf", &Z_inf, &T_star, &T_ref, &omega, &d_ref, &q_rot_e, &theta_v);
+            sscanf_s(line[0].c_str(), "%lf %lf %lf %lf %lf %lf %lf", &Z_inf, &T_star, &T_ref, &omega, &d_ref, &q_rot_e, &theta_v);
             break;
             
         case 1:
@@ -92,15 +94,15 @@ void speciesTrans::read(const std::string& line, int mode)
     switch (mode)
     {
         case 0: // Blottner
-            sscanf(line.c_str(), "%lf %lf %lf", &blottner.A, &blottner.B, &blottner.C);
+            sscanf_s(line.c_str(), "%lf %lf %lf", &blottner.A, &blottner.B, &blottner.C);
             break;
             
         case 1: // Sutherland
-            sscanf(line.c_str(), "%lf %lf %lf %lf %lf %lf", &sutherland.S, &sutherland.T_ref, &sutherland.mu_0, &sutherland.S_kappa, &sutherland.T0_kappa, &sutherland.kappa_0);
+            sscanf_s(line.c_str(), "%lf %lf %lf %lf %lf %lf", &sutherland.S, &sutherland.T_ref, &sutherland.mu_0, &sutherland.S_kappa, &sutherland.T0_kappa, &sutherland.kappa_0);
             break;
             
         case 2: // Kinetic theory model for viscosity
-            sscanf(line.c_str(), "%lf %lf", &kinetic.sigma, &kinetic.Teps);
+            sscanf_s(line.c_str(), "%lf %lf", &kinetic.sigma, &kinetic.Teps);
             break;
     }
 }

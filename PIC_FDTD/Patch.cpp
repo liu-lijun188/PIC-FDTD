@@ -14,7 +14,7 @@ Patch::Patch()
 // Constructor
 Patch::Patch(Parameters *parametersList, int patchID)
 {
-	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
+	parametersList->logMessages("Initialising patch " + std::to_string(patchID), __FILENAME__, __LINE__, 1);
 
 	time = 0;
 	this->patchID = patchID;
@@ -63,12 +63,12 @@ void Patch::startPIC()
 	numErrors = parametersList.numErrors;
 	if (numErrors == 0)
 	{
-		parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
+		parametersList.logMessages("Starting PIC loop in patch " + std::to_string(patchID), __FILENAME__, __LINE__, 1);
 
 		for (int i = 0; i < parametersList.maximumNumberOfIterations; i++)
 		{
 			parametersList.logMessages("Starting iteration " + std::to_string(i + 1),
-				__FILE__, __LINE__, 1);
+				__FILENAME__, __LINE__, 1);
 
 			// TODO: Do the classes below really need to be defined as such, or can they
 			// be replaced with functions of the Patch class? 

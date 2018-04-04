@@ -19,6 +19,8 @@
 
 #include "omp.h"
 
+#define __FILENAME__ strrchr("\\" __FILE__, '\\') + 1
+
 //! \class Parameters 
 //! \brief Handles pre-processing of input parameters
 class Parameters

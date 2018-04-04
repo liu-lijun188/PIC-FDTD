@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorParticle class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "VectorParticle.h"
 
@@ -15,7 +15,7 @@ VectorParticle::VectorParticle()
 VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patchID)
 {
 	this->patchID = patchID;
-	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILE__, __LINE__, 1);
+	parametersList->logMessages("Creating particles vector in patch " + std::to_string(patchID), __FILENAME__, __LINE__, 1);
 	
 	// If 0 < numCellsWithParticles <= numCells, seed particles in a few cells, 
 	// else seed particles in every cell
@@ -55,7 +55,7 @@ VectorParticle::VectorParticle(Parameters *parametersList, Mesh *mesh, int patch
 
 	parametersList->logMessages("Generated " + std::to_string(numParticles) +
 		" particles in " + std::to_string(parametersList->numCellsWithParticles) + 
-		" cells", __FILE__, __LINE__, 1);
+		" cells", __FILENAME__, __LINE__, 1);
 }
 
 
