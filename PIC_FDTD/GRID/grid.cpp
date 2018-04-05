@@ -3,7 +3,7 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 10/11/2016.
-//  Last edited by Rahul Kalampattel, March 2018
+//  Last edited by Rahul Kalampattel, April 2018
 //  
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
@@ -201,7 +201,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                 double z = 0.0;
                 
                 getline(mesh_file, line);
-                sscanf(line.c_str(), "%d %lf %lf %lf", &nodeID, &x, &y, &z);
+                sscanf_s(line.c_str(), "%d %lf %lf %lf", &nodeID, &x, &y, &z);
                 
                 if (nodeID != -1)
                 {
@@ -244,7 +244,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                 std::vector<int> faceNodeList(MAX_FACE_PER_NODE, -1);
                 
                 getline(mesh_file, line);
-                sscanf(line.c_str(), "%d %d %d", &faceID, &faceBC, &faceType);
+                sscanf_s(line.c_str(), "%d %d %d", &faceID, &faceBC, &faceType);
                 
                 
                 
@@ -258,7 +258,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                     switch(faceType)
                     {
                         case LINE:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d", &faceID, &faceBC, &faceType, &faceNodeList[0], &faceNodeList[1], &cl, &cr);
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d", &faceID, &faceBC, &faceType, &faceNodeList[0], &faceNodeList[1], &cl, &cr);
                             
                             faces[f].connectivity.numNodes   = 2;
                             faces[f].connectivity.nodeIDs.resize(faces[f].connectivity.numNodes);
@@ -267,7 +267,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case TRI3:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d", &faceID, &faceBC, &faceType, &faceNodeList[0], &faceNodeList[1], &faceNodeList[2], &cl, &cr);
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d", &faceID, &faceBC, &faceType, &faceNodeList[0], &faceNodeList[1], &faceNodeList[2], &cl, &cr);
                             
                             faces[f].connectivity.numNodes   = 3;
                             faces[f].connectivity.nodeIDs.resize(faces[f].connectivity.numNodes);
@@ -277,7 +277,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case QUAD4:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d", &faceID, &faceBC, &faceType, &faceNodeList[0], &faceNodeList[1], &faceNodeList[2], &faceNodeList[3], &cl, &cr);
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d", &faceID, &faceBC, &faceType, &faceNodeList[0], &faceNodeList[1], &faceNodeList[2], &faceNodeList[3], &cl, &cr);
                             
                             faces[f].connectivity.numNodes   = 4;
                             faces[f].connectivity.nodeIDs.resize(faces[f].connectivity.numNodes);
@@ -329,7 +329,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                 std::vector<int> cellFaceList(MAX_CELL_PER_FACE, -1);
                 
                 getline(mesh_file, line);
-                sscanf(line.c_str(), "%d %d %d", &cellID, &cellBC, &cellType);
+                sscanf_s(line.c_str(), "%d %d %d", &cellID, &cellBC, &cellType);
                 
                 if (cellID != -1)
                 {
@@ -341,7 +341,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                     switch(cellType)
                     {
                         case TRI3:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType, &cellNodeList[0], &cellNodeList[1], &cellNodeList[2], &cellFaceList[0], &cellFaceList[1], &cellFaceList[2]);
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType, &cellNodeList[0], &cellNodeList[1], &cellNodeList[2], &cellFaceList[0], &cellFaceList[1], &cellFaceList[2]);
                             
                             cells[c].connectivity.numNodes   = 3;
                             cells[c].connectivity.nodeIDs.resize(cells[c].connectivity.numNodes);
@@ -357,7 +357,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case QUAD4:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType, &cellNodeList[0], &cellNodeList[1], &cellNodeList[2],  &cellNodeList[3], &cellFaceList[0], &cellFaceList[1], &cellFaceList[2],  &cellFaceList[3]);
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType, &cellNodeList[0], &cellNodeList[1], &cellNodeList[2],  &cellNodeList[3], &cellFaceList[0], &cellFaceList[1], &cellFaceList[2],  &cellFaceList[3]);
                             
                             cells[c].connectivity.numNodes   = 4;
                             cells[c].connectivity.nodeIDs.resize(cells[c].connectivity.numNodes);
@@ -375,7 +375,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case TETRA4:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType, &cellNodeList[0], &cellNodeList[1], &cellNodeList[2],  &cellNodeList[3], &cellFaceList[0], &cellFaceList[1], &cellFaceList[2],  &cellFaceList[3]);
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType, &cellNodeList[0], &cellNodeList[1], &cellNodeList[2],  &cellNodeList[3], &cellFaceList[0], &cellFaceList[1], &cellFaceList[2],  &cellFaceList[3]);
                             
                             cells[c].connectivity.numNodes   = 4;
                             cells[c].connectivity.nodeIDs.resize(cells[c].connectivity.numNodes);
@@ -393,7 +393,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case HEXA8:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType,
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType,
                                    &cellNodeList[0], &cellNodeList[1], &cellNodeList[2], &cellNodeList[3], &cellNodeList[4], &cellNodeList[5], &cellNodeList[6], &cellNodeList[7],
                                    &cellFaceList[0], &cellFaceList[1], &cellFaceList[2], &cellFaceList[3], &cellFaceList[4], &cellFaceList[5]);
                             
@@ -420,7 +420,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case PRISM6:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType,
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType,
                                    &cellNodeList[0], &cellNodeList[1], &cellNodeList[2], &cellNodeList[3], &cellNodeList[4], &cellNodeList[5],
                                    &cellFaceList[0], &cellFaceList[1], &cellFaceList[2], &cellFaceList[3], &cellFaceList[4]);
                             
@@ -443,7 +443,7 @@ void GridGeo::readGrid(const std::string& mesh_file_name, GridBasicInfo& gridInf
                             break;
                             
                         case PYRAMID5:
-                            sscanf(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType,
+                            sscanf_s(line.c_str(), "%d %d %d %d %d %d %d %d %d %d %d %d %d", &cellID, &cellBC, &cellType,
                                    &cellNodeList[0], &cellNodeList[1], &cellNodeList[2], &cellNodeList[3], &cellNodeList[4],
                                    &cellFaceList[0], &cellFaceList[1], &cellFaceList[2], &cellFaceList[3], &cellFaceList[4]);
                             

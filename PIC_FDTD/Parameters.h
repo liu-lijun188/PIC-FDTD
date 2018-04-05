@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #pragma once
 
@@ -19,6 +19,8 @@
 
 #include "omp.h"
 
+#define __FILENAME__ strrchr("\\" __FILE__, '\\') + 1
+
 //! \class Parameters 
 //! \brief Handles pre-processing of input parameters
 class Parameters
@@ -26,7 +28,8 @@ class Parameters
 private:
 	// Data members
 	std::vector<std::string> valuesVector;	//!< Raw strings from input file	
-	std::string meshFile = "processedMesh";	//!< Name of processed mesh file
+	std::string meshFilePIC = "PICMesh";	//!< Name of PIC mesh file
+	std::string meshFileFDTD = "FDTDMesh";	//!< Name of FDTD mesh file
 
 	bool fileNotOpened = false;				//!< Check if input file was opened 
 	bool firstLog = true;					//!< Check if this is the first log entry
@@ -35,8 +38,10 @@ private:
 public:
 	// Data members
 	int numErrors = 0;						//!< Number of errors detected during simulation
-	GridBasicInfo gridinfo;					//!< Basic grid properties
-	GridGeo gridgeo;						//!< Detailed grid info
+	GridBasicInfo gridinfoPIC;				//!< Basic grid properties, PIC mesh
+	GridGeo gridgeoPIC;						//!< Detailed grid info, PIC mesh
+	GridBasicInfo gridinfoFDTD;				//!< Basic grid properties, FDTD mesh
+	GridGeo gridgeoFDTD;					//!< Detailed grid info, FDTD mesh
 
 
 	// Simulation parameters
@@ -62,6 +67,11 @@ public:
 	double FDTDtimeStep;					//!< Time step for FDTD solver
 
 	// Mesh parameters
+	bool userMesh;							//!< If true, use user defined mesh rather than mesh from file
+	double domainLength;					//!< Length of simulation domain
+	double domainHeight;					//!< Height of simulation domain;
+	double PICspacing;						//!< Grid spacing for PIC mesh
+	double FDTDspacing;						//!< Grid spacing for FDTD mesh
 	std::string meshFilePath;				//!< Path of mesh file
 	double meshScalingParameter;			//!< Mesh scaling parameter
 
@@ -98,7 +108,8 @@ public:
 
 	// Methods
 	void assignInputs();					//!< Assign values to data members
-	void processMesh();						//!< Process mesh file
+	void generateMesh(std::string type);	//!< Generate a user-defined mesh
+	void processMesh(std::string type);		//!< Post process mesh 
 	void logMessages(std::string message, std::string filename, 
 		int line, int messageType);			//!< Log messages, warnings and errors
 	void logBrief(std::string message, 

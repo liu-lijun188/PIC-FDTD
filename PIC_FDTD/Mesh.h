@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Mesh class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #pragma once
 
@@ -32,7 +32,8 @@ public:
 
 	// Constructor/destructor
 	Mesh();									//!< Default constructor
-	Mesh(Parameters *localParametersList);	//!< Constructor
+	Mesh(Parameters *localParametersList, 
+		std::string type);					//!< Constructor
 	~Mesh();								//!< Destructor
 
 

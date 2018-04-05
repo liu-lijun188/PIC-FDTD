@@ -12,7 +12,7 @@
 % Simulation parameters 
 %------------------------------------------------------------------------------
 timeStep: 0.00002
-maximumNumberOfIterations: 20 
+maximumNumberOfIterations: 1 
 numberOfPatches: 1
 particlesPerCell: 16
 numCellsWithParticles: 1
@@ -42,6 +42,11 @@ FDTDtimeStep: 0.0
 %------------------------------------------------------------------------------
 % Mesh parameters
 %------------------------------------------------------------------------------
+userMesh: 1
+domainLength: 0.1
+domainHeight: 0.06
+PICspacing: 0.02
+FDTDspacing: 0.01
 meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
 

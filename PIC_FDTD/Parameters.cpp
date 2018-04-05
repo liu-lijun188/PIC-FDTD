@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "Parameters.h"
 
@@ -23,7 +23,7 @@ Parameters::Parameters(std::string filename)
 
 	if (inputFile.is_open())
 	{
-		logMessages("Reading inputs", __FILE__, __LINE__, 1);
+		logMessages("Reading inputs", __FILENAME__, __LINE__, 1);
 
 		while (!inputFile.eof())	// Continue until the end of the file is reached
 		{
@@ -62,7 +62,7 @@ Parameters::~Parameters()
 // Assign values to data members 
 void Parameters::assignInputs()
 {
-	logMessages("Printing input parameters", __FILE__, __LINE__, 1);
+	logMessages("Printing input parameters", __FILENAME__, __LINE__, 1);
 	if (!fileNotOpened)
 	{
 		int index = 0;
@@ -444,6 +444,114 @@ void Parameters::assignInputs()
 		// Mesh parameters
 		try
 		{
+			int value = stoi(valuesVector[index]);
+			if (value == 1)
+			{
+				userMesh = true;
+			}
+			else if (value == 0)
+			{
+				userMesh = false;
+			}
+			else
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for user defined mesh flag", 3);
+		}
+		catch (int error)
+		{
+			logBrief("User defined mesh flag should be true (1) or false (0)", 3);
+		}
+		logBrief("User defined mesh flag: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			domainLength = stod(valuesVector[index]);
+			if (domainLength < 0.0)
+			{
+				throw 1;
+			}
+		}
+		catch (const std::exception&)
+		{
+			logBrief("Invalid argument detected for domain length", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Domain length should be positive", 3);
+		}
+		logBrief("Domain length: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			domainHeight = stod(valuesVector[index]);
+			if (domainHeight < 0.0)
+			{
+				throw 1;
+			}
+		}
+		catch (const std::exception&)
+		{
+			logBrief("Invalid argument detected for domain height", 3);
+		}
+		catch (int error)
+		{
+			logBrief("Domain height should be positive", 3);
+		}
+		logBrief("Domain height: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			PICspacing = stod(valuesVector[index]);
+			if (PICspacing < 0.0)
+			{
+				throw 1;
+			}
+		}
+		catch (const std::exception&)
+		{
+			logBrief("Invalid argument detected for PIC grid spacing", 3);
+		}
+		catch (int error)
+		{
+			logBrief("PIC grid spacing should be positive", 3);
+		}
+		logBrief("PIC grid spacing: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			FDTDspacing = stod(valuesVector[index]);
+			if (FDTDspacing < 0.0)
+			{
+				throw 1;
+			}
+		}
+		catch (const std::exception&)
+		{
+			logBrief("Invalid argument detected for FDTD grid spacing", 3);
+		}
+		catch (int error)
+		{
+			logBrief("FDTD grid spacing should be positive", 3);
+		}
+		logBrief("FDTD grid spacing: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
 			meshFilePath = valuesVector[index];
 		}
 		catch (std::invalid_argument&)
@@ -791,13 +899,267 @@ void Parameters::assignInputs()
 
 
 // Process mesh file
-void Parameters::processMesh()
+void Parameters::generateMesh(std::string type)
 {
-	logMessages("Extracting mesh data", __FILE__, __LINE__, 1);
+	double h;
+	std::string meshFile;
+	if (type == "PIC")
+	{
+		h = PICspacing;
+		meshFile = meshFilePIC;
+	}
+	else if (type == "FDTD")
+	{
+		h = FDTDspacing;
+		meshFile = meshFileFDTD;
+	}
 
-	precessingGridSU2(meshFilePath, meshFile);
-	readGridFromFile(meshFile + ".op2", gridinfo, gridgeo);
-	processingGrid(gridinfo, gridgeo);
+	if (abs((domainLength / h) - round(domainLength / h)) <= 1e-10 &&
+		abs((domainHeight / h) - round(domainHeight / h)) <= 1e-10)
+	{
+		// Number of cells in each direction (length and height)
+		int NL = round(domainLength / h);
+		int NH = round(domainHeight / h);
+
+		// Number of cells, nodes and faces
+		int NCM = NL * NH;
+		int NNM = (NL + 1) * (NH + 1);
+		int NFM = (NL + 1) * NH + (NH + 1) * NL;
+
+		std::vector<std::vector<double>> nodesVector;
+		std::vector<std::vector<int>> cellsVector;
+		std::vector<std::vector<int>> facesVector;
+
+		// Create nodes
+		int nodeID = 0;
+		for (int i = 0; i < NL + 1; i++)
+		{
+			for (int j = 0; j < NH + 1; j++)
+			{
+				std::vector<double> node = { h * i,domainHeight - h * j };
+				nodesVector.push_back(node);
+
+				// Check for boundary nodes
+				if (abs(nodesVector[nodeID][0] - 0.0) <= 1e-10 ||
+					abs(nodesVector[nodeID][0] - domainLength) <= 1e-10 ||
+					abs(nodesVector[nodeID][1] - 0.0) <= 1e-10 ||
+					abs(nodesVector[nodeID][1] - domainHeight) <= 1e-10)
+				{
+					nodesVector[nodeID].push_back(1.0);
+				}
+				else
+				{
+					nodesVector[nodeID].push_back(0.0);
+				}
+
+				nodeID++;
+			}
+		}
+
+		// Create cells and link to nodes
+		for (int cellID = 1; cellID < NCM + 1; cellID++)
+		{
+			int column = floor(cellID / NH);
+			int row = cellID % NH;
+			if (row == 0)
+			{
+				column--;
+				row = NH;
+			}
+
+			int node1 = (NH + 1)*column + row;
+			int node2 = (NH + 1)*column + row + 1;
+			int node3 = (NH + 1)*(column + 1) + row + 1;
+			int node4 = (NH + 1)*(column + 1) + row;
+
+			std::vector<int> cell = { node1,node2,node3,node4,0,0,0,0 };
+			cellsVector.push_back(cell);
+		}
+
+		// Create faces and link to nodes and cells
+		int faceID = 0;
+		for (int cellID = 1; cellID < NCM + 1; cellID++)
+		{
+			int node1 = cellsVector[cellID - 1][0];
+			int node2 = cellsVector[cellID - 1][1];
+			int node3 = cellsVector[cellID - 1][2];
+			int node4 = cellsVector[cellID - 1][3];
+
+			// Left face
+			if (nodesVector[node1 - 1][2] == 1.0 &&
+				nodesVector[node2 - 1][2] == 1.0)
+			{
+				faceID++;
+				std::vector<int> face = { -1,node1,node2,cellID,0 };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][4] = faceID;
+			}
+			else if (node1 < node2)
+			{
+				faceID++;
+				std::vector<int> face = { 0,node2,node1,cellID - NH,cellID };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][4] = faceID;
+				cellsVector[cellID - NH - 1][6] = faceID;
+			}
+
+			// Bottom face
+			if (nodesVector[node2 - 1][2] == 1.0 &&
+				nodesVector[node3 - 1][2] == 1.0)
+			{
+				faceID++;
+				std::vector<int> face = { -1,node2,node3,cellID,0 };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][5] = faceID;
+			}
+			else if (node2 < node3)
+			{
+				faceID++;
+				std::vector<int> face = { 0,node2,node3,cellID,cellID + 1 };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][5] = faceID;
+				cellsVector[cellID][7] = faceID;
+			}
+
+			// Right face
+			if (nodesVector[node3 - 1][2] == 1.0 &&
+				nodesVector[node4 - 1][2] == 1.0)
+			{
+				faceID++;
+				std::vector<int> face = { -1,node3,node4,cellID,0 };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][6] = faceID;
+			}
+
+			// Top face
+			if (nodesVector[node4 - 1][2] == 1.0 &&
+				nodesVector[node1 - 1][2] == 1.0)
+			{
+				faceID++;
+				std::vector<int> face = { -1,node4,node1,cellID,0 };
+				facesVector.push_back(face);
+				cellsVector[cellID - 1][7] = faceID;
+			}
+		}
+
+		std::ofstream mesh_file_OP2(meshFile + ".op2", std::ios::trunc);
+
+		// Write mesh file in OP2A format
+		if (mesh_file_OP2.is_open())
+		{
+			mesh_file_OP2 << "%*****************************************************" << std::endl;
+			mesh_file_OP2 << "%     OP2A Grid File using FORMAT version 1.0         " << std::endl;
+			mesh_file_OP2 << "%                                                     " << std::endl;
+			mesh_file_OP2 << "%                  Originally developed by Minkwan Kim" << std::endl;
+			mesh_file_OP2 << "%=====================================================" << std::endl;
+			mesh_file_OP2 << "% [FACE / CELL TYPE identifiers]                      " << std::endl;
+			mesh_file_OP2 << "%      Line                   :  3                    " << std::endl;
+			mesh_file_OP2 << "%      Triangle (3-nodes)     :  5                    " << std::endl;
+			mesh_file_OP2 << "%      Quadrilateral (4-nodes):  9                    " << std::endl;
+			mesh_file_OP2 << "%      Tetrahedral (4-nodes)  : 10                    " << std::endl;
+			mesh_file_OP2 << "%      Hexahedral (8-nodes)   : 12                    " << std::endl;
+			mesh_file_OP2 << "%      Prism (6-nodes)        : 13                    " << std::endl;
+			mesh_file_OP2 << "%      Pyramid (5-nodes)      : 14                    " << std::endl;
+			mesh_file_OP2 << "%                                                     " << std::endl;
+			mesh_file_OP2 << "% [BC TYPE identifiers]                               " << std::endl;
+			mesh_file_OP2 << "%      Interior               :  0                    " << std::endl;
+			mesh_file_OP2 << "%      Wall                   : 10                    " << std::endl;
+			mesh_file_OP2 << "%      Inlet                  : 20                    " << std::endl;
+			mesh_file_OP2 << "%      Outlet                 : 30                    " << std::endl;
+			mesh_file_OP2 << "%      Freestream (Far-field) : 40                    " << std::endl;
+			mesh_file_OP2 << "%      Symmetric              : 50                    " << std::endl;
+			mesh_file_OP2 << "%      Axisymmetric           : 60                    " << std::endl;
+			mesh_file_OP2 << "%      Anode                  : 70                    " << std::endl;
+			mesh_file_OP2 << "%      Cathode                : 80                    " << std::endl;
+			mesh_file_OP2 << "%      Dielectric material    : 90                    " << std::endl;
+			mesh_file_OP2 << "%                                                     " << std::endl;
+			mesh_file_OP2 << "% [DATA Format]                                       " << std::endl;
+			mesh_file_OP2 << "%    -Node Data FORMAT                                " << std::endl;
+			mesh_file_OP2 << "%     (NODE ID#)  (POSITION DATA: X Y Z)           " << std::endl;
+			mesh_file_OP2 << "%    -Face Data FORMAT                                " << std::endl;
+			mesh_file_OP2 << "%     (FACE ID#)  (BOUNDARY CONDITION)  (FACE TYPE)  (LIST OF NODE IDs) (LEFT-CELL ID) (RIGHT-CELL ID)" << std::endl;
+			mesh_file_OP2 << "%    -Cell Data FORMAT" << std::endl;
+			mesh_file_OP2 << "%     (CELL ID#)  (BOUNDARY CONDITION)  (CELL TYPE)  (LIST OF NODE IDs) (LIST OF FACE IDs)" << std::endl;
+			mesh_file_OP2 << "%=====================================================" << std::endl;
+			mesh_file_OP2 << "%                   Last Format Updated on April/2016 " << std::endl;
+			mesh_file_OP2 << "%                                       by M Kim      " << std::endl;
+			mesh_file_OP2 << "%*****************************************************" << std::endl << std::endl;
+
+			mesh_file_OP2 << "% OVERALL GRID INFORMATION" << std::endl;
+			mesh_file_OP2 << "DIM= " << 2 << std::endl;
+			mesh_file_OP2 << "NNM= " << NNM << std::endl;
+			mesh_file_OP2 << "NFM= " << NFM << std::endl;
+			mesh_file_OP2 << "NCM= " << NCM << std::endl;
+			mesh_file_OP2 << std::endl;
+
+			mesh_file_OP2 << "%%%%%%%%%%%" << std::endl;
+			mesh_file_OP2 << "NODEDATA= " << NNM << std::endl;
+			for (int n = 0; n < NNM; n++)
+			{
+				mesh_file_OP2 << std::setw(8) << n + 1 << std::setw(25) <<
+					std::scientific << std::setprecision(16) <<
+					nodesVector[n][0] << std::setw(25) << nodesVector[n][1] <<
+					std::setw(25) << 0.0 << std::endl;
+			}
+			mesh_file_OP2 << std::endl;
+
+			mesh_file_OP2 << "%%%%%%%%%%%%" << std::endl;
+			mesh_file_OP2 << "FACEDATA= " << NFM << std::endl;
+			for (int f = 0; f < NFM; f++)
+			{
+				mesh_file_OP2 << std::setw(8) << f + 1 << std::setw(8) <<
+					facesVector[f][0] << std::setw(8) << 3;
+				for (int i = 1; i <= 4; i++)
+					mesh_file_OP2 << std::setw(8) << facesVector[f][i];
+				mesh_file_OP2 << std::endl;
+			}
+			mesh_file_OP2 << std::endl;
+
+			mesh_file_OP2 << "%%%%%%%%%%%" << std::endl;
+			mesh_file_OP2 << "CELLDATA= " << NCM << std::endl;
+			for (int c = 0; c < NCM; c++)
+			{
+				mesh_file_OP2 << std::setw(8) << c + 1 << std::setw(8) << 0 <<
+					std::setw(8) << 9;
+				for (int i = 0; i < 8; i++)
+					mesh_file_OP2 << std::setw(8) << cellsVector[c][i];
+				mesh_file_OP2 << std::endl;
+			}
+			mesh_file_OP2 << std::endl;
+			mesh_file_OP2.close();
+		}
+	}
+	else
+	{
+		logBrief("Grid spacing not uniform, please adjust", 3);
+	}
+}
+
+
+// Process mesh file
+void Parameters::processMesh(std::string type)
+{
+	logMessages("Extracting mesh data", __FILENAME__, __LINE__, 1);
+
+	if (type == "PIC")
+	{
+		if (userMesh)
+		{
+			generateMesh("PIC");
+		}
+		else
+		{
+			precessingGridSU2(meshFilePath, meshFilePIC);
+		}
+		readGridFromFile(meshFilePIC + ".op2", gridinfoPIC, gridgeoPIC);
+		processingGrid(gridinfoPIC, gridgeoPIC);
+	}
+	else if (type == "FDTD")
+	{
+		generateMesh("FDTD");
+		readGridFromFile(meshFileFDTD + ".op2", gridinfoFDTD, gridgeoFDTD);
+		processingGrid(gridinfoFDTD, gridgeoFDTD);
+	}
 }
 
 
@@ -852,8 +1214,10 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 
 		if (logFile.is_open())
 		{
+			char time[26];
 			std::time_t clockTime = std::chrono::system_clock::to_time_t(currentTime);
-			logFile << "Simulation start time: " << std::ctime(&clockTime) << std::endl;
+			ctime_s(time, sizeof time, &clockTime);
+			logFile << "Simulation start time: " << time << std::endl;
 			
 			logFile << std::left << std::setfill('.') << std::setw(45) << "(" + 
 				filename + ", line " + std::to_string(line) + ")" << message << 

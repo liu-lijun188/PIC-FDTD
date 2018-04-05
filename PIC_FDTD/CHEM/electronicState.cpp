@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 24/11/2016.
+//  Last edited by Rahul Kalampattel, April 2018
+//
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -34,7 +36,7 @@ void electronicState::read(const int num, const std::vector<std::string>& line)
     
     for (int i = 0; i < lvl; i++)
     {
-        sscanf(line[i].c_str(), "%d %lf %lf", &s, &temp1, &temp2);
+        sscanf_s(line[i].c_str(), "%d %lf %lf", &s, &temp1, &temp2);
         theta[s-1] = temp1;
         g[s-1] = temp2;
     }
@@ -51,7 +53,7 @@ void electronicState::read(const std::vector<std::string>& line)
     
     for (int i = 0; i < lvl; i++)
     {
-        sscanf(line[i].c_str(), "%d %lf %lf", &s, &temp1, &temp2);
+        sscanf_s(line[i].c_str(), "%d %lf %lf", &s, &temp1, &temp2);
         
         if (s > lvl)
         {

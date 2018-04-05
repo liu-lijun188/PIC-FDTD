@@ -3,6 +3,8 @@
 //  OP2A
 //
 //  Created by Kim M.K. on 24/11/2016.
+//  Last edited by Rahul Kalampattel, April 2018
+//
 //  Copyright © 2016 Kim M.K. All rights reserved.
 //
 
@@ -34,7 +36,7 @@ void relaxation_rate_e_v::read(const int num, const std::vector<std::string>& li
     
     for (int i = 0; i < lvl; i++)
     {
-        sscanf(line[i].c_str(), "%d %lf %lf %lf", &s, &temp1, &temp2, &temp3);
+        sscanf_s(line[i].c_str(), "%d %lf %lf %lf", &s, &temp1, &temp2, &temp3);
         a[s-1] = temp1;
         b[s-1] = temp2;
         c[s-1] = temp2;
@@ -54,7 +56,7 @@ void relaxation_rate_e_v::read(const std::vector<std::string>& line)
     
     for (int i = 0; i < lvl; i++)
     {
-        sscanf(line[i].c_str(), "%d %lf %lf %lf", &s, &temp1, &temp2, &temp3);
+        sscanf_s(line[i].c_str(), "%d %lf %lf %lf", &s, &temp1, &temp2, &temp3);
         a[s-1] = temp1;
         b[s-1] = temp2;
         c[s-1] = temp2;

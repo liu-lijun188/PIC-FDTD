@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of FDTD class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #pragma once
 
@@ -14,6 +14,7 @@ class FDTD
 {
 public:
 	// Data members
+	Mesh FDTDmesh;									//!< FDTD mesh
 
 
 	// Constructor/destructor

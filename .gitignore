@@ -289,3 +289,5 @@ __pycache__/
 /rotate.mcr
 /mixed.lay
 /PIC_FDTD/cSolution_G.plt
+/PIC_FDTD/FDTDMesh.op2
+/PIC_FDTD/PICMesh.op2
