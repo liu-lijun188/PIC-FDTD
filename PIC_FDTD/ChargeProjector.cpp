@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ChargeProjector class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "ChargeProjector.h"
 
@@ -102,13 +102,13 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		
 		if (parametersList->simulationType == "electron")
 		{
-			// Assuming a cold plasma of mobile electrons and fixed ions with equal 
-			// and opposite charge, we must account for this neutralising background 
-			// charge density
+			// Assuming a cold plasma with m_ion/m_electron -> infinity, only 
+			// electrons are modelled. In order to maintain a quasi-neutral plasma,
+			// we assume fixed ions at the nodes, providing a neutralising background 
+			// charge density.
 			mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * ELECTRON_CHARGE) /
 				(mesh->numCells * hSquared * mesh->numNodes));
 		}
-		// TODO: Background charge for other simulationType == "partial"?
 	}
 
 	// Account for periodic BCs 

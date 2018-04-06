@@ -85,6 +85,11 @@ void Patch::startPIC()
 
 			MCC collisions(&parametersList, &mesh, &particlesVector);
 
+			// TODO: At certain intervals, calculate the Debye length, plasma frequency, 
+			// etc. in order to check that initial assumptions and methods used
+			// are still valid, e.g. is spatial grid still fine enough to resolve
+			// Debye length? Stability of leapfrog method and field solver??
+
 			numErrors = parametersList.numErrors;
 			if (numErrors != 0)
 			{
@@ -96,6 +101,11 @@ void Patch::startPIC()
 			// Generate plots at specified intervals
 			if (static_cast<int>(time / parametersList.timeStep) % parametersList.plotFrequency == 0)
 			{
+				// TODO: Since values of v need to be time-shifted by dt/2, the
+				// present calculation of EK is wrong - can fix by calculating 
+				// 0.5*m*v_old*v*new. Therefore, either need to store v_old at 
+				// each time step, or calculate EK at each time step in the pusher 
+				// class.
 				double EK = particlesVector.calculateEK();
 				double EP = mesh.nodesVector.calculateEP();
 

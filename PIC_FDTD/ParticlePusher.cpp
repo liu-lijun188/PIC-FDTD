@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ParticlePusher class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "ParticlePusher.h"
 
@@ -13,8 +13,9 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
-	// TODO: Consider working with normalised equations (e.g. x/h, t/timeStep, etc.)
-	// to reduce number of computations at each stage
+	// TODO: Consider working with normalised variable (e.g. x/h instead of x, 
+	// t/timeStep instead of t, v*timeStep/h instead of v, etc.) in order to reduce 
+	// number of operations at each stage
 
 	// Leapfrog method
 	if (time == 0.0)
