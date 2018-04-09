@@ -75,7 +75,8 @@ void Patch::startPIC()
 
 			ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 
-			FDTD fdtd(&parametersList, &mesh);
+			// TODO: Doesn't need to be calculated at ever time step
+			// FDTD fdtd(&parametersList, &mesh);
 
 			FieldSolver solver(&parametersList, &mesh);
 
@@ -83,7 +84,8 @@ void Patch::startPIC()
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
-			MCC collisions(&parametersList, &mesh, &particlesVector);
+			// TODO: Doesn't need to be calculated at ever time step
+			// MCC collisions(&parametersList, &mesh, &particlesVector);
 
 			// TODO: At certain intervals, calculate the Debye length, plasma frequency, 
 			// etc. in order to check that initial assumptions and methods used

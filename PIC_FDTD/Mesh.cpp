@@ -15,10 +15,11 @@ Mesh::Mesh()
 // Constructor
 Mesh::Mesh(Parameters *localParametersList, std::string type)
 {
-	localParametersList->logMessages("Starting additional mesh pre-processing", __FILENAME__, __LINE__, 1);
-
+	// TODO: Don't need to regenerate FDTD mesh every single class instance?
 	if (type == "PIC")
 	{
+		localParametersList->logMessages("Starting additional mesh pre-processing", __FILENAME__, __LINE__, 1);
+
 		// Extract data from gridinfo
 		numCells = localParametersList->gridinfoPIC.NCM;
 		numFaces = localParametersList->gridinfoPIC.NFM;
@@ -34,6 +35,8 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 	}
 	else if (type == "FDTD")
 	{
+		localParametersList->logBrief("Starting FDTD mesh pre-processing", 1);
+
 		// Extract data from gridinfo
 		numCells = localParametersList->gridinfoFDTD.NCM;
 		numFaces = localParametersList->gridinfoFDTD.NFM;

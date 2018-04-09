@@ -11,12 +11,12 @@
 %------------------------------------------------------------------------------
 % Simulation parameters 
 %------------------------------------------------------------------------------
-timeStep: 0.00002
-maximumNumberOfIterations: 1 
+timeStep: 0.00008
+maximumNumberOfIterations: 100 
 numberOfPatches: 1
-particlesPerCell: 16
-numCellsWithParticles: 1
-simulationType: partial
+particlesPerCell: 1
+numCellsWithParticles: 0
+simulationType: electron
 axisymmetric: 0
 twoStream: 0
 
@@ -24,10 +24,10 @@ twoStream: 0
 %------------------------------------------------------------------------------
 % Particle parameters
 %------------------------------------------------------------------------------
-particleDistribution: random
+particleDistribution: uniform
 initialTemperature: 1000.0
 initialPosition: 0.5,0.5
-initialVelocity: 100.0,-10.0
+initialVelocity: 0.0,0.0
 propellant: xenon
 
 
@@ -35,7 +35,7 @@ propellant: xenon
 % Field parameters
 %------------------------------------------------------------------------------
 Efield: 0.0,0.0,0.0
-Bfield: 0.0,0.0,-1.0e-7
+Bfield: 0.0,0.0,0.0
 FDTDtimeStep: 0.0
 
 
@@ -45,7 +45,7 @@ FDTDtimeStep: 0.0
 userMesh: 1
 domainLength: 0.1
 domainHeight: 0.06
-PICspacing: 0.02
+PICspacing: 0.01
 FDTDspacing: 0.01
 meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
@@ -58,9 +58,9 @@ solverType: GS
 maxSolverIterations: 50
 residualTolerance: 1e-20
 SORparameter: 1.1
-leftBCType: dirichlet
+leftBCType: periodic
 leftBCValue: 0.0
-rightBCType: dirichlet
+rightBCType: periodic
 rightBCValue: 0.0
 topBCType: dirichlet
 topBCValue: 0.0
@@ -77,7 +77,7 @@ numThreads: 1
 %------------------------------------------------------------------------------
 % Output parameters
 %------------------------------------------------------------------------------
-plotFrequency: 1
+plotFrequency: 2
 tecplotMesh: cMesh
 tecplotParticleSolution: cSolution_P
 tecplotNodeSolution: cSolution_N

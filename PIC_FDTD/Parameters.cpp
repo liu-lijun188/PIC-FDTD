@@ -1139,23 +1139,24 @@ void Parameters::generateMesh(std::string type)
 // Process mesh file
 void Parameters::processMesh(std::string type)
 {
-	logMessages("Extracting mesh data", __FILENAME__, __LINE__, 1);
-
 	if (type == "PIC")
 	{
 		if (userMesh)
 		{
+			logMessages("Generating user mesh", __FILENAME__, __LINE__, 1);
 			generateMesh("PIC");
 		}
 		else
 		{
 			precessingGridSU2(meshFilePath, meshFilePIC);
 		}
+		logMessages("Extracting mesh data", __FILENAME__, __LINE__, 1);
 		readGridFromFile(meshFilePIC + ".op2", gridinfoPIC, gridgeoPIC);
 		processingGrid(gridinfoPIC, gridgeoPIC);
 	}
 	else if (type == "FDTD")
 	{
+		logBrief("Generating FDTD mesh and extracting data", 1);
 		generateMesh("FDTD");
 		readGridFromFile(meshFileFDTD + ".op2", gridinfoFDTD, gridgeoFDTD);
 		processingGrid(gridinfoFDTD, gridgeoFDTD);
@@ -1174,61 +1175,77 @@ void Parameters::logMessages(std::string message, std::string filename, int line
 	{
 		std::ofstream logFile("logFile.txt", std::ios::app);	// Open log file, 'append' write mode
 
-		if (logFile.is_open())
-		{	
-			if (messageType == 1)
-			{
-				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
-					filename + ", line " + std::to_string(line) + ")" << message <<
-					std::right << std::setw(100 - message.length()) << "Elapsed time: " +
-					std::to_string(duration.count()) + " seconds" << std::endl;
-			}
-			else if (messageType == 2)
-			{
-				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
-					filename + ", line " + std::to_string(line) + ")" << "## WARNING: " +
-					message << std::right << std::setw(100 - message.length()) << 
-					"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
-					std::endl;
-			}
-			else if (messageType == 3)
-			{
-				logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
-					filename + ", line " + std::to_string(line) + ")" << "#### ERROR: " + 
-					message << std::right << std::setw(100 - message.length()) << 
-					"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
-					std::endl;
-				numErrors += 1;
-			}
-			logFile.close();
-		}
-		else
+		if (!logFile.is_open())
 		{
-			std::cout << "Unable to open log file!!!" << std::endl;
+			while (!logFile.is_open())
+			{
+				std::cout << "Unable to open log file!!!" << std::endl;
+				logFile.close();
+				std::ofstream logFile("logFile.txt", std::ios::app);
+				if (logFile.is_open())
+				{
+					break;
+				}
+			}
 		}
+
+		if (messageType == 1)
+		{
+			logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
+				filename + ", line " + std::to_string(line) + ")" << message <<
+				std::right << std::setw(100 - message.length()) << "Elapsed time: " +
+				std::to_string(duration.count()) + " seconds" << std::endl;
+		}
+		else if (messageType == 2)
+		{
+			logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
+				filename + ", line " + std::to_string(line) + ")" << "## WARNING: " +
+				message << std::right << std::setw(100 - message.length()) << 
+				"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
+				std::endl;
+		}
+		else if (messageType == 3)
+		{
+			logFile << std::left << std::setfill('.') << std::setw(45) << "(" +
+				filename + ", line " + std::to_string(line) + ")" << "#### ERROR: " + 
+				message << std::right << std::setw(100 - message.length()) << 
+				"Elapsed time: " + std::to_string(duration.count()) + " seconds" <<
+				std::endl;
+			numErrors += 1;
+		}
+		logFile.close();
+
 		std::cout << message << std::endl;
 	}
 	else
 	{
 		std::ofstream logFile("logFile.txt", std::ios::trunc);	// Open log file, 'truncate' write mode
 
-		if (logFile.is_open())
+		if (!logFile.is_open())
 		{
-			char time[26];
-			std::time_t clockTime = std::chrono::system_clock::to_time_t(currentTime);
-			ctime_s(time, sizeof time, &clockTime);
-			logFile << "Simulation start time: " << time << std::endl;
+			while (!logFile.is_open())
+			{
+				std::cout << "Unable to open log file!!!" << std::endl;
+				logFile.close();
+				std::ofstream logFile("logFile.txt", std::ios::trunc);
+				if (logFile.is_open())
+				{
+					break;
+				}
+			}
+		}
+
+		char time[26];
+		std::time_t clockTime = std::chrono::system_clock::to_time_t(currentTime);
+		ctime_s(time, sizeof time, &clockTime);
+		logFile << "Simulation start time: " << time << std::endl;
 			
-			logFile << std::left << std::setfill('.') << std::setw(45) << "(" + 
-				filename + ", line " + std::to_string(line) + ")" << message << 
-				std::right << std::setw(100 - message.length()) << "Elapsed time: " + 
-				std::to_string(duration.count()) + " seconds" << std::endl;
-			logFile.close();
-		}
-		else
-		{
-			std::cout << "Unable to open log file!!!" << std::endl;
-		}
+		logFile << std::left << std::setfill('.') << std::setw(45) << "(" + 
+			filename + ", line " + std::to_string(line) + ")" << message << 
+			std::right << std::setw(100 - message.length()) << "Elapsed time: " + 
+			std::to_string(duration.count()) + " seconds" << std::endl;
+		logFile.close();
+
 		std::cout << message << std::endl;
 		firstLog = false;
 	}
@@ -1241,28 +1258,34 @@ void Parameters::logBrief(std::string message, int messageType)
 {
 	std::ofstream logFile("logFile.txt", std::ios::app);	// Open log file, 'append' write mode
 
-	if (logFile.is_open())
-	{
-		if (messageType == 1)
+	if (!logFile.is_open())
+	{ 
+		while (!logFile.is_open())
 		{
-			logFile << std::left << std::setw(45) << " " << message << std::endl;
+			std::cout << "Unable to open log file!!!" << std::endl;
 			logFile.close();
-		}
-		else if (messageType == 2)
-		{
-			logFile << std::left << std::setw(45) << " " << "## WARNING: " + message << std::endl;
-			logFile.close();
-		}
-		else if (messageType == 3)
-		{
-			logFile << std::left << std::setw(45) << " " << "#### ERROR: " + message << std::endl;
-			logFile.close();
-			numErrors += 1;
+			std::ofstream logFile("logFile.txt", std::ios::app);
+			if (logFile.is_open())
+			{
+				break;
+			}
 		}
 	}
-	else
+
+	if (messageType == 1)
 	{
-		std::cout << "Unable to open log file!!!" << std::endl;
+		logFile << std::left << std::setw(45) << " " << message << std::endl;
 	}
+	else if (messageType == 2)
+	{
+		logFile << std::left << std::setw(45) << " " << "## WARNING: " + message << std::endl;
+	}
+	else if (messageType == 3)
+	{
+		logFile << std::left << std::setw(45) << " " << "#### ERROR: " + message << std::endl;
+		numErrors += 1;
+	}
+	logFile.close();
+
 	std::cout << message << std::endl;
 }

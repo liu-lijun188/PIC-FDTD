@@ -76,6 +76,16 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 	// Calculate charge density (charge / cell volume)
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
+		if (parametersList->simulationType == "electron")
+		{
+			// Assuming a cold plasma with m_ion/m_electron -> infinity, only 
+			// electrons are modelled. In order to maintain a quasi-neutral plasma,
+			// we assume fixed ions at the nodes, providing a neutralising background 
+			// charge density.
+			mesh->nodesVector.nodes[i].charge -= (particlesVector->numParticles * 
+				ELECTRON_CHARGE / mesh->numNodes);
+		}
+
 		// For cylindrical case, need to account for changing cell volume
 		if (parametersList->axisymmetric == true)
 		{
@@ -98,16 +108,6 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		{
 			// Cartesian case, assume unit cell depth
 			mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
-		}
-		
-		if (parametersList->simulationType == "electron")
-		{
-			// Assuming a cold plasma with m_ion/m_electron -> infinity, only 
-			// electrons are modelled. In order to maintain a quasi-neutral plasma,
-			// we assume fixed ions at the nodes, providing a neutralising background 
-			// charge density.
-			mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * ELECTRON_CHARGE) /
-				(mesh->numCells * hSquared * mesh->numNodes));
 		}
 	}
 
@@ -139,6 +139,10 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 			}
 		}
 	}
+
+	// TODO: Current calculation involves velocity, which at present in calculated 
+	// at half time-steps, i.e. current is also calculated at half time-steps. 
+	// Need to make sure this is ok for use with FDTD.
 
 	// Project current to nodes
 	for (int i = 0; i < particlesVector->numParticles; i++)
