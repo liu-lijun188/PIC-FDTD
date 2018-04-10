@@ -24,6 +24,8 @@ public:
 	int cellID;								//!< Current cell ID
 	std::vector<double> position;			//!< Particle position vector
 	std::vector<double> velocity;			//!< Particle velocity vector
+	std::vector<double> oldVelocity
+	{ -1.0, -1.0, -1.0 };					//!< Velocity vector from previous time step
 	std::vector<double> EMfield
 	{ -1.0, -1.0, -1.0, -1.0, -1.0, -1.0 };	//!< Electromagnetic field
 

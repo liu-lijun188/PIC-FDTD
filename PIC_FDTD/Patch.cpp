@@ -75,8 +75,10 @@ void Patch::startPIC()
 
 			ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 
-			// TODO: Doesn't need to be calculated at ever time step
-			// FDTD fdtd(&parametersList, &mesh);
+			if (static_cast<int>(time / parametersList.timeStep) % parametersList.FDTDfrequency == 0)
+			{
+				// FDTD fdtd(&parametersList, &mesh);
+			}
 
 			FieldSolver solver(&parametersList, &mesh);
 
@@ -84,8 +86,10 @@ void Patch::startPIC()
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
-			// TODO: Doesn't need to be calculated at ever time step
-			// MCC collisions(&parametersList, &mesh, &particlesVector);
+			if (static_cast<int>(time / parametersList.timeStep) % parametersList.MCCfrequency == 0)
+			{
+				// MCC collisions(&parametersList, &mesh, &particlesVector);
+			}
 
 			// TODO: At certain intervals, calculate the Debye length, plasma frequency, 
 			// etc. in order to check that initial assumptions and methods used
@@ -103,11 +107,6 @@ void Patch::startPIC()
 			// Generate plots at specified intervals
 			if (static_cast<int>(time / parametersList.timeStep) % parametersList.plotFrequency == 0)
 			{
-				// TODO: Since values of v need to be time-shifted by dt/2, the
-				// present calculation of EK is wrong - can fix by calculating 
-				// 0.5*m*v_old*v*new. Therefore, either need to store v_old at 
-				// each time step, or calculate EK at each time step in the pusher 
-				// class.
 				double EK = particlesVector.calculateEK();
 				double EP = mesh.nodesVector.calculateEP();
 

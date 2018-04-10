@@ -58,7 +58,8 @@ Parameters::~Parameters()
 {
 }
 
-
+// TODO: Default values for parameters (If no input is detected?? Or if invalid 
+// input is given?)
 // Assign values to data members 
 void Parameters::assignInputs()
 {
@@ -370,6 +371,26 @@ void Parameters::assignInputs()
 		index++;
 
 
+		try
+		{
+			MCCfrequency = stoi(valuesVector[index]);
+			if (MCCfrequency < 0)
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for MCC frequency", 3);
+		}
+		catch (int error)
+		{
+			logBrief("MCC frequency should be positive", 3);
+		}
+		logBrief("MCC frequency: " + valuesVector[index], 1);
+		index++;
+
+
 		// Field parameters
 		try
 		{
@@ -438,6 +459,26 @@ void Parameters::assignInputs()
 			logBrief("FDTD time step should be positive", 3);
 		}
 		logBrief("FDTD time step: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
+			FDTDfrequency = stoi(valuesVector[index]);
+			if (FDTDfrequency < 0)
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for FDTD frequency", 3);
+		}
+		catch (int error)
+		{
+			logBrief("FDTD frequency should be positive", 3);
+		}
+		logBrief("FDTD frequency: " + valuesVector[index], 1);
 		index++;
 
 

@@ -22,8 +22,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	{
 		for (int i = 0; i < particlesVector->numParticles; i++)
 		{
-			double v1Initial = particlesVector->particleVector[i].velocity[0];
-			double v2Initial = particlesVector->particleVector[i].velocity[1];
+			particlesVector->particleVector[i].oldVelocity = particlesVector->particleVector[i].velocity;
 
 			particlesVector->particleVector[i].velocity[0] -=
 				particlesVector->particleVector[i].basic.q * 
@@ -39,14 +38,17 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				(particlesVector->particleVector[i].EMfield[1] +
 					particlesVector->particleVector[i].EMfield[3] *
 					particlesVector->particleVector[i].velocity[2] -
-					particlesVector->particleVector[i].EMfield[5] * v1Initial) * 0.5 *
+					particlesVector->particleVector[i].EMfield[5] * 
+					particlesVector->particleVector[i].oldVelocity[0]) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 
 			particlesVector->particleVector[i].velocity[2] -=
 				particlesVector->particleVector[i].basic.q *
 				(particlesVector->particleVector[i].EMfield[2] +
-					particlesVector->particleVector[i].EMfield[4] * v1Initial -
-					particlesVector->particleVector[i].EMfield[3] * v2Initial) * 0.5 *
+					particlesVector->particleVector[i].EMfield[4] * 
+					particlesVector->particleVector[i].oldVelocity[0] -
+					particlesVector->particleVector[i].EMfield[3] * 
+					particlesVector->particleVector[i].oldVelocity[1]) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		}
 	}
@@ -60,6 +62,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// Currently available BCs: periodic, open, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{		
+		particlesVector->particleVector[i].oldVelocity = particlesVector->particleVector[i].velocity;
+
 		// Update velocity using Boris method:
 		double vMinus[3];
 		double tVector[3], sVector[3];

@@ -15,7 +15,6 @@ Mesh::Mesh()
 // Constructor
 Mesh::Mesh(Parameters *localParametersList, std::string type)
 {
-	// TODO: Don't need to regenerate FDTD mesh every single class instance?
 	if (type == "PIC")
 	{
 		localParametersList->logMessages("Starting additional mesh pre-processing", __FILENAME__, __LINE__, 1);
@@ -171,6 +170,8 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 				nodesVector.nodes[nodeID1].boundaryType = "L";
 				nodesVector.nodes[nodeID2].boundaryType = "BL";
 				nodesVector.nodes[nodeID3].boundaryType = "B";
+				numRows = i + 1;
+				numColumns = numCells / numRows;
 			}
 			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].topCellID < 1)
 			{

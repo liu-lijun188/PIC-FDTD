@@ -60,11 +60,13 @@ public:
 	std::vector<double> initialPosition;	//!< Initial particle position (if precise==true)
 	std::vector<double> initialVelocity;	//!< Initial particle velocity (if precise==true)
 	std::string propellant;					//!< Propellant used in simulation (xenon)
+	int MCCfrequency;						//!< Iterations between calls to MCC
 
 	// Field parameters
 	std::vector<double> Efield;				//!< External electric field
 	std::vector<double> Bfield;				//!< External magnetic field
 	double FDTDtimeStep;					//!< Time step for FDTD solver
+	int FDTDfrequency;						//!< Iterations between calls to FDTD
 
 	// Mesh parameters
 	bool userMesh;							//!< If true, use user defined mesh rather than mesh from file

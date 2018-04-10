@@ -65,8 +65,8 @@ double VectorNode::calculateEP()
 	double EP = 0.0;
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		// TODO: Should this use charge or rho? Does it need the 'abs'?
-		EP += abs(0.5 * nodes[i].charge * nodes[i].phi);
+		// TODO: Should this use charge or rho? Does it need an 'abs'?
+		EP += 0.5 * nodes[i].charge * nodes[i].phi;
 	}
 	return EP;
 }

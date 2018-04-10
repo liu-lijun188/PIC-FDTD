@@ -12,6 +12,10 @@
 
 class Parameters;	// Forward declaration to resolve circular dependency 
 
+// TODO: Make Mesh a base class, and have different derived classes for the PIC 
+// and FDTD meshes (e.g. don't need to add particles to the FDTD mesh, and the 
+// PIC mesh doesn't need to support interpolation like the FDTD mesh).
+
 //! \class Mesh
 //! \brief Compiled mesh properties extracted from gridinfo and gridgeo
 class Mesh
@@ -23,6 +27,8 @@ public:
 	int numGhost;							//!< Number of ghost cells
 	int numNodes;							//!< Number of nodes
 	int dimension;							//!< Dimension of mesh (2D)
+	int numRows;							//!< Number of rows of cells
+	int numColumns;							//!< Number of columns of cells
 	double h;								//!< Cell width/length (assume uniform)
 	VectorCell cellsVector;					//!< Vector of cells
 	VectorFace facesVector;					//!< Vector of faces
