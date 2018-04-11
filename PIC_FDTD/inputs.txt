@@ -12,10 +12,10 @@
 % Simulation parameters 
 %------------------------------------------------------------------------------
 timeStep: 0.00004
-maximumNumberOfIterations: 50 
+maximumNumberOfIterations: 10 
 numberOfPatches: 1
 particlesPerCell: 1
-numCellsWithParticles: 0
+numCellsWithParticles: 1
 simulationType: electron
 axisymmetric: 0
 twoStream: 0
@@ -29,7 +29,7 @@ initialTemperature: 1000.0
 initialPosition: 0.5,0.5
 initialVelocity: 0.0,0.0
 propellant: xenon
-MCCFrequency: 6
+MCCFrequency: 11
 
 
 %------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ MCCFrequency: 6
 Efield: 0.0,0.0,0.0
 Bfield: 0.0,0.0,0.0
 FDTDtimeStep: 0.0
-FDTDfrequency: 3
+FDTDfrequency: 10
 
 
 %------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ FDTDfrequency: 3
 userMesh: 1
 domainLength: 0.1
 domainHeight: 0.06
-PICspacing: 0.005
+PICspacing: 0.02
 FDTDspacing: 0.01
 meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
@@ -79,7 +79,7 @@ numThreads: 1
 %------------------------------------------------------------------------------
 % Output parameters
 %------------------------------------------------------------------------------
-plotFrequency: 1
+plotFrequency: 11
 tecplotMesh: cMesh
 tecplotParticleSolution: cSolution_P
 tecplotNodeSolution: cSolution_N

@@ -100,6 +100,8 @@ MCC::MCC(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector
 		}
 
 	}
+
+	parametersList->logBrief("Collision handler exited", 1);
 }
 
 

@@ -75,9 +75,9 @@ void Patch::startPIC()
 
 			ChargeProjector projector(&parametersList, &mesh, &particlesVector);
 
-			if (static_cast<int>(time / parametersList.timeStep) % parametersList.FDTDfrequency == 0)
+			if ((static_cast<int>(time / parametersList.timeStep) + 1) % parametersList.FDTDfrequency == 0)
 			{
-				// FDTD fdtd(&parametersList, &mesh);
+				FDTD fdtd(&parametersList, &mesh);
 			}
 
 			FieldSolver solver(&parametersList, &mesh);
@@ -86,9 +86,9 @@ void Patch::startPIC()
 
 			ParticlePusher pusher(&parametersList, &mesh, &particlesVector, time);
 
-			if (static_cast<int>(time / parametersList.timeStep) % parametersList.MCCfrequency == 0)
+			if ((static_cast<int>(time / parametersList.timeStep) + 1) % parametersList.MCCfrequency == 0)
 			{
-				// MCC collisions(&parametersList, &mesh, &particlesVector);
+				MCC collisions(&parametersList, &mesh, &particlesVector);
 			}
 
 			// TODO: At certain intervals, calculate the Debye length, plasma frequency, 
@@ -105,7 +105,7 @@ void Patch::startPIC()
 			time += parametersList.timeStep;
 
 			// Generate plots at specified intervals
-			if (static_cast<int>(time / parametersList.timeStep) % parametersList.plotFrequency == 0)
+			if ((static_cast<int>(time / parametersList.timeStep) + 1) % parametersList.plotFrequency == 0)
 			{
 				double EK = particlesVector.calculateEK();
 				double EP = mesh.nodesVector.calculateEP();

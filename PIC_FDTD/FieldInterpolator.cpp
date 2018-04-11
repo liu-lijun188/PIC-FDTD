@@ -42,7 +42,6 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		double x2 = particlesVector->particleVector[i].position[1];
 
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
-		double charge = particlesVector->particleVector[i].basic.q;
 
 		if (firstNodePosition == "TL")
 		{
