@@ -18,6 +18,8 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 	Mesh *mesh, VectorParticle *particlesVector)
 {
 	particlesVector->clearFields();
+	
+	double hSquared = mesh->h * mesh->h;
 
 	# pragma omp parallel for num_threads(parametersList->numThreads)
 	for (int i = 0; i < particlesVector->numParticles; i++)
@@ -35,8 +37,6 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		double right = mesh->cellsVector.cells[cellID].right;
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
-
-		double hSquared = mesh->h * mesh->h;
 
 		double x1 = particlesVector->particleVector[i].position[0];
 		double x2 = particlesVector->particleVector[i].position[1];
