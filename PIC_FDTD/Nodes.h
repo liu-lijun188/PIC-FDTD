@@ -1,11 +1,15 @@
 //! \file
 //! \brief Definition of Nodes class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #pragma once
 
 #include "GRID\node.hpp"
+
+// TODO: Either make Nodes a base class and derive separate classes for the PIC
+// and FDTD meshes, or just make a derived class for FDTD mesh nodes, keeping 
+// parameters like PICcellID and YeeType
 
 //! \class Nodes
 //! \brief Contains node properties, derived from NodeBase
@@ -19,7 +23,9 @@ public:
 	int bottomNodeID = -1;					//!< ID of node to bottom
 	int periodicX1NodeID = -1;				//!< ID of periodic node, x/z direction (not valid for internal nodes)
 	int	periodicX2NodeID = -1;				//!< ID of periodic node, y/r direction (not valid for internal nodes or axisymmetric cases)
-	std::string boundaryType;				//!< Position on boundary (internal if FALSE)
+	int PICcellID = -1;						//!< ID of PIC mesh cell which the FDTD mesh node occupies
+	std::string YeeType;					//!< Type of Yee node for FDTD mesh
+	std::string boundaryType;				//!< Position on boundary
 
 	double charge = -1;						//!< Charge at the grid node
 	double rho = -1;						//!< Charge density at the grid node

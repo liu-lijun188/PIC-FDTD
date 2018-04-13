@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of FieldInterpolator class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "FieldInterpolator.h"
 
@@ -18,6 +18,8 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 	Mesh *mesh, VectorParticle *particlesVector)
 {
 	particlesVector->clearFields();
+	
+	double hSquared = mesh->h * mesh->h;
 
 	# pragma omp parallel for num_threads(parametersList->numThreads)
 	for (int i = 0; i < particlesVector->numParticles; i++)
@@ -36,15 +38,23 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 		double top = mesh->cellsVector.cells[cellID].top;
 		double bottom = mesh->cellsVector.cells[cellID].bottom;
 
-		double hSquared = mesh->h * mesh->h;
-
 		double x1 = particlesVector->particleVector[i].position[0];
 		double x2 = particlesVector->particleVector[i].position[1];
 
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
-		double charge = particlesVector->particleVector[i].basic.q;
 
-		if (firstNodePosition == "BL")
+		if (firstNodePosition == "TL")
+		{
+			for (int j = 0; j < 6; j++)
+			{
+				particlesVector->particleVector[i].EMfield[j] =
+					mesh->nodesVector.nodes[nodeID_0].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+			}
+		}
+		else if (firstNodePosition == "BL")
 		{
 			for (int j = 0; j < 6; j++)
 			{
@@ -75,17 +85,6 @@ FieldInterpolator::FieldInterpolator(Parameters *parametersList,
 					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
 					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (right - x1) * (top - x2) / hSquared +
 					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
-			}
-		}
-		else if (firstNodePosition == "TL")
-		{
-			for (int j = 0; j < 6; j++)
-			{
-				particlesVector->particleVector[i].EMfield[j] =
-					mesh->nodesVector.nodes[nodeID_0].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
-					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (right - x1) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (x1 - left) * (top - x2) / hSquared +
-					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
 			}
 		}
 	}

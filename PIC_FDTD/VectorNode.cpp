@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of VectorNode class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "VectorNode.h"
 
@@ -65,6 +65,7 @@ double VectorNode::calculateEP()
 	double EP = 0.0;
 	for (int i = 0; i < nodes.size(); i++)
 	{
+		// TODO: Should this use charge or rho? Does it need an 'abs'?
 		EP += 0.5 * nodes[i].charge * nodes[i].phi;
 	}
 	return EP;

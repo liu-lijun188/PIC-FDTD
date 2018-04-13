@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of FieldSolver class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "FieldSolver.h"
 
@@ -277,52 +277,7 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 					}
 					else
 					{
-						// TODO: Does this case even physically make sense???
-						if (parametersList->leftBCType == "periodic" &&
-							parametersList->topBCType == "periodic")
-						{
-							if (mesh->nodesVector.nodes[j].boundaryType == "TL")
-							{
-								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
-									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX2NodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
-										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
-							}
-							else if (mesh->nodesVector.nodes[j].boundaryType == "BL")
-							{
-								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
-									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX2NodeID - 1].phi) +
-										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
-							}
-							else if (mesh->nodesVector.nodes[j].boundaryType == "TR")
-							{
-								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
-									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX2NodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
-										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
-							}
-							else if (mesh->nodesVector.nodes[j].boundaryType == "BR")
-							{
-								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
-									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX2NodeID - 1].phi) +
-										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
-							}
-						}
-						else if (parametersList->leftBCType == "neumann" &&
+						if (parametersList->leftBCType == "neumann" &&
 							parametersList->rightBCType == "neumann" &&
 							parametersList->topBCType == "neumann" &&
 							parametersList->bottomBCType == "neumann")

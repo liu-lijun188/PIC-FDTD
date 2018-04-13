@@ -11,12 +11,12 @@
 %------------------------------------------------------------------------------
 % Simulation parameters 
 %------------------------------------------------------------------------------
-timeStep: 0.00002
-maximumNumberOfIterations: 1 
+timeStep: 0.00004
+maximumNumberOfIterations: 10 
 numberOfPatches: 1
-particlesPerCell: 16
+particlesPerCell: 1
 numCellsWithParticles: 1
-simulationType: partial
+simulationType: electron
 axisymmetric: 0
 twoStream: 0
 
@@ -24,19 +24,21 @@ twoStream: 0
 %------------------------------------------------------------------------------
 % Particle parameters
 %------------------------------------------------------------------------------
-particleDistribution: random
+particleDistribution: uniform
 initialTemperature: 1000.0
 initialPosition: 0.5,0.5
-initialVelocity: 100.0,-10.0
+initialVelocity: 0.0,0.0
 propellant: xenon
+MCCFrequency: 11
 
 
 %------------------------------------------------------------------------------
 % Field parameters
 %------------------------------------------------------------------------------
 Efield: 0.0,0.0,0.0
-Bfield: 0.0,0.0,-1.0e-7
+Bfield: 0.0,0.0,0.0
 FDTDtimeStep: 0.0
+FDTDfrequency: 10
 
 
 %------------------------------------------------------------------------------
@@ -77,7 +79,7 @@ numThreads: 1
 %------------------------------------------------------------------------------
 % Output parameters
 %------------------------------------------------------------------------------
-plotFrequency: 1
+plotFrequency: 11
 tecplotMesh: cMesh
 tecplotParticleSolution: cSolution_P
 tecplotNodeSolution: cSolution_N

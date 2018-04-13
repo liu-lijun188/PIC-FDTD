@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of MCC class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "MCC.h"
 
@@ -58,6 +58,8 @@ MCC::MCC(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector
 		else if (parametersList->simulationType == "electron")
 		{
 			// TODO: Collisions for electrons
+			targetDensity = static_cast<double>(mesh->cellsVector.cells[particlesVector->particleVector[i].cellID - 1].listOfParticles.size()) /
+				(mesh->h * mesh->h);
 		}
 
 		// TODO: Again, in general need to use the relative velocity
@@ -98,6 +100,8 @@ MCC::MCC(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector
 		}
 
 	}
+
+	parametersList->logBrief("Collision handler exited", 1);
 }
 
 

@@ -158,13 +158,17 @@ void VectorParticle::removeParticleFromSim(int particleID)
 //!< Calculate kinetic energy
 double VectorParticle::calculateEK()
 {
-	double EK = 0;
+	double EK = 0.0;
 	for (int i = 0; i < numParticles; i++)
 	{
-		EK += 0.5 * particleVector[i].basic.m *	(particleVector[i].velocity[0] *
-			particleVector[i].velocity[0] + particleVector[i].velocity[1] *
-			particleVector[i].velocity[1] + particleVector[i].velocity[2] *
-			particleVector[i].velocity[2]);
+		// Kinetic energy is calculated by using velocities from t-0.5*dt 
+		// and t-1.5*dt (velocity and oldVelocity), in order to get a result time 
+		// centred at t-1*dt (still behind). Need abs to remove noise.
+		// TODO: Does this need to include all three velocity components?
+		EK += 0.5 * particleVector[i].basic.m *	(abs(particleVector[i].velocity[0] *
+			particleVector[i].oldVelocity[0]) + abs(particleVector[i].velocity[1] *
+			particleVector[i].oldVelocity[1]) + abs(particleVector[i].velocity[2] *
+			particleVector[i].oldVelocity[2]));
 	}
 	return EK;
 }

@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ParticlePusher class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "ParticlePusher.h"
 
@@ -13,16 +13,16 @@ ParticlePusher::ParticlePusher()
 // Constructor
 ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorParticle *particlesVector, double time)
 {
-	// TODO: Consider working with normalised equations (e.g. x/h, t/timeStep, etc.)
-	// to reduce number of computations at each stage
+	// TODO: Consider working with normalised variable (e.g. x/h instead of x, 
+	// t/timeStep instead of t, v*timeStep/h instead of v, etc.) in order to reduce 
+	// number of operations at each stage
 
 	// Leapfrog method
 	if (time == 0.0)
 	{
 		for (int i = 0; i < particlesVector->numParticles; i++)
 		{
-			double v1Initial = particlesVector->particleVector[i].velocity[0];
-			double v2Initial = particlesVector->particleVector[i].velocity[1];
+			particlesVector->particleVector[i].oldVelocity = particlesVector->particleVector[i].velocity;
 
 			particlesVector->particleVector[i].velocity[0] -=
 				particlesVector->particleVector[i].basic.q * 
@@ -38,14 +38,17 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 				(particlesVector->particleVector[i].EMfield[1] +
 					particlesVector->particleVector[i].EMfield[3] *
 					particlesVector->particleVector[i].velocity[2] -
-					particlesVector->particleVector[i].EMfield[5] * v1Initial) * 0.5 *
+					particlesVector->particleVector[i].EMfield[5] * 
+					particlesVector->particleVector[i].oldVelocity[0]) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 
 			particlesVector->particleVector[i].velocity[2] -=
 				particlesVector->particleVector[i].basic.q *
 				(particlesVector->particleVector[i].EMfield[2] +
-					particlesVector->particleVector[i].EMfield[4] * v1Initial -
-					particlesVector->particleVector[i].EMfield[3] * v2Initial) * 0.5 *
+					particlesVector->particleVector[i].EMfield[4] * 
+					particlesVector->particleVector[i].oldVelocity[0] -
+					particlesVector->particleVector[i].EMfield[3] * 
+					particlesVector->particleVector[i].oldVelocity[1]) * 0.5 *
 				parametersList->timeStep / particlesVector->particleVector[i].basic.m;
 		}
 	}
@@ -59,6 +62,8 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 	// Currently available BCs: periodic, open, Dirichlet and Neumann
 	for (int i = 0; i < particlesVector->numParticles; i++)
 	{		
+		particlesVector->particleVector[i].oldVelocity = particlesVector->particleVector[i].velocity;
+
 		// Update velocity using Boris method:
 		double vMinus[3];
 		double tVector[3], sVector[3];
@@ -262,7 +267,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// TODO: Doesn't make sense to have periodic bottom BC for cylindrical case
+				// Periodic case not valid for axisymmetric simulations
 				if (parametersList->bottomBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
@@ -309,7 +314,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				// TODO: Doesn't make sense to have periodic top BC for cylindrical case
+				// Periodic case not valid for axisymmetric simulations
 				if (parametersList->topBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
@@ -347,12 +352,23 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			particlesVector->particleVector[i].position[2] += parametersList->timeStep *
 				particlesVector->particleVector[i].velocity[2];
 
-			// TODO: Check that new position does not exceed height of simulation domain
-			double newX2 = particlesVector->particleVector[i].velocityMagnitude();
+			double newX2 = sqrt(particlesVector->particleVector[i].position[1] *
+				+particlesVector->particleVector[i].position[1] +
+				+particlesVector->particleVector[i].position[2] *
+				+particlesVector->particleVector[i].position[2]);
 
-			// TODO: Check that rotation angle is reasonable
+			if (newX2 > (static_cast<double>(mesh->numRows) * mesh->h));
+			{
+				parametersList->logBrief("Out of plane motion has exceeded domain height", 2);
+			}
+
 			double rotation = atan(abs(particlesVector->particleVector[i].position[2]) /
 				particlesVector->particleVector[i].position[1]);
+
+			if ((rotation * 180.0 / std::_Pi) > 15.0)
+			{
+				parametersList->logBrief("Out of plane rotation has exceeded 15 degrees", 2);
+			}
 
 			displacementT += newX2 - particlesVector->particleVector[i].position[1];
 			if (displacementT > 0.0 && abs(displacementT) >= mesh->h)

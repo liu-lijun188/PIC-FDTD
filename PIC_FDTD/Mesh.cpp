@@ -15,10 +15,10 @@ Mesh::Mesh()
 // Constructor
 Mesh::Mesh(Parameters *localParametersList, std::string type)
 {
-	localParametersList->logMessages("Starting additional mesh pre-processing", __FILENAME__, __LINE__, 1);
-
 	if (type == "PIC")
 	{
+		localParametersList->logMessages("Starting additional mesh pre-processing", __FILENAME__, __LINE__, 1);
+
 		// Extract data from gridinfo
 		numCells = localParametersList->gridinfoPIC.NCM;
 		numFaces = localParametersList->gridinfoPIC.NFM;
@@ -34,6 +34,8 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 	}
 	else if (type == "FDTD")
 	{
+		localParametersList->logBrief("Starting FDTD mesh pre-processing", 1);
+
 		// Extract data from gridinfo
 		numCells = localParametersList->gridinfoFDTD.NCM;
 		numFaces = localParametersList->gridinfoFDTD.NFM;
@@ -73,34 +75,34 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 		{
 			// Node vector is indexed from 0, nodeIDs from 1, hence the index shift (-1) below
 			int nodeID = cellsVector.cells[i].connectivity.nodeIDs[j] - 1;
-			double x = nodesVector.nodes[nodeID].geometry.X.element(0, 0);
-			double y = nodesVector.nodes[nodeID].geometry.X.element(1, 0);
+			double x1 = nodesVector.nodes[nodeID].geometry.X.element(0, 0);
+			double x2 = nodesVector.nodes[nodeID].geometry.X.element(1, 0);
 
 			// Identify cell boundaries
 			if (j == 0)
 			{
-				cellsVector.cells[i].left = x;
-				cellsVector.cells[i].right = x;
-				cellsVector.cells[i].top = y;
-				cellsVector.cells[i].bottom = y;
+				cellsVector.cells[i].left = x1;
+				cellsVector.cells[i].right = x1;
+				cellsVector.cells[i].top = x2;
+				cellsVector.cells[i].bottom = x2;
 			}
 			else
 			{
-				if (x < cellsVector.cells[i].left)
+				if (x1 < cellsVector.cells[i].left)
 				{
-					cellsVector.cells[i].left = x;
+					cellsVector.cells[i].left = x1;
 				}
-				else if (x > cellsVector.cells[i].right)
+				else if (x1 > cellsVector.cells[i].right)
 				{
-					cellsVector.cells[i].right = x;
+					cellsVector.cells[i].right = x1;
 				}
-				if (y < cellsVector.cells[i].bottom)
+				if (x2 < cellsVector.cells[i].bottom)
 				{
-					cellsVector.cells[i].bottom = y;
+					cellsVector.cells[i].bottom = x2;
 				}
-				else if (y > cellsVector.cells[i].top)
+				else if (x2 > cellsVector.cells[i].top)
 				{
-					cellsVector.cells[i].top = y;
+					cellsVector.cells[i].top = x2;
 				}
 			}
 		}
@@ -113,8 +115,8 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 		int nodeID2 = cellsVector.cells[i].connectivity.nodeIDs[1] - 1;
 		int nodeID3 = cellsVector.cells[i].connectivity.nodeIDs[2] - 1;
 		int nodeID4 = cellsVector.cells[i].connectivity.nodeIDs[3] - 1;
-		double x = nodesVector.nodes[nodeID1].geometry.X.element(0, 0);
-		double y = nodesVector.nodes[nodeID1].geometry.X.element(1, 0);
+		double x1 = nodesVector.nodes[nodeID1].geometry.X.element(0, 0);
+		double x2 = nodesVector.nodes[nodeID1].geometry.X.element(1, 0);
 
 		// IDs of faces and their respective adjacent cells
 		int faceID_1 = cellsVector.cells[i].connectivity.faceIDs[0] - 1;
@@ -136,7 +138,7 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 		// Identify position of adjacent cells based on location of first node,
 		// identify connected nodes, and positions of cells and nodes w.r.t.
 		// boundary of simulation domain
-		if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].top)		// Top left node
+		if (x1 == cellsVector.cells[i].left && x2 == cellsVector.cells[i].top)		// Top left node
 		{
 			cellsVector.cells[i].firstNodePosition = "TL";
 			cellsVector.cells[i].leftCellID = leftCell_1 + rightCell_1 - i + 1;
@@ -168,6 +170,8 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 				nodesVector.nodes[nodeID1].boundaryType = "L";
 				nodesVector.nodes[nodeID2].boundaryType = "BL";
 				nodesVector.nodes[nodeID3].boundaryType = "B";
+				numRows = i + 1;
+				numColumns = numCells / numRows;
 			}
 			else if (cellsVector.cells[i].leftCellID < 1 && cellsVector.cells[i].topCellID < 1)
 			{
@@ -215,7 +219,7 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
 		}
-		else if (x == cellsVector.cells[i].left && y == cellsVector.cells[i].bottom)			// Bottom left node
+		else if (x1 == cellsVector.cells[i].left && x2 == cellsVector.cells[i].bottom)			// Bottom left node
 		{
 			cellsVector.cells[i].firstNodePosition = "BL";
 			cellsVector.cells[i].bottomCellID = leftCell_1 + rightCell_1 - i + 1;
@@ -294,7 +298,7 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 				nodesVector.nodes[nodeID4].boundaryType = "T";
 			}
 		}
-		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].bottom)	// Bottom right node
+		else if (x1 == cellsVector.cells[i].right && x2 == cellsVector.cells[i].bottom)	// Bottom right node
 		{
 			cellsVector.cells[i].firstNodePosition = "BR";
 			cellsVector.cells[i].rightCellID = leftCell_1 + rightCell_1 - i + 1;
@@ -373,7 +377,7 @@ Mesh::Mesh(Parameters *localParametersList, std::string type)
 				nodesVector.nodes[nodeID3].boundaryType = "T";
 			}
 		}
-		else if (x == cellsVector.cells[i].right && y == cellsVector.cells[i].top)		// Top right node
+		else if (x1 == cellsVector.cells[i].right && x2 == cellsVector.cells[i].top)		// Top right node
 		{
 			cellsVector.cells[i].firstNodePosition = "TR";
 			cellsVector.cells[i].topCellID = leftCell_1 + rightCell_1 - i + 1;

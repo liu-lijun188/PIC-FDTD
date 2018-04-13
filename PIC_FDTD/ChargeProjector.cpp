@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of ChargeProjector class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "ChargeProjector.h"
 
@@ -42,7 +42,14 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
 		double charge = particlesVector->particleVector[i].basic.q;
 
-		if (firstNodePosition == "BL")
+		if (firstNodePosition == "TL")
+		{
+			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x1) * (x2 - bottom) / hSquared;
+			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x1) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x1 - left) * (top - x2) / hSquared;
+			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x1 - left) * (x2 - bottom) / hSquared;
+		}
+		else if (firstNodePosition == "BL")
 		{
 			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x1) * (top - x2) / hSquared;
 			mesh->nodesVector.nodes[nodeID_1].charge += charge * (x1 - left) * (top - x2) / hSquared;
@@ -64,18 +71,21 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 			mesh->nodesVector.nodes[nodeID_2].charge += charge * (right - x1) * (top - x2) / hSquared;
 			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x1 - left) * (top - x2) / hSquared;
 		}
-		else if (firstNodePosition == "TL")
-		{	
-			mesh->nodesVector.nodes[nodeID_0].charge += charge * (right - x1) * (x2 - bottom) / hSquared;
-			mesh->nodesVector.nodes[nodeID_1].charge += charge * (right - x1) * (top - x2) / hSquared;
-			mesh->nodesVector.nodes[nodeID_2].charge += charge * (x1 - left) * (top - x2) / hSquared;
-			mesh->nodesVector.nodes[nodeID_3].charge += charge * (x1 - left) * (x2 - bottom) / hSquared;
-		}
 	}
 
 	// Calculate charge density (charge / cell volume)
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
+		if (parametersList->simulationType == "electron")
+		{
+			// Assuming a cold plasma with m_ion/m_electron -> infinity, only 
+			// electrons are modelled. In order to maintain a quasi-neutral plasma,
+			// we assume fixed ions at the nodes, providing a neutralising background 
+			// charge density.
+			mesh->nodesVector.nodes[i].charge -= (particlesVector->numParticles * 
+				ELECTRON_CHARGE / mesh->numNodes);
+		}
+
 		// For cylindrical case, need to account for changing cell volume
 		if (parametersList->axisymmetric == true)
 		{
@@ -97,19 +107,30 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 		else
 		{
 			// Cartesian case, assume unit cell depth
-			mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
+			if (mesh->nodesVector.nodes[i].boundaryType == "internal")
+			{
+				mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / hSquared;
+			}
+			else if (mesh->nodesVector.nodes[i].boundaryType == "L" ||
+				mesh->nodesVector.nodes[i].boundaryType == "R" || 
+				mesh->nodesVector.nodes[i].boundaryType == "T" || 
+				mesh->nodesVector.nodes[i].boundaryType == "B")
+			{
+				mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / (0.5 * hSquared);
+			}
+			else
+			{
+				mesh->nodesVector.nodes[i].rho = mesh->nodesVector.nodes[i].charge / (0.25 * hSquared);
+			}
 		}
-		
-		if (parametersList->simulationType == "electron")
-		{
-			// Assuming a cold plasma of mobile electrons and fixed ions with equal 
-			// and opposite charge, we must account for this neutralising background 
-			// charge density
-			mesh->nodesVector.nodes[i].rho -= ((particlesVector->numParticles * ELECTRON_CHARGE) /
-				(mesh->numCells * hSquared * mesh->numNodes));
-		}
-		// TODO: Background charge for other simulationType == "partial"?
 	}
+
+	double sumT = 0.0;
+	for (int i = 0; i < mesh->numNodes; i++)
+	{
+		sumT += mesh->nodesVector.nodes[i].rho;
+	}
+	sumT += 0.0;
 
 	// Account for periodic BCs 
 	for (int i = 0; i < mesh->numNodes; i++)
@@ -139,6 +160,11 @@ ChargeProjector::ChargeProjector(Parameters *parametersList,
 			}
 		}
 	}
+
+	// TODO: Current calculation involves velocity, which at present in calculated 
+	// at half time-steps, i.e. current is also calculated at half time-steps. 
+	// Need to make sure this is ok for use with FDTD. If not, can average between
+	// velocity and oldVelocity, like in EK calculation (VectorParticle).
 
 	// Project current to nodes
 	for (int i = 0; i < particlesVector->numParticles; i++)
