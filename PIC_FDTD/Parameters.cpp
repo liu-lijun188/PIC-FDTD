@@ -831,6 +831,14 @@ void Parameters::assignInputs()
 		{
 			logBrief("Periodic boundary conditions must be used on top and bottom", 3);
 		}
+		if (bottomBCType == "periodic" && axisymmetric == true)
+		{
+			logBrief("Cannot have periodic top/bottom BCs in axisymmetric simulations", 3);
+		}
+		if (bottomBCType == "periodic" && rightBCType == "periodic")
+		{
+			logBrief("Cannot have periodic BCs in all four directions", 3);
+		}
 		logBrief("Bottom boundary condition type: " + valuesVector[index], 1);
 		index++;
 

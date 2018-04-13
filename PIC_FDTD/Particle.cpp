@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Particle class 
 //! \author Rahul Kalampattel
-//! \date Last updated March 2018
+//! \date Last updated April 2018
 
 #include "Particle.h"
 
@@ -76,16 +76,6 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	// cells closer to the axis will have different numbers of particles
 	// compared to cells at a distance
 
-	// Check that particle remains inside cell
-	// TODO: Delete this or comment out, not needed apart from testing
-	if (this->position[0] < mesh->cellsVector.cells[this->cellID - 1].left ||
-		this->position[0] > mesh->cellsVector.cells[this->cellID - 1].right ||
-		this->position[1] < mesh->cellsVector.cells[this->cellID - 1].bottom ||
-		this->position[1] > mesh->cellsVector.cells[this->cellID - 1].top)
-	{
-		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
-	}
-
 	// TODO: Select velocities from a Maxwellian distribution
 	// Initial particle velocity
 	velocity.push_back(parametersList->initialVelocity[0]);	// u
@@ -150,16 +140,6 @@ Particle::Particle(Parameters *parametersList, Mesh *mesh, int patchID, int cell
 	position.push_back(mesh->cellsVector.cells[cellID - 1].top * random2 +
 		mesh->cellsVector.cells[cellID - 1].bottom * (1 - random2));	// Cartesian y/cylindrical r
 	position.push_back(0.0);											// Cartesian z/cylindrical theta
-
-	// Check that particle remains inside cell
-	// TODO: Delete this or comment out, not needed apart from testing
-	if (this->position[0] < mesh->cellsVector.cells[this->cellID - 1].left ||
-		this->position[0] > mesh->cellsVector.cells[this->cellID - 1].right ||
-		this->position[1] < mesh->cellsVector.cells[this->cellID - 1].bottom ||
-		this->position[1] > mesh->cellsVector.cells[this->cellID - 1].top)
-	{
-		parametersList->logBrief("Particle " + std::to_string(this->particleID) + " has been pushed out of initial cell", 3);
-	}
 
 	// TODO: Select velocities from a Maxwellian distribution
 	// Initial particle velocity

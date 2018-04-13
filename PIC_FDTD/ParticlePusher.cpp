@@ -267,7 +267,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses bottom boundary
 			else
 			{
-				// TODO: Doesn't make sense to have periodic bottom BC for cylindrical case
+				// Periodic case not valid for axisymmetric simulations
 				if (parametersList->bottomBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
@@ -314,7 +314,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			// Particle crosses top boundary
 			else
 			{
-				// TODO: Doesn't make sense to have periodic top BC for cylindrical case
+				// Periodic case not valid for axisymmetric simulations
 				if (parametersList->topBCType == "periodic")
 				{
 					particlesVector->particleVector[i].cellID =
@@ -352,12 +352,23 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 			particlesVector->particleVector[i].position[2] += parametersList->timeStep *
 				particlesVector->particleVector[i].velocity[2];
 
-			// TODO: Check that new position does not exceed height of simulation domain
-			double newX2 = particlesVector->particleVector[i].velocityMagnitude();
+			double newX2 = sqrt(particlesVector->particleVector[i].position[1] *
+				+particlesVector->particleVector[i].position[1] +
+				+particlesVector->particleVector[i].position[2] *
+				+particlesVector->particleVector[i].position[2]);
 
-			// TODO: Check that rotation angle is reasonable
+			if (newX2 > (static_cast<double>(mesh->numRows) * mesh->h));
+			{
+				parametersList->logBrief("Out of plane motion has exceeded domain height", 2);
+			}
+
 			double rotation = atan(abs(particlesVector->particleVector[i].position[2]) /
 				particlesVector->particleVector[i].position[1]);
+
+			if ((rotation * 180.0 / std::_Pi) > 15.0)
+			{
+				parametersList->logBrief("Out of plane rotation has exceeded 15 degrees", 2);
+			}
 
 			displacementT += newX2 - particlesVector->particleVector[i].position[1];
 			if (displacementT > 0.0 && abs(displacementT) >= mesh->h)
