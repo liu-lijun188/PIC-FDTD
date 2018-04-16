@@ -428,7 +428,70 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 			}
 			else if (parametersList->solverType == "FFT")
 			{
-				// TODO: Implement FFT based solver
+				// TODO: Implement FFT based solver for different BC cases
+				// TODO: Check that number of row and columns is odd, so that
+				// number of nodes in each direction is even
+				int nx = mesh->numColumns + 1, ny = mesh->numRows + 1;
+
+				// Allocate memory for signal (real) and transformed signal (complex)
+				double *signal;
+				signal = (double*)fftw_malloc(sizeof(double) * mesh->numNodes);
+				fftw_complex *transform;
+				transform = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * 
+					ny * (1 + nx/2));
+
+				// Copy charge density from nodesVector into signal array
+				for (int i = 0; i < ny; i++)
+				{
+					for (int j = 0; j < nx; j++)
+					{
+						signal[i*nx + j] =
+							mesh->nodesVector.nodes[i*nx + j].rho;
+					}
+				}
+
+				// Create and execute plan for forwards DFT
+				fftw_plan forwardsPlan = fftw_plan_dft_r2c_2d(ny, nx, signal, 
+					transform, FFTW_ESTIMATE);
+				fftw_execute(forwardsPlan);
+
+				// Calculate (transformed) potential phi based on (transformed)
+				// charge density				
+				double W = exp(2.0 * std::_Pi * sqrt(-1.0) / static_cast<double>(nx));
+				double Wm = 1, Wn = 1;
+
+				// Current formulation is only true for periodic BCs
+				for (int i = 0; i < nx; i++)
+				{
+					for (int j = 0; j < ny; j++)
+					{
+						double denominator = 4 - Wm - Wn - 1.0 / Wm - 1.0 / Wn;
+						if (denominator != 0.0)
+						{
+							transform[i*ny + j][0] *= mesh->h * mesh->h / denominator;
+							// TODO: Need to multiply complex part as well??
+						}
+						Wn *= W;
+					}
+					Wm *= W;
+				}
+
+				// Create and execute plan for backwards (inverse) DFT
+				fftw_plan backwardsPlan = fftw_plan_dft_c2r_2d(ny,
+					nx, transform, signal, FFTW_ESTIMATE);
+				fftw_execute(backwardsPlan);
+
+				// TODO: Since FFTW computes unnormalised DFTs, this results in
+				// a twice transformed array (forwards and back) being scaled by
+				// ny * nx -> Need to divide signal array by this factor
+		
+				// TODO: Write data from signal array back to nodesVector elements
+
+				// Destroy plans and memory blocks allocated with fftw_malloc
+				fftw_destroy_plan(forwardsPlan);
+				fftw_destroy_plan(backwardsPlan);
+				fftw_free(signal);
+				fftw_free(transform);
 			}
 		}
 	}
