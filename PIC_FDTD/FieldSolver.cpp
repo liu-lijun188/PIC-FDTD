@@ -145,6 +145,54 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 							(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 				}
 			}
+
+			// Check convergence
+			if (i != 0 && i % 9 == 0)
+			{
+				double residualSum = 0;
+
+				for (int j = 0; j < mesh->numNodes; j++)
+				{
+					// TODO: Include other nodes in calculating residual sum (???)
+					if (mesh->nodesVector.nodes[j].boundaryType == "internal")
+					{
+						double residual = 
+							(mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+							(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+							(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi -
+							4 * mesh->nodesVector.nodes[j].phi;
+
+						residualSum += residual * residual;
+					}
+				}
+
+				if (sqrt(residualSum / static_cast<double>(mesh->numNodes)) < parametersList->residualTolerance)
+				{
+					parametersList->logBrief("Solver convergence criteria met", 1);
+					break;
+				}
+			}
+
+			// Account for periodic BCs 
+			for (int i = 0; i < mesh->numNodes; i++)
+			{
+				if (parametersList->leftBCType == "periodic")
+				{
+					if (mesh->nodesVector.nodes[i].boundaryType == "TL" ||
+						mesh->nodesVector.nodes[i].boundaryType == "L" ||
+						mesh->nodesVector.nodes[i].boundaryType == "BL")
+					{
+						mesh->nodesVector.nodes[i].phi = 0.5 * (mesh->nodesVector.nodes[i].phi +
+							mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi);
+						mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi =
+							mesh->nodesVector.nodes[i].phi;
+					}
+				}
+			}
 		}
 		else
 		{
@@ -205,11 +253,15 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						nx, transform, signal, FFTW_ESTIMATE);
 					fftw_execute(backwardsPlan);
 
-					// TODO: Since FFTW computes unnormalised DFTs, this results in
-					// a twice transformed array (forwards and back) being scaled by
-					// ny * nx -> Need to divide signal array by this factor
-
-					// TODO: Write data from signal array back to nodesVector elements
+					// Write data from signal array back to nodesVector phi
+					for (int i = 0; i < ny; i++)
+					{
+						for (int j = 0; j < nx; j++)
+						{
+							mesh->nodesVector.nodes[i*nx + j].phi = signal[i*nx + j] /
+								static_cast<double>(ny * nx);
+						}
+					}
 
 					// Destroy plans and memory blocks allocated with fftw_malloc
 					fftw_destroy_plan(forwardsPlan);
@@ -249,8 +301,8 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						for (int j = 0; j < ny; j++)
 						{
 							double denominator = 4.0 - 2.0 * 
-								(cos(std::_Pi * (double)(i + 2) / (double)(nx + 1)) + 
-								cos(std::_Pi * (double)(j + 2) / (double)(ny + 1)));
+								(cos(std::_Pi * static_cast<double>(i + 1) / static_cast<double>(nx + 1)) +
+								cos(std::_Pi * static_cast<double>(j + 1) / static_cast<double>(ny + 1)));
 							if (denominator != 0.0)
 							{
 								transform[i*ny + j] *= mesh->h * mesh->h / denominator;
@@ -263,11 +315,15 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						signal, FFTW_RODFT00, FFTW_RODFT00, FFTW_ESTIMATE);
 					fftw_execute(backwardsPlan);
 
-					// TODO: Since FFTW computes unnormalised DFTs, this results in
-					// a twice transformed array (forwards and back) being scaled by
-					// ny * nx -> Need to divide signal array by this factor
-
-					// TODO: Write data from signal array back to nodesVector elements
+					// Write data from signal array back to nodesVector phi
+					for (int i = 0; i < ny; i++)
+					{
+						for (int j = 0; j < nx; j++)
+						{
+							mesh->nodesVector.nodes[i*nx + j].phi = signal[i*nx + j] /
+								static_cast<double>((2.0 * (ny + 1.0)) * (2.0 * (nx + 1.0)));
+						}
+					}
 
 					// Destroy plans and memory blocks allocated with fftw_malloc
 					fftw_destroy_plan(forwardsPlan);
@@ -307,8 +363,8 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						for (int j = 0; j < ny; j++)
 						{
 							double denominator = 4.0 - 2.0 *
-								(cos(std::_Pi * (double)(i + 1.5) / (double)(nx)) +
-									cos(std::_Pi * (double)(j + 1.5) / (double)(ny)));
+								(cos(std::_Pi * static_cast<double>(i + 0.5) / static_cast<double>(nx)) +
+									cos(std::_Pi * static_cast<double>(j + 0.5) / static_cast<double>(ny)));
 							if (denominator != 0.0)
 							{
 								transform[i*ny + j] *= mesh->h * mesh->h / denominator;
@@ -321,11 +377,15 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						signal, FFTW_REDFT11, FFTW_REDFT11, FFTW_ESTIMATE);
 					fftw_execute(backwardsPlan);
 
-					// TODO: Since FFTW computes unnormalised DFTs, this results in
-					// a twice transformed array (forwards and back) being scaled by
-					// ny * nx -> Need to divide signal array by this factor
-
-					// TODO: Write data from signal array back to nodesVector elements
+					// Write data from signal array back to nodesVector phi
+					for (int i = 0; i < ny; i++)
+					{
+						for (int j = 0; j < nx; j++)
+						{
+							mesh->nodesVector.nodes[i*nx + j].phi = signal[i*nx + j] /
+								static_cast<double>((2.0 * ny) * (2.0 * nx));
+						}
+					}
 
 					// Destroy plans and memory blocks allocated with fftw_malloc
 					fftw_destroy_plan(forwardsPlan);
