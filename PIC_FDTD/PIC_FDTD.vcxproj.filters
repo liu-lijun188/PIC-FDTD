@@ -218,6 +218,9 @@
     <ClInclude Include="CHEM\Blottner.hpp">
       <Filter>Header Files\OP2A</Filter>
     </ClInclude>
+    <ClInclude Include="fftw-3.3.5-dll64\fftw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChargeProjector.cpp">
@@ -406,5 +409,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fftw-3.3.5-dll64\libfftw3-3.exp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="fftw-3.3.5-dll64\libfftw3-3.lib" />
   </ItemGroup>
 </Project>
