@@ -146,6 +146,16 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 	// leapfrog method. The effects of any source terms are also accounted for
 	// in between.
 
+	// Relevant equations in 2D (e = epsilon, u = mu):
+	// (1) d/dt(Bx) = -d/dy(Ez)
+	// (2) d/dt(By) = d/dx(Ez)
+	// (3) d/dt(Bz) = -d/dx(Ey) + d/dy(Ex)
+	// (4) e.d/dt(Ex) = (1/u).d/dy(Bz) - Jx
+	// (5) e.d/dt(Ey) = -(1/u).d/dx(Bz) - Jy
+	// (6) e.d/dt(Ez) = (1/u).d/dx(By) - (1/u).d/dy(Bx) 
+	// E is defined at integer time steps, while B and J are defined at half
+	// integer time steps (c.f. x and v in particle pusher) -> Calculate 
+
 	for (int i = 0; i < FDTDmesh.numNodes; i++)
 	{
 		// TODO: Can change all of the below to references to avoid copying large 
