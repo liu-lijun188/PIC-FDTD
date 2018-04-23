@@ -44,7 +44,7 @@ public:
 	GridGeo gridgeoFDTD;					//!< Detailed grid info, FDTD mesh
 
 
-	// Simulation parameters
+	// Global simulation parameters
 	double timeStep;						//!< Time step
 	int maximumNumberOfIterations;			//!< Maximum number of iterations
 	int numberOfPatches;					//!< Number of patches
@@ -54,7 +54,7 @@ public:
 	bool axisymmetric;						//!< True if axisymmetric simulation is required
 	bool twoStream;							//!< True is two-stream problem is bring modelled
 
-	// Particle parameters
+	// Particle and collision parameters
 	std::string particleDistribution;		//!< Particle distribution (random, uniform, precise)
 	double initialTemperature;				//!< Initial temperature of gas/plasma
 	std::vector<double> initialPosition;	//!< Initial particle position (if precise==true)
@@ -62,13 +62,14 @@ public:
 	std::string propellant;					//!< Propellant used in simulation (xenon)
 	int MCCfrequency;						//!< Iterations between calls to MCC
 
-	// Field parameters
+	// Field and FDTD parameters
 	std::vector<double> Efield;				//!< External electric field
 	std::vector<double> Bfield;				//!< External magnetic field
 	double FDTDtimeStep;					//!< Time step for FDTD solver
+	int FDTDiterations;						//!< Number of iterations in FDTD loop
 	int FDTDfrequency;						//!< Iterations between calls to FDTD
 
-	// Mesh parameters
+	// Mesh and domain parameters
 	bool userMesh;							//!< If true, use user defined mesh rather than mesh from file
 	double domainLength;					//!< Length of simulation domain
 	double domainHeight;					//!< Height of simulation domain;
@@ -77,7 +78,7 @@ public:
 	std::string meshFilePath;				//!< Path of mesh file
 	double meshScalingParameter;			//!< Mesh scaling parameter
 
-	// Solver parameters
+	// Solver and boundary condition parameters
 	std::string solverType;					//!< Solver type (GS, FFT)
 	int maxSolverIterations;				//!< Maximum number of iterations for solver
 	double residualTolerance;				//!< Tolerance for solver residuals

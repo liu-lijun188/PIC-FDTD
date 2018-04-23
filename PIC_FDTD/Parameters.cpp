@@ -69,7 +69,7 @@ void Parameters::assignInputs()
 		int index = 0;
 
 
-		// Simulation parameters
+		// Global simulation parameters
 		try
 		{
 			timeStep = stod(valuesVector[index]);
@@ -249,7 +249,7 @@ void Parameters::assignInputs()
 		index++;
 
 
-		// Particle parameters
+		// Particle and collision parameters
 		try
 		{
 			particleDistribution = valuesVector[index];
@@ -391,7 +391,7 @@ void Parameters::assignInputs()
 		index++;
 
 
-		// Field parameters
+		// Field and FDTD parameters
 		try
 		{
 			std::stringstream inputs(valuesVector[index]);
@@ -464,6 +464,26 @@ void Parameters::assignInputs()
 
 		try
 		{
+			FDTDiterations = stoi(valuesVector[index]);
+			if (FDTDiterations < 0)
+			{
+				throw 1;
+			}
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for FDTD iterations", 3);
+		}
+		catch (int error)
+		{
+			logBrief("FDTD iterations should be positive", 3);
+		}
+		logBrief("FDTD iterations: " + valuesVector[index], 1);
+		index++;
+
+
+		try
+		{
 			FDTDfrequency = stoi(valuesVector[index]);
 			if (FDTDfrequency < 0)
 			{
@@ -482,7 +502,7 @@ void Parameters::assignInputs()
 		index++;
 
 
-		// Mesh parameters
+		// Mesh and domain parameters
 		try
 		{
 			int value = stoi(valuesVector[index]);
@@ -615,7 +635,7 @@ void Parameters::assignInputs()
 		index++;
 
 
-		// Solver parameters
+		// Solver and boundary condition parameters
 		try
 		{
 			solverType = valuesVector[index];
@@ -959,7 +979,9 @@ void Parameters::generateMesh(std::string type)
 	}
 	else if (type == "FDTD")
 	{
-		h = FDTDspacing;
+		// Since the effective grid spacing of a Yee mesh is half that of a regular
+		// mesh, we divide the input spacing by two
+		h = FDTDspacing / 2.0;
 		meshFile = meshFileFDTD;
 	}
 

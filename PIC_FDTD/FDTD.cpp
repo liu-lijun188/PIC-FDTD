@@ -60,21 +60,16 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 		parametersList->logBrief("FDTD spacing should be a factor of PIC spacing", 3);
 	}
 
+	// TODO: Check that number of FDTD mesh rows is even for debugging purposes
+	if (FDTDmesh.numRows % 2 != 0)
+	{
+		parametersList->logBrief("Number of FDTD rows not even!", 3);
+	}
 
 	double hSquared = mesh->h * mesh->h;
 
 	for (int i = 0; i < FDTDmesh.numNodes; i++)
 	{
-		// Set alternating nodes to calculate E and B field parameters on
-		if (i % 2 == 0)
-		{
-			FDTDmesh.nodesVector.nodes[i].YeeType == "E";
-		}
-		else
-		{
-			FDTDmesh.nodesVector.nodes[i].YeeType == "B";
-		}
-
 		// TODO: Can change all of the below to references to avoid copying large 
 		// amounts of data for each calculation
 
@@ -94,7 +89,6 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
 
-		// TODO: Interpolate all relevant quantities from PIC to FDTD mesh 
 		if (firstNodePosition == "TL")
 		{
 			for (int j = 0; j < 6; j++)
@@ -104,6 +98,14 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (right - x1) * (top - x2) / hSquared +
 					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (x1 - left) * (top - x2) / hSquared +
 					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+			}
+			for (int j = 0; j < 2; j++)
+			{
+				FDTDmesh.nodesVector.nodes[i].current[j] =
+					mesh->nodesVector.nodes[nodeID_0].current[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].current[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].current[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].current[j] * (x1 - left) * (x2 - bottom) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "BL")
@@ -116,6 +118,14 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
 					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
 			}
+			for (int j = 0; j < 2; j++)
+			{
+				FDTDmesh.nodesVector.nodes[i].current[j] =
+					mesh->nodesVector.nodes[nodeID_0].current[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].current[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].current[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].current[j] * (right - x1) * (x2 - bottom) / hSquared;
+			}
 		}
 		else if (firstNodePosition == "BR")
 		{
@@ -126,6 +136,14 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 					mesh->nodesVector.nodes[nodeID_1].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared +
 					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared +
 					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (right - x1) * (top - x2) / hSquared;
+			}
+			for (int j = 0; j < 2; j++)
+			{
+				FDTDmesh.nodesVector.nodes[i].current[j] =
+					mesh->nodesVector.nodes[nodeID_0].current[j] * (x1 - left) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].current[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].current[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].current[j] * (right - x1) * (top - x2) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TR")
@@ -138,23 +156,85 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 					mesh->nodesVector.nodes[nodeID_2].EMfield[j] * (right - x1) * (top - x2) / hSquared +
 					mesh->nodesVector.nodes[nodeID_3].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
 			}
+			for (int j = 0; j < 2; j++)
+			{
+				FDTDmesh.nodesVector.nodes[i].current[j] =
+					mesh->nodesVector.nodes[nodeID_0].current[j] * (x1 - left) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_1].current[j] * (right - x1) * (x2 - bottom) / hSquared +
+					mesh->nodesVector.nodes[nodeID_2].current[j] * (right - x1) * (top - x2) / hSquared +
+					mesh->nodesVector.nodes[nodeID_3].current[j] * (x1 - left) * (top - x2) / hSquared;
+			}
 		}
 	}
 
-	// TODO: Solve Maxwell's equations to find the E field based on B, and the
-	// B field based on E. Both sets of calculations are time-shifted using the 
-	// leapfrog method. The effects of any source terms are also accounted for
-	// in between.
+	// TODO: Define epsilon_0 and mu_0, as well as non-vacuum versions, in an
+	// accessible location (remove from chemConstants file)
+	double epsilon_0 = 8.85418782e-12;
+	double mu_0 = 4 * std::_Pi * 1e-7;
+	double constant = 1.0 / (epsilon_0 * mu_0);
+	double ratio = parametersList->FDTDtimeStep / FDTDmesh.h;
 
-	// Relevant equations in 2D (e = epsilon, u = mu):
-	// (1) d/dt(Bx) = -d/dy(Ez)
-	// (2) d/dt(By) = d/dx(Ez)
-	// (3) d/dt(Bz) = -d/dx(Ey) + d/dy(Ex)
-	// (4) e.d/dt(Ex) = (1/u).d/dy(Bz) - Jx
-	// (5) e.d/dt(Ey) = -(1/u).d/dx(Bz) - Jy
-	// (6) e.d/dt(Ez) = (1/u).d/dx(By) - (1/u).d/dy(Bx) 
-	// E is defined at integer time steps, while B and J are defined at half
-	// integer time steps (c.f. x and v in particle pusher) -> Calculate 
+	// Solve Maxwell's equations
+	for (int i = 0; i < parametersList->FDTDiterations; i++)
+	{
+		// Solve B field equations based on E 
+		for (int j = 0; j < FDTDmesh.numNodes; j += 2)
+		{
+			int leftNodeID = mesh->nodesVector.nodes[j].leftNodeID - 1;
+			int rightNodeID = mesh->nodesVector.nodes[j].rightNodeID - 1;
+			int topNodeID = mesh->nodesVector.nodes[j].topNodeID - 1;
+			int bottomNodeID = mesh->nodesVector.nodes[j].bottomNodeID - 1;
+
+			if (FDTDmesh.nodesVector.nodes[j].boundaryType == "internal")
+			{
+				// (1) d/dt(Bx) = -d/dy(Ez)
+				FDTDmesh.nodesVector.nodes[j].EMfield[3] -= ratio * 
+					(FDTDmesh.nodesVector.nodes[topNodeID].EMfield[2] - 
+						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[2]);
+				// (2) d/dt(By) = d/dx(Ez)
+				FDTDmesh.nodesVector.nodes[j].EMfield[4] += ratio *
+					(FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[2] -
+						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[2]);
+				// (3) d/dt(Bz) = -d/dx(Ey) + d/dy(Ex)
+				FDTDmesh.nodesVector.nodes[j].EMfield[5] += ratio *
+					(FDTDmesh.nodesVector.nodes[topNodeID].EMfield[0] -
+						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[0] - 
+						FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[1] +
+						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[1]);
+			}
+			// TODO: Cases for boundary nodes
+		}
+
+		// Solve E field equations based on B
+		for (int j = 1; j < FDTDmesh.numNodes; j += 2)
+		{
+			int leftNodeID = mesh->nodesVector.nodes[j].leftNodeID - 1;
+			int rightNodeID = mesh->nodesVector.nodes[j].rightNodeID - 1;
+			int topNodeID = mesh->nodesVector.nodes[j].topNodeID - 1;
+			int bottomNodeID = mesh->nodesVector.nodes[j].bottomNodeID - 1;
+
+			if (FDTDmesh.nodesVector.nodes[j].boundaryType == "internal")
+			{
+				// (4) e.d/dt(Ex) = (1/u).d/dy(Bz) - Jx
+				FDTDmesh.nodesVector.nodes[j].EMfield[0] += ratio * constant *
+					(FDTDmesh.nodesVector.nodes[topNodeID].EMfield[5] -
+						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[5]) - 
+					FDTDmesh.nodesVector.nodes[j].current[0] / epsilon_0;
+				// (5) e.d/dt(Ey) = -(1/u).d/dx(Bz) - Jy
+				FDTDmesh.nodesVector.nodes[j].EMfield[1] -= ratio * constant *
+					(FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[5] -
+						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[5]) - 
+					FDTDmesh.nodesVector.nodes[j].current[1] / epsilon_0;
+				// (6) e.d/dt(Ez) = (1/u).d/dx(By) - (1/u).d/dy(Bx) 
+				FDTDmesh.nodesVector.nodes[j].EMfield[2] += ratio * constant *
+					(FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[4] -
+						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[4] -
+					    FDTDmesh.nodesVector.nodes[topNodeID].EMfield[3] +
+						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[3]);
+			}
+			// TODO: Cases for boundary nodes
+		}
+	}
 
 	for (int i = 0; i < FDTDmesh.numNodes; i++)
 	{
@@ -177,46 +257,60 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 
 		std::string firstNodePosition = mesh->cellsVector.cells[cellID].firstNodePosition;
 
-		// TODO: Interpolate all relevant quantities from FDTD to PIC mesh (reverse
-		// of the above process)
 		if (firstNodePosition == "TL")
 		{
 			for (int j = 0; j < 6; j++)
 			{
-				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
-				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
-				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
-				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "BL")
 		{
 			for (int j = 0; j < 6; j++)
 			{
-				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
-				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
-				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
-				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "BR")
 		{
 			for (int j = 0; j < 6; j++)
 			{
-				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
-				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
-				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
-				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
 			}
 		}
 		else if (firstNodePosition == "TR")
 		{
 			for (int j = 0; j < 6; j++)
 			{
-				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
-				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
-				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
-				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_0].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_1].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (x2 - bottom) / hSquared;
+				mesh->nodesVector.nodes[nodeID_2].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (right - x1) * (top - x2) / hSquared;
+				mesh->nodesVector.nodes[nodeID_3].EMfield[j] += 
+					FDTDmesh.nodesVector.nodes[i].EMfield[j] * (x1 - left) * (top - x2) / hSquared;
 			}
 		}
 	}
