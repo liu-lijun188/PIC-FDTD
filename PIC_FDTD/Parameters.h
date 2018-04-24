@@ -65,8 +65,7 @@ public:
 	// Field and FDTD parameters
 	std::vector<double> Efield;				//!< External electric field
 	std::vector<double> Bfield;				//!< External magnetic field
-	double FDTDtimeStep;					//!< Time step for FDTD solver
-	int FDTDiterations;						//!< Number of iterations in FDTD loop
+	int FDTDiterations;						//!< Number of iterations in FDTD loop, determines FDTD time step
 	int FDTDfrequency;						//!< Iterations between calls to FDTD
 
 	// Mesh and domain parameters

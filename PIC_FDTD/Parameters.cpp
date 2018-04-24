@@ -444,26 +444,6 @@ void Parameters::assignInputs()
 
 		try
 		{
-			FDTDtimeStep = stod(valuesVector[index]);
-			if (FDTDtimeStep < 0.0)
-			{
-				throw 1;
-			}
-		}
-		catch (const std::exception&)
-		{
-			logBrief("Invalid argument detected for FDTD time step", 3);
-		}
-		catch (int error)
-		{
-			logBrief("FDTD time step should be positive", 3);
-		}
-		logBrief("FDTD time step: " + valuesVector[index], 1);
-		index++;
-
-
-		try
-		{
 			FDTDiterations = stoi(valuesVector[index]);
 			if (FDTDiterations < 0)
 			{

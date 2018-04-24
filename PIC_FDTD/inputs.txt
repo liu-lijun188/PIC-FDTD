@@ -37,8 +37,7 @@ MCCFrequency: 11
 %------------------------------------------------------------------------------
 Efield: 0.0,0.0,0.0
 Bfield: 0.0,0.0,0.0
-FDTDtimeStep: 0.00004
-FDTDiterations: 10
+FDTDiterations: 1000000
 FDTDfrequency: 10
 
 
@@ -49,7 +48,7 @@ userMesh: 1
 domainLength: 0.1
 domainHeight: 0.06
 PICspacing: 0.02
-FDTDspacing: 0.01
+FDTDspacing: 0.005
 meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
 
@@ -74,7 +73,7 @@ bottomBCValue: 0.0
 %------------------------------------------------------------------------------
 % Parallelisation parameters
 %------------------------------------------------------------------------------
-numThreads: 1
+numThreads: 8
 
 
 %------------------------------------------------------------------------------

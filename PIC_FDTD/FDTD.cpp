@@ -18,13 +18,15 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 	// finer grid spacing. Nodes in every second row and second column are used 
 	// to calculate E field parameters, while the alternate nodes are used for 
 	// B field parameters (i.e a Yee mesh). 
-	// TODO: Don't need to regenerate FDTD mesh every single class instance?
+	// TODO: Don't need to regenerate FDTD mesh every single class instance, rather 
+	// do it once and use the same mesh for subsequent calls (unless the original
+	// mesh is refined).
 	parametersList->processMesh("FDTD");
 	FDTDmesh = Mesh(parametersList, "FDTD");
-	
+
 	int currentCol = 0, cellShift = 0;
 	int step = static_cast<int>(round(mesh->h / FDTDmesh.h));
-	
+
 	// Check that the FDTD mesh spacing divides the PIC mesh spacing evenly
 	if (step > 1 && abs(mesh->h - (FDTDmesh.h * round(mesh->h / FDTDmesh.h))) < 1e-10)
 	{
@@ -58,12 +60,6 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 	else
 	{
 		parametersList->logBrief("FDTD spacing should be a factor of PIC spacing", 3);
-	}
-
-	// TODO: Check that number of FDTD mesh rows is even for debugging purposes
-	if (FDTDmesh.numRows % 2 != 0)
-	{
-		parametersList->logBrief("Number of FDTD rows not even!", 3);
 	}
 
 	double hSquared = mesh->h * mesh->h;
@@ -170,33 +166,42 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 	// TODO: Define epsilon_0 and mu_0, as well as non-vacuum versions, in an
 	// accessible location (remove from chemConstants file)
 	double epsilon_0 = 8.85418782e-12;
-	double mu_0 = 4 * std::_Pi * 1e-7;
-	double constant = 1.0 / (epsilon_0 * mu_0);
-	double ratio = parametersList->FDTDtimeStep / FDTDmesh.h;
+	double mu_0 = 4 * std::_Pi * 1.0e-7;
+	double cSquared = 1.0 / (epsilon_0 * mu_0);
+	double FDTDtimeStep = parametersList->timeStep / static_cast<double>(parametersList->FDTDiterations);
+	double timeStepRatio = FDTDtimeStep / (FDTDmesh.h * 2.0);
+
+	// Check that FDTD time step and grid spacing meet stability conditions
+	if ((sqrt(2.0) * (FDTDmesh.h * 2.0) / sqrt(cSquared)) < FDTDtimeStep)
+	{
+		double difference = FDTDtimeStep / (sqrt(2.0) * (FDTDmesh.h * 2.0) / sqrt(cSquared));
+		parametersList->logBrief("FDTD stability criterion exceeded by factor of " + std::to_string((int)difference), 2);
+	}
 
 	// Solve Maxwell's equations
 	for (int i = 0; i < parametersList->FDTDiterations; i++)
 	{
 		// Solve B field equations based on E 
+		# pragma omp parallel for num_threads(parametersList->numThreads)
 		for (int j = 0; j < FDTDmesh.numNodes; j += 2)
 		{
-			int leftNodeID = mesh->nodesVector.nodes[j].leftNodeID - 1;
-			int rightNodeID = mesh->nodesVector.nodes[j].rightNodeID - 1;
-			int topNodeID = mesh->nodesVector.nodes[j].topNodeID - 1;
-			int bottomNodeID = mesh->nodesVector.nodes[j].bottomNodeID - 1;
+			int leftNodeID = FDTDmesh.nodesVector.nodes[j].leftNodeID - 1;
+			int rightNodeID = FDTDmesh.nodesVector.nodes[j].rightNodeID - 1;
+			int topNodeID = FDTDmesh.nodesVector.nodes[j].topNodeID - 1;
+			int bottomNodeID = FDTDmesh.nodesVector.nodes[j].bottomNodeID - 1;
 
 			if (FDTDmesh.nodesVector.nodes[j].boundaryType == "internal")
 			{
 				// (1) d/dt(Bx) = -d/dy(Ez)
-				FDTDmesh.nodesVector.nodes[j].EMfield[3] -= ratio * 
+				FDTDmesh.nodesVector.nodes[j].EMfield[3] -= timeStepRatio *
 					(FDTDmesh.nodesVector.nodes[topNodeID].EMfield[2] - 
 						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[2]);
 				// (2) d/dt(By) = d/dx(Ez)
-				FDTDmesh.nodesVector.nodes[j].EMfield[4] += ratio *
+				FDTDmesh.nodesVector.nodes[j].EMfield[4] += timeStepRatio *
 					(FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[2] -
 						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[2]);
 				// (3) d/dt(Bz) = -d/dx(Ey) + d/dy(Ex)
-				FDTDmesh.nodesVector.nodes[j].EMfield[5] += ratio *
+				FDTDmesh.nodesVector.nodes[j].EMfield[5] += timeStepRatio *
 					(FDTDmesh.nodesVector.nodes[topNodeID].EMfield[0] -
 						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[0] - 
 						FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[1] +
@@ -206,27 +211,28 @@ FDTD::FDTD(Parameters *parametersList, Mesh *mesh)
 		}
 
 		// Solve E field equations based on B
+		# pragma omp parallel for num_threads(parametersList->numThreads)
 		for (int j = 1; j < FDTDmesh.numNodes; j += 2)
 		{
-			int leftNodeID = mesh->nodesVector.nodes[j].leftNodeID - 1;
-			int rightNodeID = mesh->nodesVector.nodes[j].rightNodeID - 1;
-			int topNodeID = mesh->nodesVector.nodes[j].topNodeID - 1;
-			int bottomNodeID = mesh->nodesVector.nodes[j].bottomNodeID - 1;
+			int leftNodeID = FDTDmesh.nodesVector.nodes[j].leftNodeID - 1;
+			int rightNodeID = FDTDmesh.nodesVector.nodes[j].rightNodeID - 1;
+			int topNodeID = FDTDmesh.nodesVector.nodes[j].topNodeID - 1;
+			int bottomNodeID = FDTDmesh.nodesVector.nodes[j].bottomNodeID - 1;
 
 			if (FDTDmesh.nodesVector.nodes[j].boundaryType == "internal")
 			{
 				// (4) e.d/dt(Ex) = (1/u).d/dy(Bz) - Jx
-				FDTDmesh.nodesVector.nodes[j].EMfield[0] += ratio * constant *
+				FDTDmesh.nodesVector.nodes[j].EMfield[0] += timeStepRatio * cSquared *
 					(FDTDmesh.nodesVector.nodes[topNodeID].EMfield[5] -
 						FDTDmesh.nodesVector.nodes[bottomNodeID].EMfield[5]) - 
 					FDTDmesh.nodesVector.nodes[j].current[0] / epsilon_0;
 				// (5) e.d/dt(Ey) = -(1/u).d/dx(Bz) - Jy
-				FDTDmesh.nodesVector.nodes[j].EMfield[1] -= ratio * constant *
+				FDTDmesh.nodesVector.nodes[j].EMfield[1] -= timeStepRatio * cSquared *
 					(FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[5] -
 						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[5]) - 
 					FDTDmesh.nodesVector.nodes[j].current[1] / epsilon_0;
 				// (6) e.d/dt(Ez) = (1/u).d/dx(By) - (1/u).d/dy(Bx) 
-				FDTDmesh.nodesVector.nodes[j].EMfield[2] += ratio * constant *
+				FDTDmesh.nodesVector.nodes[j].EMfield[2] += timeStepRatio * cSquared *
 					(FDTDmesh.nodesVector.nodes[rightNodeID].EMfield[4] -
 						FDTDmesh.nodesVector.nodes[leftNodeID].EMfield[4] -
 					    FDTDmesh.nodesVector.nodes[topNodeID].EMfield[3] +
