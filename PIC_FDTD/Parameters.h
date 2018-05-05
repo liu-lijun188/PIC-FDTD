@@ -1,7 +1,7 @@
 //! \file
 //! \brief Definition of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated April 2018
+//! \date Last updated May 2018
 
 #pragma once
 
@@ -31,6 +31,7 @@ private:
 	std::string meshFilePIC = "PICMesh";	//!< Name of PIC mesh file
 	std::string meshFileFDTD = "FDTDMesh";	//!< Name of FDTD mesh file
 
+	bool useDefaultArgument = false;		//!< Flag to use default argument
 	bool fileNotOpened = false;				//!< Check if input file was opened 
 	bool firstLog = true;					//!< Check if this is the first log entry
 	std::chrono::system_clock::time_point initialTime;	//!< Global simulation time
