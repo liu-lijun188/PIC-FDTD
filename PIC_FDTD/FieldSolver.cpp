@@ -38,16 +38,21 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 
 			for (int j = 0; j < mesh->numNodes; j++)
 			{
+				int leftNodeID = mesh->nodesVector.nodes[j].leftNodeID - 1;
+				int rightNodeID = mesh->nodesVector.nodes[j].rightNodeID - 1;
+				int topNodeID = mesh->nodesVector.nodes[j].topNodeID - 1;
+				int bottomNodeID = mesh->nodesVector.nodes[j].bottomNodeID - 1;
+
 				if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 				{
 					mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 						((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+							mesh->nodesVector.nodes[leftNodeID].phi +
+							mesh->nodesVector.nodes[rightNodeID].phi +
 							(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+							mesh->nodesVector.nodes[topNodeID].phi +
 							(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+							mesh->nodesVector.nodes[bottomNodeID].phi) +
 							(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 				}
 				else if (mesh->nodesVector.nodes[j].boundaryType == "L")
@@ -57,11 +62,11 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 							((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
 								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								mesh->nodesVector.nodes[rightNodeID].phi +
 								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								mesh->nodesVector.nodes[topNodeID].phi +
 								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+								mesh->nodesVector.nodes[bottomNodeID].phi) +
 								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 					}
 					else if (parametersList->leftBCType == "dirichlet")
@@ -72,11 +77,11 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 					{
 						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 							((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+								mesh->nodesVector.nodes[rightNodeID].phi +
 								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								mesh->nodesVector.nodes[topNodeID].phi +
 								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi -
+								mesh->nodesVector.nodes[bottomNodeID].phi -
 								h * parametersList->leftBCValue) + (1 - parametersList->SORparameter) *
 							mesh->nodesVector.nodes[j].phi;
 					}
@@ -87,12 +92,12 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 					{
 						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 							((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+								mesh->nodesVector.nodes[leftNodeID].phi +
 								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
 								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								mesh->nodesVector.nodes[topNodeID].phi +
 								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+								mesh->nodesVector.nodes[bottomNodeID].phi) +
 								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 					}
 					else if (parametersList->rightBCType == "dirichlet")
@@ -103,11 +108,11 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 					{
 						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 							((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+								mesh->nodesVector.nodes[leftNodeID].phi +
 								(1.0 + h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+								mesh->nodesVector.nodes[topNodeID].phi +
 								(1.0 - h / (2 * mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) *
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+								mesh->nodesVector.nodes[bottomNodeID].phi +
 								h * parametersList->rightBCValue) + (1 - parametersList->SORparameter) *
 							mesh->nodesVector.nodes[j].phi;
 					}
@@ -126,9 +131,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 							(h * h * ((mesh->nodesVector.nodes[j].rho / EPSILON_0) +
 							(parametersList->topBCValue / mesh->nodesVector.nodes[j].geometry.X.element(1, 0))) +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+								mesh->nodesVector.nodes[leftNodeID].phi +
+								mesh->nodesVector.nodes[rightNodeID].phi +
+								mesh->nodesVector.nodes[bottomNodeID].phi +
 								h * parametersList->topBCValue) + (1 - parametersList->SORparameter) *
 							mesh->nodesVector.nodes[j].phi;
 					}
@@ -139,9 +144,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 
 					mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 						((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-							mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-							2 * mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi) +
+							mesh->nodesVector.nodes[leftNodeID].phi +
+							mesh->nodesVector.nodes[rightNodeID].phi +
+							2 * mesh->nodesVector.nodes[topNodeID].phi) +
 							(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 				}
 			}
@@ -403,14 +408,19 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 					// boundaries, while for other BCs and the four corner nodes, a
 					// three point stencil or fixed value is used
 
+					int leftNodeID = mesh->nodesVector.nodes[j].leftNodeID - 1;
+					int rightNodeID = mesh->nodesVector.nodes[j].rightNodeID - 1;
+					int topNodeID = mesh->nodesVector.nodes[j].topNodeID - 1;
+					int bottomNodeID = mesh->nodesVector.nodes[j].bottomNodeID - 1;
+
 					if (mesh->nodesVector.nodes[j].boundaryType == "internal")
 					{
 						mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 							((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-								mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+								mesh->nodesVector.nodes[leftNodeID].phi +
+								mesh->nodesVector.nodes[rightNodeID].phi +
+								mesh->nodesVector.nodes[topNodeID].phi +
+								mesh->nodesVector.nodes[bottomNodeID].phi) +
 								(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 					}
 					else if (mesh->nodesVector.nodes[j].boundaryType == "L")
@@ -420,9 +430,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
 									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+									mesh->nodesVector.nodes[rightNodeID].phi +
+									mesh->nodesVector.nodes[topNodeID].phi +
+									mesh->nodesVector.nodes[bottomNodeID].phi) +
 									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 						}
 						else if (parametersList->leftBCType == "dirichlet")
@@ -433,9 +443,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi -
+									mesh->nodesVector.nodes[rightNodeID].phi +
+									mesh->nodesVector.nodes[topNodeID].phi +
+									mesh->nodesVector.nodes[bottomNodeID].phi -
 									parametersList->leftBCValue * h) + (1 - parametersList->SORparameter) *
 								mesh->nodesVector.nodes[j].phi;
 						}
@@ -446,10 +456,10 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
+									mesh->nodesVector.nodes[leftNodeID].phi +
 									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX1NodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+									mesh->nodesVector.nodes[topNodeID].phi +
+									mesh->nodesVector.nodes[bottomNodeID].phi) +
 									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 						}
 						else if (parametersList->rightBCType == "dirichlet")
@@ -460,9 +470,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+									mesh->nodesVector.nodes[leftNodeID].phi +
+									mesh->nodesVector.nodes[topNodeID].phi +
+									mesh->nodesVector.nodes[bottomNodeID].phi +
 									parametersList->rightBCValue * h) + (1 - parametersList->SORparameter) *
 								mesh->nodesVector.nodes[j].phi;
 						}
@@ -473,10 +483,10 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
+									mesh->nodesVector.nodes[leftNodeID].phi +
+									mesh->nodesVector.nodes[rightNodeID].phi +
 									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX2NodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi) +
+									mesh->nodesVector.nodes[bottomNodeID].phi) +
 									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 						}
 						else if (parametersList->topBCType == "dirichlet")
@@ -487,9 +497,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+									mesh->nodesVector.nodes[leftNodeID].phi +
+									mesh->nodesVector.nodes[rightNodeID].phi +
+									mesh->nodesVector.nodes[bottomNodeID].phi +
 									parametersList->topBCValue * h) + (1 - parametersList->SORparameter) *
 								mesh->nodesVector.nodes[j].phi;
 						}
@@ -500,9 +510,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.25 *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+									mesh->nodesVector.nodes[leftNodeID].phi +
+									mesh->nodesVector.nodes[rightNodeID].phi +
+									mesh->nodesVector.nodes[topNodeID].phi +
 									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].periodicX2NodeID - 1].phi) +
 									(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 						}
@@ -514,9 +524,9 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 						{
 							mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * (1.0 / 3.0) *
 								((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-									mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi -
+									mesh->nodesVector.nodes[leftNodeID].phi +
+									mesh->nodesVector.nodes[rightNodeID].phi +
+									mesh->nodesVector.nodes[topNodeID].phi -
 									parametersList->bottomBCValue * h) + (1 - parametersList->SORparameter) *
 								mesh->nodesVector.nodes[j].phi;
 						}
@@ -532,8 +542,8 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 							{
 								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
 									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+										mesh->nodesVector.nodes[rightNodeID].phi +
+										mesh->nodesVector.nodes[bottomNodeID].phi +
 										h * (parametersList->topBCValue - parametersList->leftBCValue)) +
 										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 							}
@@ -541,8 +551,8 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 							{
 								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
 									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].rightNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi -
+										mesh->nodesVector.nodes[rightNodeID].phi +
+										mesh->nodesVector.nodes[topNodeID].phi -
 										h * (parametersList->bottomBCValue + parametersList->leftBCValue)) +
 										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 							}
@@ -550,8 +560,8 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 							{
 								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
 									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].bottomNodeID - 1].phi +
+										mesh->nodesVector.nodes[leftNodeID].phi +
+										mesh->nodesVector.nodes[bottomNodeID].phi +
 										h * (parametersList->topBCValue + parametersList->rightBCValue)) +
 										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 							}
@@ -559,8 +569,8 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 							{
 								mesh->nodesVector.nodes[j].phi = parametersList->SORparameter * 0.5 *
 									((mesh->nodesVector.nodes[j].rho / EPSILON_0) * h * h +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].leftNodeID - 1].phi +
-										mesh->nodesVector.nodes[mesh->nodesVector.nodes[j].topNodeID - 1].phi +
+										mesh->nodesVector.nodes[leftNodeID].phi +
+										mesh->nodesVector.nodes[topNodeID].phi +
 										h * (parametersList->rightBCValue - parametersList->bottomBCValue)) +
 										(1 - parametersList->SORparameter) * mesh->nodesVector.nodes[j].phi;
 							}
@@ -678,172 +688,179 @@ FieldSolver::FieldSolver(Parameters *parametersList, Mesh *mesh)
 	// Electric field
 	for (int i = 0; i < mesh->numNodes; i++)
 	{
+		int leftNodeID = mesh->nodesVector.nodes[i].leftNodeID - 1;
+		int rightNodeID = mesh->nodesVector.nodes[i].rightNodeID - 1;
+		int topNodeID = mesh->nodesVector.nodes[i].topNodeID - 1;
+		int bottomNodeID = mesh->nodesVector.nodes[i].bottomNodeID - 1;
+		int periodicX1NodeID = mesh->nodesVector.nodes[i].periodicX1NodeID - 1;
+		int periodicX2NodeID = mesh->nodesVector.nodes[i].periodicX2NodeID - 1;
+
 		if (mesh->nodesVector.nodes[i].boundaryType == "internal")
 		{
-			mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);
+			mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[leftNodeID].phi -
+				mesh->nodesVector.nodes[rightNodeID].phi) / (2 * h);
 
-			mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi -
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / (2 * h);
+			mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[bottomNodeID].phi -
+				mesh->nodesVector.nodes[topNodeID].phi) / (2 * h);
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "T")
 		{
-			mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);
+			mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[leftNodeID].phi -
+				mesh->nodesVector.nodes[rightNodeID].phi) / (2 * h);
 
 			if (parametersList->topBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[bottomNodeID].phi -
+					mesh->nodesVector.nodes[periodicX2NodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[bottomNodeID].phi) / h;
 			}
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "B")
 		{
-			mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);
+			mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[leftNodeID].phi -
+				mesh->nodesVector.nodes[rightNodeID].phi) / (2 * h);
 
 			if (parametersList->bottomBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[periodicX2NodeID].phi -
+					mesh->nodesVector.nodes[topNodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[topNodeID].phi) / h;
 			}
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "L")
 		{
 			if (parametersList->leftBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[periodicX1NodeID].phi -
+					mesh->nodesVector.nodes[rightNodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[rightNodeID].phi) / h;
 			}
 
-			mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi -
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / (2 * h);
+			mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[bottomNodeID].phi -
+				mesh->nodesVector.nodes[topNodeID].phi) / (2 * h);
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "R")
 		{
 			if (parametersList->rightBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[leftNodeID].phi -
+					mesh->nodesVector.nodes[periodicX1NodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[leftNodeID].phi) / h;
 			}
 
-			mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi -
-				mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / (2 * h);
+			mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[bottomNodeID].phi -
+				mesh->nodesVector.nodes[topNodeID].phi) / (2 * h);
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "TL")
 		{
 			if (parametersList->leftBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[periodicX1NodeID].phi -
+					mesh->nodesVector.nodes[rightNodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[rightNodeID].phi) / h;
 			}
 			
 			if (parametersList->topBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[bottomNodeID].phi -
+					mesh->nodesVector.nodes[periodicX2NodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[bottomNodeID].phi) / h;
 			}
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "BL")
 		{
 			if (parametersList->leftBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[periodicX1NodeID].phi -
+					mesh->nodesVector.nodes[rightNodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].rightNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[rightNodeID].phi) / h;
 			}
 			
 			if (parametersList->topBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[periodicX2NodeID].phi -
+					mesh->nodesVector.nodes[topNodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[topNodeID].phi) / h;
 			}
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "TR")
 		{
 			if (parametersList->leftBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[leftNodeID].phi -
+					mesh->nodesVector.nodes[periodicX1NodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[leftNodeID].phi) / h;
 			}
 
 			if (parametersList->topBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[bottomNodeID].phi -
+					mesh->nodesVector.nodes[periodicX2NodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].bottomNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[bottomNodeID].phi) / h;
 			}
 		}
 		else if (mesh->nodesVector.nodes[i].boundaryType == "BR")
 		{
 			if (parametersList->leftBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX1NodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[leftNodeID].phi -
+					mesh->nodesVector.nodes[periodicX1NodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[0] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].leftNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[leftNodeID].phi) / h;
 			}
 
 			if (parametersList->topBCType == "periodic")
 			{
-				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].periodicX2NodeID - 1].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / (2 * h);
+				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[periodicX2NodeID].phi -
+					mesh->nodesVector.nodes[topNodeID].phi) / (2 * h);
 			}
 			else
 			{
 				mesh->nodesVector.nodes[i].EMfield[1] = (mesh->nodesVector.nodes[i].phi -
-					mesh->nodesVector.nodes[mesh->nodesVector.nodes[i].topNodeID - 1].phi) / h;
+					mesh->nodesVector.nodes[topNodeID].phi) / h;
 			}
 		}
 	}

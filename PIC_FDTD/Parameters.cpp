@@ -1,7 +1,7 @@
 //! \file
 //! \brief Implementation of Parameters class 
 //! \author Rahul Kalampattel
-//! \date Last updated April 2018
+//! \date Last updated May 2018
 
 #include "Parameters.h"
 
@@ -18,8 +18,7 @@ Parameters::Parameters(std::string filename)
 	std::ifstream inputFile(filename);	// Open input file
 	
 	char firstCharacter;
-	std::string name;
-	std::string value;
+	std::string name, value, test;
 
 	if (inputFile.is_open())
 	{
@@ -39,8 +38,39 @@ Parameters::Parameters(std::string filename)
 			else
 			{
 				inputFile >> name >> value;
-				valuesVector.push_back(value);
-				inputFile.ignore(256, '\n');
+				if (value.front() != '%' && value.back() != ':')
+				{
+					valuesVector.push_back(value);
+					inputFile.ignore(256, '\n');
+				}
+				// Check for empty arguments
+				else
+				{
+					while (true)
+					{
+						valuesVector.push_back("DEFAULT");
+						if (value.back() == ':')
+						{
+							inputFile >> value;
+							if (value.front() == '%')
+							{
+								valuesVector.push_back("DEFAULT");
+								inputFile.ignore(256, '\n');
+								break;
+							}
+							else if (value.back() != ':')
+							{
+								valuesVector.push_back(value);
+								inputFile.ignore(256, '\n');
+								break;
+							}
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
 			}
 		}
 		inputFile.close();
@@ -58,8 +88,7 @@ Parameters::~Parameters()
 {
 }
 
-// TODO: Default values for parameters (If no input is detected?? Or if invalid 
-// input is given?)
+
 // Assign values to data members 
 void Parameters::assignInputs()
 {
@@ -69,22 +98,39 @@ void Parameters::assignInputs()
 		int index = 0;
 
 
-		// Simulation parameters
+		// Global simulation parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			timeStep = stod(valuesVector[index]);
 			if (timeStep < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for time step, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid type detected for time step", 3);
+			logBrief("Invalid type detected for time step, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Time step should be positive", 3);
+			logBrief("Time step should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0001";
+			timeStep = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Time step: " + valuesVector[index], 1);
 		index++;
@@ -92,19 +138,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			maximumNumberOfIterations = stoi(valuesVector[index]);
 			if (maximumNumberOfIterations < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for max number of iterations, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for maximum number of iterations", 3);
+			logBrief("Invalid argument detected for max number of iterations, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Maximum number of iterations should be positive", 3);
+			logBrief("Max number of iterations should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "10";
+			maximumNumberOfIterations = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Maximum number of iterations: " + valuesVector[index], 1);
 		index++;
@@ -112,19 +175,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			numberOfPatches = stoi(valuesVector[index]);
 			if (numberOfPatches < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for number of patches, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for number of patches", 3);
+			logBrief("Invalid argument detected for number of patches, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Number of patches should be positive", 3);
+			logBrief("Number of patches should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1";
+			numberOfPatches = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Number of patches: " + valuesVector[index], 1);
 		index++;
@@ -132,19 +212,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			particlesPerCell = stoi(valuesVector[index]);
 			if (particlesPerCell < 1)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for particles per cell, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for particles per cell", 3);
+			logBrief("Invalid argument detected for particles per cell, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Particles per cell should be positive", 3);
+			logBrief("Particles per cell should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1";
+			particlesPerCell = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Particles per cell: " + valuesVector[index], 1);
 		index++;
@@ -152,19 +249,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			numCellsWithParticles = stoi(valuesVector[index]);
 			if (numCellsWithParticles < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for number of cells with particles, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for number of cells with particles", 3);
+			logBrief("Invalid argument detected for number of cells with particles, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Number of cells with particles should be positive", 3);
+			logBrief("Number of cells with particles should be positive or zero, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0";
+			numCellsWithParticles = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Number of cells with particles: " + valuesVector[index], 1);
 		index++;
@@ -172,6 +286,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			simulationType = valuesVector[index];
 			if (simulationType == "full" || simulationType == "partial" || simulationType == "electron")
 			{
@@ -181,13 +299,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for simulation type, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for simulation type", 3);
+			logBrief("Invalid argument detected for simulation type, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Simulation type should be full, partial, or electron", 3);
+			logBrief("Simulation type should be full, partial, or electron, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "electron";
+			simulationType = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Simulation type: " + valuesVector[index], 1);
 		index++;
@@ -195,6 +326,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			int value = stoi(valuesVector[index]);
 			if (value == 1)
 			{
@@ -209,13 +344,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for axisymmetric flag, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for axisymmetric flag", 3);
+			logBrief("Invalid argument detected for axisymmetric flag, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Axisymmetric flag should be true (1) or false (0)", 3);
+			logBrief("Axisymmetric flag should be true (1) or false (0), default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0";
+			axisymmetric = false;
+			useDefaultArgument = false;
 		}
 		logBrief("Axisymmetric flag: " + valuesVector[index], 1);
 		index++;
@@ -223,6 +371,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			int value = stoi(valuesVector[index]);
 			if (value == 1)
 			{
@@ -237,21 +389,38 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for two-stream flag, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for two-stream flag", 3);
+			logBrief("Invalid argument detected for two-stream flag, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Two-stream flag should be true (1) or false (0)", 3);
+			logBrief("Two-stream flag should be true (1) or false (0), default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0";
+			twoStream = false;
+			useDefaultArgument = false;
 		}
 		logBrief("Two-stream flag: " + valuesVector[index], 1);
 		index++;
 
 
-		// Particle parameters
+		// Particle and collision parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			particleDistribution = valuesVector[index];
 			if (particleDistribution == "uniform" || particleDistribution == "random" || particleDistribution == "precise")
 			{
@@ -261,13 +430,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for particle distribution, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for particle distribution", 3);
+			logBrief("Invalid argument detected for particle distribution, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Particle distribution should be uniform, random or precise", 3);
+			logBrief("Particle distribution should be uniform, random or precise, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "uniform";
+			particleDistribution = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Particle distribution: " + valuesVector[index], 1);
 		index++;
@@ -275,19 +457,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			initialTemperature = stod(valuesVector[index]);
 			if (initialTemperature < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for initial temperature, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid type detected for initial temperature", 3);
+			logBrief("Invalid type detected for initial temperature, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Initial temperature should be positive", 3);
+			logBrief("Initial temperature should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1000.0";
+			initialTemperature = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Initial temperature: " + valuesVector[index], 1);
 		index++;
@@ -295,6 +494,11 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
+
 			std::stringstream inputs(valuesVector[index]);
 			std::vector<std::string> outputs;
 
@@ -314,13 +518,26 @@ void Parameters::assignInputs()
 				}
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for initial position, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for initial position", 3);
+			logBrief("Invalid argument detected for initial position, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Initial position should be between 0 and 1", 3);
+			logBrief("Initial position should be between 0 and 1, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.5,0.5";
+			initialPosition = { 0.5, 0.5 };
+			useDefaultArgument = false;
 		}
 		logBrief("Initial position: " + valuesVector[index], 1);
 		index++;
@@ -328,6 +545,11 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
+			
 			std::stringstream inputs(valuesVector[index]);
 			std::vector<std::string> outputs;
 
@@ -343,9 +565,21 @@ void Parameters::assignInputs()
 				initialVelocity.push_back(stod(outputs[i]));
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for initial velocity, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for initial velocity", 3);
+			logBrief("Invalid argument detected for initial velocity, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0,0.0";
+			initialVelocity = { 0.0, 0.0 };
+			useDefaultArgument = false;
 		}
 		logBrief("Initial velocity: " + valuesVector[index], 1);
 		index++;
@@ -353,19 +587,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			propellant = valuesVector[index];
 			if (propellant != "xenon")
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for propellant, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for propellant", 3);
+			logBrief("Invalid argument detected for propellant, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Invalid propellant selected", 3);
+			logBrief("Invalid propellant selected, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "xenon";
+			propellant = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Propellant: " + valuesVector[index], 1);
 		index++;
@@ -373,27 +624,49 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			MCCfrequency = stoi(valuesVector[index]);
 			if (MCCfrequency < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for MCC frequency, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for MCC frequency", 3);
+			logBrief("Invalid argument detected for MCC frequency, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("MCC frequency should be positive", 3);
+			logBrief("MCC frequency should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "11";
+			MCCfrequency = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("MCC frequency: " + valuesVector[index], 1);
 		index++;
 
 
-		// Field parameters
+		// Field and FDTD parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
+
 			std::stringstream inputs(valuesVector[index]);
 			std::vector<std::string> outputs;
 
@@ -409,9 +682,21 @@ void Parameters::assignInputs()
 				Efield.push_back(stod(outputs[i]));
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for electric field, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for electric field", 3);
+			logBrief("Invalid argument detected for electric field, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0,0.0,0.0";
+			Efield = { 0.0,0.0,0.0 };
+			useDefaultArgument = false;
 		}
 		logBrief("Electric field: " + valuesVector[index], 1);
 		index++;
@@ -419,6 +704,11 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
+			
 			std::stringstream inputs(valuesVector[index]);
 			std::vector<std::string> outputs;
 
@@ -434,9 +724,21 @@ void Parameters::assignInputs()
 				Bfield.push_back(stod(outputs[i]));
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for magnetic field, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for magnetic field", 3);
+			logBrief("Invalid argument detected for magnetic field, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0,0.0,0.0";
+			Bfield = { 0.0,0.0,0.0 };
+			useDefaultArgument = false;
 		}
 		logBrief("Magnetic field: " + valuesVector[index], 1);
 		index++;
@@ -444,47 +746,85 @@ void Parameters::assignInputs()
 
 		try
 		{
-			FDTDtimeStep = stod(valuesVector[index]);
-			if (FDTDtimeStep < 0.0)
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
+			FDTDiterations = stoi(valuesVector[index]);
+			if (FDTDiterations < 0)
 			{
 				throw 1;
 			}
 		}
-		catch (const std::exception&)
+		catch (double error)
 		{
-			logBrief("Invalid argument detected for FDTD time step", 3);
+			logBrief("No argument detected for FDTD iterations, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		catch (std::invalid_argument&)
+		{
+			logBrief("Invalid argument detected for FDTD iterations, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("FDTD time step should be positive", 3);
+			logBrief("FDTD iterations should be positive, default value will be used", 2);
+			useDefaultArgument = true;
 		}
-		logBrief("FDTD time step: " + valuesVector[index], 1);
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1000000";
+			FDTDiterations = stoi(valuesVector[index]);
+			useDefaultArgument = false;
+		}
+		logBrief("FDTD iterations: " + valuesVector[index], 1);
 		index++;
 
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			FDTDfrequency = stoi(valuesVector[index]);
 			if (FDTDfrequency < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for FDTD frequency, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for FDTD frequency", 3);
+			logBrief("Invalid argument detected for FDTD frequency, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("FDTD frequency should be positive", 3);
+			logBrief("FDTD frequency should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "11";
+			FDTDfrequency = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("FDTD frequency: " + valuesVector[index], 1);
 		index++;
 
 
-		// Mesh parameters
+		// Mesh and domain parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			int value = stoi(valuesVector[index]);
 			if (value == 1)
 			{
@@ -499,13 +839,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for user defined mesh flag, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for user defined mesh flag", 3);
+			logBrief("Invalid argument detected for user defined mesh flag, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("User defined mesh flag should be true (1) or false (0)", 3);
+			logBrief("User defined mesh flag should be true (1) or false (0), default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1";
+			userMesh = true;
+			useDefaultArgument = false;
 		}
 		logBrief("User defined mesh flag: " + valuesVector[index], 1);
 		index++;
@@ -513,19 +866,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			domainLength = stod(valuesVector[index]);
 			if (domainLength < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for domain length, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for domain length", 3);
+			logBrief("Invalid argument detected for domain length, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Domain length should be positive", 3);
+			logBrief("Domain length should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.1";
+			domainLength = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Domain length: " + valuesVector[index], 1);
 		index++;
@@ -533,19 +903,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			domainHeight = stod(valuesVector[index]);
 			if (domainHeight < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for domain height, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for domain height", 3);
+			logBrief("Invalid argument detected for domain height, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Domain height should be positive", 3);
+			logBrief("Domain height should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.06";
+			domainHeight = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Domain height: " + valuesVector[index], 1);
 		index++;
@@ -553,19 +940,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			PICspacing = stod(valuesVector[index]);
 			if (PICspacing < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for PIC grid spacing, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for PIC grid spacing", 3);
+			logBrief("Invalid argument detected for PIC grid spacing, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("PIC grid spacing should be positive", 3);
+			logBrief("PIC grid spacing should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.02";
+			PICspacing = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("PIC grid spacing: " + valuesVector[index], 1);
 		index++;
@@ -573,19 +977,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			FDTDspacing = stod(valuesVector[index]);
 			if (FDTDspacing < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for FDTD grid spacing, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for FDTD grid spacing", 3);
+			logBrief("Invalid argument detected for FDTD grid spacing, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("FDTD grid spacing should be positive", 3);
+			logBrief("FDTD grid spacing should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.01";
+			FDTDspacing = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("FDTD grid spacing: " + valuesVector[index], 1);
 		index++;
@@ -593,11 +1014,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			meshFilePath = valuesVector[index];
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for mesh file path, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for mesh file path", 3);
+			logBrief("Invalid argument detected for mesh file path, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "coarseMesh.su2";
+			meshFilePath = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Mesh file path: " + valuesVector[index], 1);
 		index++;
@@ -605,19 +1042,39 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			meshScalingParameter = stod(valuesVector[index]);
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for mesh scaling parameter, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for mesh scaling parameter", 3);
+			logBrief("Invalid argument detected for mesh scaling parameter, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1.0";
+			meshScalingParameter = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Mesh scaling parameter: " + valuesVector[index], 1);
 		index++;
 
 
-		// Solver parameters
+		// Solver and boundary condition parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			solverType = valuesVector[index];
 			if (solverType == "GS" || solverType == "FFT")
 			{
@@ -627,13 +1084,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for solver type, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (const std::exception&)
 		{
-			logBrief("Invalid argument detected for solver type", 3);
+			logBrief("Invalid argument detected for solver type, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Solver type should be GS or FFT", 3);
+			logBrief("Solver type should be GS or FFT, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "GS";
+			solverType = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Solver type: " + valuesVector[index], 1);
 		index++;
@@ -641,19 +1111,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			maxSolverIterations = stoi(valuesVector[index]);
 			if (maxSolverIterations < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for max solver iterations, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for maximum solver iterations", 3);
+			logBrief("Invalid argument detected for max solver iterations, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Maximum solver iterations should be positive", 3);
+			logBrief("Max solver iterations should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "50";
+			maxSolverIterations = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Maximum solver iterations: " + valuesVector[index], 1);
 		index++;
@@ -661,19 +1148,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			residualTolerance = stod(valuesVector[index]);
 			if (residualTolerance < 0.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for residual tolerance, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for residual tolerance", 3);
+			logBrief("Invalid argument detected for residual tolerance, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Residual tolerance should be positive", 3);
+			logBrief("Residual tolerance should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1e-20";
+			residualTolerance = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Residual tolerance: " + valuesVector[index], 1);
 		index++;
@@ -681,19 +1185,36 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			SORparameter = stod(valuesVector[index]);
 			if (SORparameter < 1.0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for SOR parameter, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for successive over-relaxation parameter", 3);
+			logBrief("Invalid argument detected for SOR parameter, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Successive over-relaxation parameter should be positive", 3);
+			logBrief("SOR parameter should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1.1";
+			SORparameter = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Successive over-relaxation parameter: " + valuesVector[index], 1);
 		index++;
@@ -701,6 +1222,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			leftBCType = valuesVector[index];
 			if (leftBCType == "periodic" || leftBCType == "open" || leftBCType == "dirichlet" || leftBCType == "neumann")
 			{
@@ -710,13 +1235,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for left BC type, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for left boundary condition type", 3);
+			logBrief("Invalid argument detected for left BC type, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Left boundary condition type should be periodic, open, dirichlet or neumann", 3);
+			logBrief("Left BC type should be periodic, open, dirichlet or neumann, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "dirichlet";
+			leftBCType = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Left boundary condition type: " + valuesVector[index], 1);
 		index++;
@@ -724,11 +1262,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			leftBCValue = stod(valuesVector[index]);
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for left BC value, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for left boundary condition value", 3);
+			logBrief("Invalid argument detected for left BC value, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0";
+			leftBCValue = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Left boundary condition value: " + valuesVector[index], 1);
 		index++;
@@ -736,6 +1290,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			rightBCType = valuesVector[index];
 			if (rightBCType == "periodic" || rightBCType == "open" || rightBCType == "dirichlet" || rightBCType == "neumann")
 			{
@@ -745,17 +1303,30 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for right BC type, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for right boundary condition type", 3);
+			logBrief("Invalid argument detected for right BC type, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Right boundary condition type should be periodic, open, dirichlet or neumann", 3);
+			logBrief("Right BC type should be periodic, open, dirichlet or neumann, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "dirichlet";
+			rightBCType = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		if ((rightBCType == "periodic" && leftBCType != "periodic") || (rightBCType != "periodic" && leftBCType == "periodic"))
 		{
-			logBrief("Periodic boundary conditions must be used on left and right", 3);
+			logBrief("Periodic boundary conditions must be used on left and right boundaries", 3);
 		}
 		logBrief("Right boundary condition type: " + valuesVector[index], 1);
 		index++;
@@ -763,11 +1334,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			rightBCValue = stod(valuesVector[index]);
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for right BC value, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for right boundary condition value", 3);
+			logBrief("Invalid argument detected for right BC value, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0";
+			rightBCValue = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Right boundary condition value: " + valuesVector[index], 1);
 		index++;
@@ -775,6 +1362,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			topBCType = valuesVector[index];
 			if (topBCType == "periodic" || topBCType == "open" || topBCType == "dirichlet" || topBCType == "neumann")
 			{
@@ -784,13 +1375,26 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for top BC type, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for top boundary condition type", 3);
+			logBrief("Invalid argument detected for top BC type, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Top boundary condition type should be periodic, open, dirichlet or neumann", 3);
+			logBrief("Top BC type should be periodic, open, dirichlet or neumann, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "dirichlet";
+			topBCType = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Top boundary condition type: " + valuesVector[index], 1);
 		index++;
@@ -798,11 +1402,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			topBCValue = stod(valuesVector[index]);
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for top BC value, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for top boundary condition value", 3);
+			logBrief("Invalid argument detected for top BC value, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0";
+			topBCValue = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Top boundary condition value: " + valuesVector[index], 1);
 		index++;
@@ -810,6 +1430,10 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			bottomBCType = valuesVector[index];
 			if (bottomBCType == "periodic" || bottomBCType == "open" || bottomBCType == "dirichlet" || bottomBCType == "neumann")
 			{
@@ -819,17 +1443,30 @@ void Parameters::assignInputs()
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for bottom BC type, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for bottom boundary condition type", 3);
+			logBrief("Invalid argument detected for bottom BC type, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Bottom boundary condition type should be periodic, open, dirichlet or neumann", 3);
+			logBrief("Bottom BC type should be periodic, open, dirichlet or neumann", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "dirichlet";
+			bottomBCType = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		if ((bottomBCType == "periodic" && topBCType != "periodic") || (bottomBCType != "periodic" && topBCType == "periodic"))
 		{
-			logBrief("Periodic boundary conditions must be used on top and bottom", 3);
+			logBrief("Periodic boundary conditions must be used on top and bottom boundaries", 3);
 		}
 		if (bottomBCType == "periodic" && axisymmetric == true)
 		{
@@ -845,11 +1482,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			bottomBCValue = stod(valuesVector[index]);
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for bottom BC value, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for bottom boundary condition value", 3);
+			logBrief("Invalid argument detected for bottom BC value, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "0.0";
+			bottomBCValue = stod(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Bottom boundary condition value: " + valuesVector[index], 1);
 		index++;
@@ -858,19 +1511,36 @@ void Parameters::assignInputs()
 		// Parallelisation parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			numThreads = stoi(valuesVector[index]);
 			if (numThreads < 1)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for number of OpenMP threads, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for number of OpenMP threads", 3);
+			logBrief("Invalid argument detected for number of OpenMP threads, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Number of threads should be greater than 0", 3);
+			logBrief("Number of OpenMP threads should be greater than 0, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "1";
+			numThreads = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Number of OpenMP threads: " + valuesVector[index], 1);
 		index++;
@@ -879,19 +1549,36 @@ void Parameters::assignInputs()
 		// Output parameters
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			plotFrequency = stoi(valuesVector[index]);
 			if (plotFrequency < 0)
 			{
 				throw 1;
 			}
 		}
+		catch (double error)
+		{
+			logBrief("No argument detected for plotting frequency, default value will be used", 2);
+			useDefaultArgument = true;
+		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for plotting frequency", 3);
+			logBrief("Invalid argument detected for plotting frequency, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (int error)
 		{
-			logBrief("Plotting frequency should be positive", 3);
+			logBrief("Plotting frequency should be positive, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "11";
+			plotFrequency = stoi(valuesVector[index]);
+			useDefaultArgument = false;
 		}
 		logBrief("Plotting frequency: " + valuesVector[index], 1);
 		index++;
@@ -899,11 +1586,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			tecplotMesh = valuesVector[index];
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for output mesh file name, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for output mesh file name", 3);
+			logBrief("Invalid argument detected for output mesh file name, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "cMesh";
+			tecplotMesh = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Output mesh file name: " + valuesVector[index], 1);
 		index++;
@@ -911,11 +1614,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			tecplotParticleSolution = valuesVector[index];
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for particle solution file name, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for particle solution file name", 3);
+			logBrief("Invalid argument detected for particle solution file name, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "cSolution_P";
+			tecplotParticleSolution = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Particle solution file name: " + valuesVector[index], 1);
 		index++;
@@ -923,11 +1642,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			tecplotNodeSolution = valuesVector[index];
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for node solution file name, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for node solution file name", 3);
+			logBrief("Invalid argument detected for node solution file name, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "cSolution_N";
+			tecplotNodeSolution = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Node solution file name: " + valuesVector[index], 1);
 		index++;
@@ -935,11 +1670,27 @@ void Parameters::assignInputs()
 
 		try
 		{
+			if (valuesVector[index] == "DEFAULT")
+			{
+				throw 0.0;
+			}
 			tecplotGlobalSolution = valuesVector[index];
+		}
+		catch (double error)
+		{
+			logBrief("No argument detected for global solution file name, default value will be used", 2);
+			useDefaultArgument = true;
 		}
 		catch (std::invalid_argument&)
 		{
-			logBrief("Invalid argument detected for global solution file name", 3);
+			logBrief("Invalid argument detected for global solution file name, default value will be used", 2);
+			useDefaultArgument = true;
+		}
+		if (useDefaultArgument == true)
+		{
+			valuesVector[index] = "cSolution_G";
+			tecplotGlobalSolution = valuesVector[index];
+			useDefaultArgument = false;
 		}
 		logBrief("Global solution file name: " + valuesVector[index], 1);
 		index++;
@@ -959,7 +1710,9 @@ void Parameters::generateMesh(std::string type)
 	}
 	else if (type == "FDTD")
 	{
-		h = FDTDspacing;
+		// Since the effective grid spacing of a Yee mesh is half that of a regular
+		// mesh, we divide the input spacing by two
+		h = FDTDspacing / 2.0;
 		meshFile = meshFileFDTD;
 	}
 

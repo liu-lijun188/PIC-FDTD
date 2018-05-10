@@ -9,9 +9,9 @@
 
 
 %------------------------------------------------------------------------------
-% Simulation parameters 
+% Global simulation parameters 
 %------------------------------------------------------------------------------
-timeStep: 0.00004
+timeStep: 0.0004
 maximumNumberOfIterations: 10 
 numberOfPatches: 1
 particlesPerCell: 1
@@ -22,7 +22,7 @@ twoStream: 0
 
 
 %------------------------------------------------------------------------------
-% Particle parameters
+% Particle and collision parameters
 %------------------------------------------------------------------------------
 particleDistribution: uniform
 initialTemperature: 1000.0
@@ -33,28 +33,28 @@ MCCFrequency: 11
 
 
 %------------------------------------------------------------------------------
-% Field parameters
+% Field and FDTD parameters
 %------------------------------------------------------------------------------
 Efield: 0.0,0.0,0.0
 Bfield: 0.0,0.0,0.0
-FDTDtimeStep: 0.0
-FDTDfrequency: 10
+FDTDiterations: 1000000
+FDTDfrequency: 11
 
 
 %------------------------------------------------------------------------------
-% Mesh parameters
+% Mesh and domain parameters
 %------------------------------------------------------------------------------
 userMesh: 1
 domainLength: 0.1
 domainHeight: 0.06
 PICspacing: 0.02
-FDTDspacing: 0.01
+FDTDspacing: 0.005
 meshFilePath: coarseMesh.su2
 meshScalingParameter: 1.0
 
 
 %------------------------------------------------------------------------------
-% Solver parameters
+% Solver and boundary condition parameters
 %------------------------------------------------------------------------------
 solverType: GS
 maxSolverIterations: 50

@@ -71,16 +71,18 @@ void Patch::startPIC()
 				__FILENAME__, __LINE__, 1);
 
 			// TODO: Do the classes below really need to be defined as such, or can they
-			// be replaced with functions of the Patch class? 
+			// be replaced with functions of the Patch class? Probably more efficient
+			// to call functions rather than producing class instances at each 
+			// time step...
 
 			ChargeProjector projector(&parametersList, &mesh, &particlesVector);
+
+			FieldSolver solver(&parametersList, &mesh);
 
 			if ((static_cast<int>(time / parametersList.timeStep) + 1) % parametersList.FDTDfrequency == 0)
 			{
 				FDTD fdtd(&parametersList, &mesh);
 			}
-
-			FieldSolver solver(&parametersList, &mesh);
 
 			FieldInterpolator interpolator(&parametersList, &mesh, &particlesVector);
 

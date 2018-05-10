@@ -81,7 +81,7 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 			if (theta > 45.0)
 			{
-				parametersList->logBrief("Rotation angle has exceeded 45 degrees", 3);
+				parametersList->logBrief("Rotation angle has exceeded 45 degrees by " + std::to_string(theta - 45), 3);
 				break;
 			}
 
@@ -121,10 +121,10 @@ ParticlePusher::ParticlePusher(Parameters *parametersList, Mesh *mesh, VectorPar
 
 		if (courantNumber > 1.0)
 		{
-			parametersList->logBrief("CFL condition exceeded, consider adjusting time step", 2);
+			parametersList->logBrief("Consider adjusting time step, CFL condition is " + std::to_string(courantNumber), 2);
 			if (courantNumber > 1.5)
 			{
-				parametersList->logBrief("CFL condition exceeded 1.5, stopping pusher", 3);
+				parametersList->logBrief("Stopping pusher, CFL condition exceeded by " + std::to_string(courantNumber - 1.0), 3);
 				break;
 			}
 		}

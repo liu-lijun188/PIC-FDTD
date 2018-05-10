@@ -24,7 +24,6 @@ public:
 	int periodicX1NodeID = -1;				//!< ID of periodic node, x/z direction (not valid for internal nodes)
 	int	periodicX2NodeID = -1;				//!< ID of periodic node, y/r direction (not valid for internal nodes or axisymmetric cases)
 	int PICcellID = -1;						//!< ID of PIC mesh cell which the FDTD mesh node occupies
-	std::string YeeType;					//!< Type of Yee node for FDTD mesh
 	std::string boundaryType;				//!< Position on boundary
 
 	double charge = -1;						//!< Charge at the grid node
