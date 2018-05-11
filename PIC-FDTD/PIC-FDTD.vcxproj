@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{FB91795B-DE47-4F0E-A865-19BC165614C6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>PIC_FDTD</RootNamespace>
+    <RootNamespace>PIC-FDTD</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

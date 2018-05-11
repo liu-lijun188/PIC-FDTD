@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PIC_FDTD", "PIC_FDTD\PIC_FDTD.vcxproj", "{FB91795B-DE47-4F0E-A865-19BC165614C6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PIC-FDTD", "PIC-FDTD\PIC-FDTD.vcxproj", "{FB91795B-DE47-4F0E-A865-19BC165614C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
